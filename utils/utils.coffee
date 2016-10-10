@@ -1,10 +1,5 @@
 crypto = require 'crypto'
 VError = require 'verror'
-moment = require 'moment'
-
-# this module is loaded by the function that needs it, so as to avoid loading
-# backoffice-specific module in this generic utility module.
-accessEnum = null
 
 # Contains miscellaneous utility methods
 class Utils
@@ -35,33 +30,6 @@ class Utils
 
     return ok
 
-  # checks the user has rights on the given application.
-  # Checks the user session contains the request's appId & the requested access level
-  # @req: request object
-  # @res: response object
-  # @accessLvl: access level to check (integer). Defaults to accessEnum.READ
-  # @appIds: array of appIds to check. Defaults to req.params.appId
-  @hasAppAccess = (req, res, accessLvl, appIds = [req.params.appId]) ->
-    if !accessEnum?
-      accessEnum = require '../lib/backoffice/models/accessEnum.js'
-
-    if !accessLvl?
-      accessLvl = accessEnum.READ
-
-    if !Array.isArray appIds
-      appIds = [appIds]
-
-    granted = true
-    for appId in appIds
-      permissions = req.session.data[appId] || 0
-      if (permissions & accessLvl) != accessLvl
-        granted = false
-        break
-
-    if !granted
-      res.send 403, 'access level not granted'
-    return granted
-
   # Returns a deep copy of the object
   # @o: object to copy
   # @ignore: array of string: properties to no copy
@@ -91,13 +59,12 @@ class Utils
 
   # Returns true if the value is a valid email (RFC 5322 Official Standard)
   @isValidEmail = (value) ->
-    regex = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i
-    return regex.test(value)
+    return value.contains '@'
 
   # Generates a random binary buffer and serializes it in base64
   # @length: length of the buffer to create. Resulting string is longer due to base64 encoding.
   @generateUniqueToken = (length = 24) ->
-    promise = new Promise (resolve, reject) ->
+    return new Promise (resolve, reject) ->
       crypto.randomBytes length, (err, buf) ->
         if err
           reject err
@@ -105,7 +72,6 @@ class Utils
         else
           token = buf.toString 'base64'
           resolve token
-    return promise
 
   # Waits for all promises to complete (resolve or reject) before resolving.
   # Taken from https://gist.github.com/peisenmann/41488a45364974705cd6

@@ -7,6 +7,7 @@ session = require './utils/session.js'
 csrf = require './utils/csrf.js'
 # declare controllers
 user = require './controllers/userController.js'
+bottle = require './controllers/bottleController.js'
 
 registerRoutes = (server) ->
   logger.debug 'registering handlers & routes'
@@ -39,6 +40,9 @@ registerRoutes = (server) ->
   # server.use csrf.checkToken # CSRF verification
 
   # then register routes
-  server.get '/user/:id', user.get
+  server.get '/cave/:id', user.get
+  # server.post '/cave/:id/bouteille/:bid', user.update
+
+  server.put '/bottle', bottle.create
 
 module.exports.register = exports.register = registerRoutes

@@ -10,8 +10,10 @@ userSchema = new mongoose.Schema
   email: String
   cave: [{
       bottleId: ObjectId
+      count: Number
       location: String
   }]
+
 # Removes sensitive and uneeded fields on serialization
 userSchema.set 'toJSON', transform: (doc, ret, options) ->
   delete ret.password
