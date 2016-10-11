@@ -11,6 +11,12 @@ class BottleController
       return next()
 
     # validation
+    mandatoryFields = ['appellation', 'domain', 'year']
+    for f in mandatoryFields
+      if !req.params.bottle[f]?
+        logger.debug "f:" + f + ' v:' + req.params.bottle[f]
+        res.send 400, "missing param '#{f}'"
+        return next()
 
     bottle = new Bottle req.params.bottle
     bottle.cepages = bottle.cepages || []
