@@ -22,7 +22,9 @@ registerRoutes = (server) ->
     res.header 'Cache-Control', 'private, no-cache, no-store, must-revalidate'
     res.header 'Expires', '-1'
     res.header 'Pragma', 'no-cache'
+    res.header 'content-type', 'application/json'
     next()
+
 
   # log all incoming queries
   server.use (req, res, next) -> logger.debug req.getPath(); next()

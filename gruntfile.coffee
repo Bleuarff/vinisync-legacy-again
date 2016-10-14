@@ -20,9 +20,9 @@ module.exports = (grunt) ->
       #   dest: 'assets/js/'
       #   ext: '.js'
       #   extDot: 'last'
-      dependencies:
+      deps:
         expand: true
-        src: ['utils/*.coffee', 'models/*.coffee']
+        src: ['utils/*.coffee', 'models/*.coffee', 'services/*.coffee']
         dest: 'app/'
         ext: '.js'
     coffeelint:
@@ -31,12 +31,7 @@ module.exports = (grunt) ->
         eol_last: { level: 'warn' }
       srv: ['src/**/*.coffee']
       # client: ['assets/coffee/**/*.coffee']
-      dependencies: ['utils/**/*.coffee', 'models/*.coffee']
-    # riot_compile:
-    #   all:
-    #     coffee: 'assets/coffee/presenters'
-    #     html: 'templates'
-    #     dest: 'assets/js/tags'
+      deps: ['utils/**/*.coffee', 'models/*.coffee', 'services/*.coffee']
     # concat:
     #   less:
     #     src: ['assets/less/default/app.less', 'assets/less/default/**/*.less']
@@ -73,13 +68,14 @@ module.exports = (grunt) ->
       srv:
         files: ['src/*.coffee', 'src/**/*.coffee']
         tasks: ['coffeelint:srv', 'clean:srv', 'coffee:srv']
+      deps:
+        files: ['models/*.coffee', 'utils/*.coffee', 'services/*.coffee']
+        tasks: ['coffeelint:deps', 'clean:deps', 'coffe:deps']
     clean:
       options: {force: true}
       srv: ['app/*.js', 'app/controllers/**']
-      deps: ['app/lib/**', 'app/utils/**']
+      deps: ['app/lib/**', 'app/utils/**', 'services/**']
     chequire:
-      options:
-        exclude: ['lib/backoffice/models/accessEnum.js']
       all: ['app/**/*.js']
 
 
@@ -100,4 +96,6 @@ module.exports = (grunt) ->
 
   # group sub-tasks into bigger chunks
 
-  grunt.registerTask 'default', ['coffeelint', 'clean', 'coffee', 'concurrent']
+  grunt.registerTask 'base', ['coffeelint', 'clean', 'coffee']
+  grunt.registerTask 'default', ['base', 'concurrent']
+  grunt.registerTask 'debug', ['base', 'exec:debug']

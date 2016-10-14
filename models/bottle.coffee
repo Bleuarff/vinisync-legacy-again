@@ -5,7 +5,7 @@ bottleSchema = new mongoose.Schema
   createDate: Date
   updateDate: Date
   appellation: String
-  domain: String
+  producer: String
   name: String
   year: Number
   cepages: [String]

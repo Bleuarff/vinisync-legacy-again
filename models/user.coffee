@@ -8,7 +8,7 @@ userSchema = new mongoose.Schema
   updateDate: Date
   name: String
   email: String
-  cave: [{
+  bottles: [{
       bottleId: ObjectId
       count: Number
       location: String
@@ -16,10 +16,9 @@ userSchema = new mongoose.Schema
 
 # Removes sensitive and uneeded fields on serialization
 userSchema.set 'toJSON', transform: (doc, ret, options) ->
-  delete ret.password
-  delete ret.webcoupon
+  # delete ret.password
   delete ret.__v
-  delete ret._id
+  return ret
 
 # Save hook: updates version and timestamp
 userSchema.pre 'save', (next) ->
