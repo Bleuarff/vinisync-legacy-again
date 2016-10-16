@@ -25,14 +25,17 @@ class UserController
 
 
   @addBottle: (req, res, next) ->
-    uid = req.params.uid
-    if uid != req.session.data.uid
-      res.send 403
-      return next()
-
-    User.findById uid
-    .then (user) ->
-      if !user?
-        res.send 404, "user #{uid} not found"
+    res.send 501, "Not implemented"
+  #   uid = req.params.id
+  #   # if uid != req.session.data.uid
+  #   #   res.send 403
+  #   #   return next()
+  #
+  #   userSrv.load uid
+  #   .then (user) ->
+  #
+  #   .catch (err) ->
+  #     logger.error new VError err, 'Error adding bottle to user `%s`', uid
+  #     res.send err.status || 500, 'Error adding bottle'
 
 module.exports = exports = UserController
