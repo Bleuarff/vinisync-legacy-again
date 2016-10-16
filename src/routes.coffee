@@ -43,8 +43,10 @@ registerRoutes = (server) ->
 
   # then register routes
   server.get '/cave/:id', user.get
-  # server.post '/cave/:id/bouteille/:bid', user.update
+  server.put '/cave/:id/bouteille', user.addBottle
 
   server.put '/bottle', bottle.create
+  server.get '/bottle', bottle.find
+  server.get '/bottle/:id', bottle.get
 
 module.exports.register = exports.register = registerRoutes

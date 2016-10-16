@@ -70,11 +70,11 @@ module.exports = (grunt) ->
         tasks: ['coffeelint:srv', 'clean:srv', 'coffee:srv']
       deps:
         files: ['models/*.coffee', 'utils/*.coffee', 'services/*.coffee']
-        tasks: ['coffeelint:deps', 'clean:deps', 'coffe:deps']
+        tasks: ['coffeelint:deps', 'clean:deps', 'coffee:deps']
     clean:
       options: {force: true}
       srv: ['app/*.js', 'app/controllers/**']
-      deps: ['app/lib/**', 'app/utils/**', 'services/**']
+      deps: ['app/models/**', 'app/utils/**', 'app/services/**']
     chequire:
       all: ['app/**/*.js']
 

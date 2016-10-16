@@ -9,9 +9,11 @@ userSchema = new mongoose.Schema
   name: String
   email: String
   bottles: [{
-      bottleId: ObjectId
-      count: Number
-      location: String
+    bottleId: ObjectId
+    count: Number
+    location: String
+    createDate: Date
+    updateDate: Date
   }]
 
 # Removes sensitive and uneeded fields on serialization
