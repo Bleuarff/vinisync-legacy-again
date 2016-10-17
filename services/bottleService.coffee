@@ -31,6 +31,7 @@ class BottleService
     query = {}
     if terms.length > 0
       query.$text = { $search: terms.join ' ' }
+
     if year
       query.year = year
 
