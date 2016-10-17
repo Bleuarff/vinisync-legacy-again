@@ -21,8 +21,4 @@ class UserService
       logger.debug "user: #{user.name}"
       return Promise.resolve user
 
-
-
-
-
 module.exports = exports = UserService
