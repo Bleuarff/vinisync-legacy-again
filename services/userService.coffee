@@ -21,8 +21,5 @@ class UserService
       logger.debug "user: #{user.name}"
       return Promise.resolve user
 
-  # @addBottle: (user, bottleParams) ->
-
-
 
 module.exports = exports = UserService

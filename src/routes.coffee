@@ -43,7 +43,7 @@ registerRoutes = (server) ->
 
   # then register routes
   server.get '/cave/:id', user.get
-  server.put '/cave/:id/bouteille', user.addBottle
+  server.put '/cave/:id/bottle', user.addBottle
 
   server.put '/bottle', bottle.create
   server.get '/bottle', bottle.find

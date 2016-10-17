@@ -9,7 +9,12 @@ userSchema = new mongoose.Schema
   name: String
   email: String
   bottles: [{
-    bottleId: ObjectId
+    bottle: { # full denormalization!
+      appellation: String
+      producer: String
+      year: Number
+      cepages: [String]
+    }
     count: Number
     location: String
     createDate: Date
