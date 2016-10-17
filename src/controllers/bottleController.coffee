@@ -8,27 +8,19 @@ bottleSrv = require '../services/bottleService.js'
 class BottleController
 
   @create = (req, res, next) ->
-    if !utils.hasParams req, res, 'bottle', false
+    try
+      bottleSrv.validate req.params.bottle
+    catch ex
+      res.send 400, ex.message
       return next()
 
-    # validation
-    mandatoryFields = ['appellation', 'producer', 'year']
-    for f in mandatoryFields
-      if !req.params.bottle[f]?
-        logger.debug "f:" + f + ' v:' + req.params.bottle[f]
-        res.send 400, "missing param '#{f}'"
-        return next()
-
-    bottle = new Bottle req.params.bottle
-    bottle.cepages = bottle.cepages || []
-    bottle.createDate = bottle.updateDate = moment.utc()
-    bottle.save()
+    bottleSrv.create req.params.bottle
     .then (b) ->
       res.send 201, b
       next()
     .catch (err) ->
       logger.error new VError 'Error creating bottle'
-      res.send 500, 'error creating bottle'
+      res.send err.status || 500, 'error creating bottle'
       next()
 
 
@@ -62,8 +54,5 @@ class BottleController
       logger.error new VError err, 'error finding bottle'
       res.send 500, 'error finding bottle'
       return next()
-
-
-
 
 module.exports = exports = BottleController

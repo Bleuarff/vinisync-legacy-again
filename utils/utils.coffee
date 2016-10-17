@@ -108,4 +108,10 @@ class Utils
 
     return res
 
+  # Creates and returns a new VError instance
+  @error = (innerErr, message, status) ->
+    err = new VError innerErr, message
+    err.status = status
+    return err
+
 module.exports = exports = Utils
