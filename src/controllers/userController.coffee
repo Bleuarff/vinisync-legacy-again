@@ -27,7 +27,7 @@ class UserController
 
 
   # adds a bottle to the cave
-  @addBottle: (req, res, next) ->
+  @addBottle = (req, res, next) ->
     id = req.params.id
     bottle = req.params.bottle
     try

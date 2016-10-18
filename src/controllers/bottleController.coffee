@@ -4,6 +4,7 @@ logger = require('../utils/logger.js').create 'bottleController'
 utils = require '../utils/utils.js'
 Bottle = require '../models/bottle.js'
 bottleSrv = require '../services/bottleService.js'
+normalizer = require '../services/normalizer.js'
 
 class BottleController
 
@@ -14,7 +15,8 @@ class BottleController
       res.send 400, ex.message
       return next()
 
-    bottleSrv.create req.params.bottle
+    bottle = normalizer.normalize req.params.bottle
+    bottleSrv.create bottle
     .then (b) ->
       res.send 201, b
       next()
