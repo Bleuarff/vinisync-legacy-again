@@ -1,33 +1,34 @@
-# appellation
-# chateau -> château
-# st -> Saint
-# Saint qqch -> Saint-
-# capitaliser / pascal case sauf stopwords
-
 # Normalize bottle properties, to ensure consistency
 class Normalizer
 
-  @stopWords = 'au|ça|ce|ces|ci|des|du|dos|en|et|ici|la|le|les|là|ma|mes|mon|ni|nous|or|ou|où|par|pas|peu|pour|que|quel|quelle|quelles|quels|qui|sa|sans|ses|si|sien|son|sont|sous|sur|ta|tel|tels|tes|ton|tous|tout|trop|très|tu|votre|vous|vu'.split '|'
+  # stop words to not capitalize, except at the beginning of string
+  @stopWords = 'a|à|c|d|j|l|m|n|s|t|y|au|ça|ce|ces|ci|des|du|dos|en|et|hui|ici|la|le|les|là|ma|mes|mon|ni|nous|or|ou|où|par|pas|peu|pour|que|quel|quelle|quelles|quels|qui|sa|sans|ses|si|sien|son|sont|sous|sur|ta|tel|tels|tes|ton|tous|tout|trop|très|tu|votre|vous|vu'.split '|'
 
+  # list string or patterns to replace, with substitutions
+  @patterns = [
+    ['Chateau', 'Château'],
+    [/\bSt(e?)\b/g, 'Saint$1'], # expand st, ste into saint, sainte
+    [/\b(Sainte?)\s+\b/g, '$1-'] # hyphenate Saint(e) when followed by a word
+  ]
 
   @normalize: (bottle) ->
     for key in Object.keys bottle
       continue if typeof bottle[key] != 'string'
-      res = Normalizer.toTitleCase bottle[key]
-      # res = Normalizer.correctWords res
-      bottle[key] = res
+      value = Normalizer._toTitleCase bottle[key]
+      value = Normalizer._replacePatterns value
+      bottle[key] = value
 
     return bottle
 
-
-  # @correctWords: (input) ->
-  #   list = [['Chateau', 'Château'], [/st ?/g, ]]
-  #   for item in list
-  #     return input.replace
+  # Applies each pattern on input and replaces it with corresponding substitution
+  @_replacePatterns: (input) ->
+    for item in Normalizer.patterns
+      input = input.replace item[0], item[1]
+    return input
 
 
   # Converts input to title case, except stop words not at the beginning
-  @toTitleCase: (input) ->
+  @_toTitleCase: (input) ->
     rx = /\b\w+\b/g
     return input.replace rx, (match, offset) ->
       if (Normalizer.stopWords.indexOf(match) > -1 && offset  > 0)

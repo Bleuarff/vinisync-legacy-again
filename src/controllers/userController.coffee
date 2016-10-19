@@ -5,6 +5,7 @@ utils = require '../utils/utils.js'
 User = require '../models/user.js'
 userSrv = require '../services/userService.js'
 bottleSrv = require '../services/bottleService.js'
+normalizer = require '../services/normalizer.js'
 
 class UserController
 
@@ -36,11 +37,10 @@ class UserController
       res.send 400, error.message
       return next()
 
-    # TODO: bottle normalization
-
+    bottle = normalizer.normalize bottle
     logger.debug "add to cave: #{bottle.appellation}, #{bottle.producer}, #{bottle.name}, #{bottle.year} / count: #{req.params.count}"
-
     in_cave = null
+
     User.findById id
     .then (user) ->
       if !user?
