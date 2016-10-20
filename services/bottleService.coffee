@@ -5,15 +5,19 @@ Bottle = require '../models/bottle.js'
 
 class BottleService
 
+  @mandatoryFields = ['appellation', 'producer', 'year']
+
   # checks mandatory parameters are here
   @validate: (bottle) ->
     if !bottle?
       throw new VError 'missing param bottle'
 
-    mandatoryFields = ['appellation', 'producer', 'year'] # TODO: move to static class property
-    for f in mandatoryFields
+    for f in BottleService.mandatoryFields
       if !bottle[f]?
         throw new VError 'missing params %s', f
+
+    if typeof bottle.year != 'number' || bottle.year < 1800 || bottle.year > 2100
+      throw new VError 'year must be an integer between 1800 and 2100'
     return true
 
 
@@ -39,8 +43,6 @@ class BottleService
 
   # creates a new bottle
   @create: (params) ->
-    # TODO: string normalization
-
     bottle = new Bottle params
     bottle.cepages = bottle.cepages || []
     bottle.createDate = bottle.updateDate = moment.utc()

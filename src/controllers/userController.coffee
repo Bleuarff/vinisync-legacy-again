@@ -30,14 +30,13 @@ class UserController
   # adds a bottle to the cave
   @addBottle = (req, res, next) ->
     id = req.params.id
-    bottle = req.params.bottle
     try
-      bottleSrv.validate bottle
+      bottleSrv.validate req.params.bottle
     catch error
       res.send 400, error.message
       return next()
 
-    bottle = normalizer.normalize bottle
+    bottle = normalizer.normalize req.params.bottle
     logger.debug "add to cave: #{bottle.appellation}, #{bottle.producer}, #{bottle.name}, #{bottle.year} / count: #{req.params.count}"
     in_cave = null
 
@@ -73,6 +72,7 @@ class UserController
         bottle = user.bottles[user.bottles.length - 1]
       res.send 200, bottle
       # TODO: add to bottle collection, appellation, producer, cepages collections
+      # bottleSrv.create bottle
 
       return next()
     .catch (err) ->

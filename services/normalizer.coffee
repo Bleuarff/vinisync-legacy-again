@@ -1,4 +1,5 @@
 # Normalize bottle properties, to ensure consistency
+# Normalization should be done at the controller level, and services assume correct parameters.
 class Normalizer
 
   # stop words to not capitalize, except at the beginning of string
