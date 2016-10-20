@@ -67,14 +67,19 @@ class UserController
       user.save()
     .then (user) ->
       if in_cave
-        bottle = in_cave
+        entry = in_cave
       else
-        bottle = user.bottles[user.bottles.length - 1]
-      res.send 200, bottle
-      # TODO: add to bottle collection, appellation, producer, cepages collections
-      # bottleSrv.create bottle
+        entry = user.bottles[user.bottles.length - 1]
+      res.send 200, entry
 
-      return next()
+      # add to bottle collection (and subsequently to appellation, producer, cepages collections)
+      bottleSrv.propagate entry.bottle
+      .then () ->
+        return next()
+      .catch (err) ->
+        # on error, log but do not send error to client - bottle has been added to the cave OK
+        logger.error new VError err, 'Error creating bottle'
+        return next()
     .catch (err) ->
       logger.error new VError err, 'error adding bottle to cave `%s`', id
       res.send 500, "Error adding bottle"

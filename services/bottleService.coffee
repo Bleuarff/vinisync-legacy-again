@@ -35,17 +35,24 @@ class BottleService
     query = {}
     if terms.length > 0
       query.$text = { $search: terms.join ' ' }
-
     if year
       query.year = year
-
     return Bottle.find query
+
 
   # creates a new bottle
   @create: (params) ->
     bottle = new Bottle params
-    bottle.cepages = bottle.cepages || []
+    # bottle.cepages = bottle.cepages || []
     bottle.createDate = bottle.updateDate = moment.utc()
     return bottle.save()
+
+
+  # propagates data after creating a cave entry
+  # creates a bottle and corresponding cepages, appellation and producer from a cave entry bottle
+  @propagate: (params) ->
+    bottle = params.toJSON()
+    BottleService.create bottle
+    return Promise.resolve()
 
 module.exports = exports = BottleService

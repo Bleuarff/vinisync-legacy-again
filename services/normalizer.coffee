@@ -19,6 +19,8 @@ class Normalizer
       value = Normalizer._replacePatterns value
       bottle[key] = value
 
+    bottle.cepages = bottle.cepages || []
+
     return bottle
 
   # Applies each pattern on input and replaces it with corresponding substitution
