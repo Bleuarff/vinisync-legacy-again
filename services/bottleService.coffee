@@ -52,7 +52,12 @@ class BottleService
   # creates a bottle and corresponding cepages, appellation and producer from a cave entry bottle
   @propagate: (params) ->
     bottle = params.toJSON()
-    BottleService.create bottle
-    return Promise.resolve()
-
+    # checks if bottle exists before creating duplicate
+    BottleService.find bottle
+    .then (bottles) ->
+      if bottles.length == 0
+        return BottleService.create bottle
+      else
+        return Promise.resolve()
+  
 module.exports = exports = BottleService
