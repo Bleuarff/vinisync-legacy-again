@@ -15,12 +15,17 @@ class Normalizer
   @normalize: (bottle) ->
     for key in Object.keys bottle
       if typeof bottle[key] == 'string'
-        value = Normalizer._toTitleCase bottle[key]
+        value = bottle[key]
+        continue if value == null
+
+        value = Normalizer._toTitleCase value
         value = Normalizer._replacePatterns value
         bottle[key] = value
       else if key =='cepages'
         bottle.cepages = bottle.cepages.map (x) -> x.toLowerCase()
 
+    if bottle.name == null || bottle.name == ''
+      delete bottle.name
 
     bottle.cepages = bottle.cepages || []
 

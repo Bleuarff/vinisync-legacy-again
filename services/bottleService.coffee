@@ -15,7 +15,7 @@ class BottleService
       throw new VError 'missing param bottle'
 
     for f in BottleService.mandatoryFields
-      if !bottle[f]?
+      if !bottle[f]? || bottle[f] == ''
         throw new VError 'missing params %s', f
 
     if typeof bottle.year != 'number' || bottle.year < 1800 || bottle.year > 2100
@@ -71,7 +71,7 @@ class BottleService
     prms.push( Appellation.findOne {name: bottle.appellation}
     .then (app) ->
       if !app?
-        logger.debug 'appellation not found'
+        logger.debug "appellation #{bottle.appellation} not found"
         return Appellation.create {name: bottle.appellation, createDate: moment.utc()}
       else
         logger.debug 'appellation found'
@@ -84,8 +84,10 @@ class BottleService
       .then (cepage) ->
         if !cepage?
           logger.debug "cepage #{cpg} not found"
-        return Promise.resolve()
-          # Cepage.c
+          return Cepage.create {name: cpg, createDate: moment.utc()}
+        else
+          logger.debug 'cepage found'
+          return Promise.resolve()
     , Promise.resolve()
     prms.push cpgPrm
 
