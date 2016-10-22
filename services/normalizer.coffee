@@ -14,10 +14,13 @@ class Normalizer
 
   @normalize: (bottle) ->
     for key in Object.keys bottle
-      continue if typeof bottle[key] != 'string'
-      value = Normalizer._toTitleCase bottle[key]
-      value = Normalizer._replacePatterns value
-      bottle[key] = value
+      if typeof bottle[key] == 'string'
+        value = Normalizer._toTitleCase bottle[key]
+        value = Normalizer._replacePatterns value
+        bottle[key] = value
+      else if key =='cepages'
+        bottle.cepages = bottle.cepages.map (x) -> x.toLowerCase()
+
 
     bottle.cepages = bottle.cepages || []
 

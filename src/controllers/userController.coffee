@@ -47,16 +47,17 @@ class UserController
 
       # checks wether bottle is already in this cave
       in_cave = user.bottles.find (x) ->
-        x.bottle.appellation == bottle.appellation && x.bottle.producer == bottle.producer && x.bottle.name == bottle.name && x.bottle.year == bottle.year
+        x.bottle.appellation == bottle.appellation && x.bottle.producer == bottle.producer &&
+        x.bottle.name == bottle.name && x.bottle.year == bottle.year
 
       # if so, update counter
       if in_cave?
-        logger.debug "found bottle, update"
+        logger.debug "found entry, update"
         in_cave.count += req.params.count
         in_cave.updateDate = moment.utc()
       else
         # otherwise create new entry in array
-        logger.debug 'bottle not in cave, create'
+        logger.debug 'entry not found, create'
         user.bottles.push {
           bottle: bottle
           count: req.params.count

@@ -57,11 +57,13 @@ class BottleService
     prms = []
     # propagate bottle
     # checks if bottle exists before creating duplicate
-    prms.push( BottleService.find bottle
+    prms.push( BottleService.find bottle.appellation, bottle.producer, bottle.name, bottle.year
     .then (bottles) ->
       if bottles.length == 0
+        logger.debug 'bottle not found, create'
         return BottleService.create bottle
       else
+        logger.debug 'bottle found, no update'
         return Promise.resolve()
     )
 
@@ -69,19 +71,24 @@ class BottleService
     prms.push( Appellation.findOne {name: bottle.appellation}
     .then (app) ->
       if !app?
+        logger.debug 'appellation not found'
         return Appellation.create {name: bottle.appellation, createDate: moment.utc()}
       else
+        logger.debug 'appellation found'
         return Promise.resolve()
     )
 
     # propage cepages
-    # cpgPrm = bottle.cepages.reduce (prom, cpg) ->
-    #   return Cepage.findOne {name: cpg}
-    #   .then (cepage) ->
-    #     if !cepage?
-    #       Cepage.c
-    # , Promise.resolve()
-    # prms.push cpgPrm
+    cpgPrm = bottle.cepages.reduce (prom, cpg) ->
+      return Cepage.findOne {name: cpg}
+      .then (cepage) ->
+        if !cepage?
+          logger.debug "cepage #{cpg} not found"
+        return Promise.resolve()
+          # Cepage.c
+    , Promise.resolve()
+    prms.push cpgPrm
+
     return Promise.all prms
 
 
