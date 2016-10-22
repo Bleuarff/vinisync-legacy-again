@@ -32,7 +32,8 @@ class Normalizer
 
   # Converts input to title case, except stop words not at the beginning
   @_toTitleCase: (input) ->
-    rx = /\b\w+\b/g
+    # TODO: handle more accented chars
+    rx = /\b[\wàäâéèêëìïîôöòüûù]+\b/g
     return input.replace rx, (match, offset) ->
       if (Normalizer.stopWords.indexOf(match) > -1 && offset  > 0)
         rep = match

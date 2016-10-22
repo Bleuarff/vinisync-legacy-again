@@ -60,7 +60,7 @@ module.exports = (grunt) ->
       dev:
         script: 'app/app.js'
         options:
-          watch: ['app/', 'config/']
+          watch: ['app/**/*.js', 'config/']
           ext: 'js,yml'
           delay: 1000
           # nodeArgs: '--use-strict' # fails some dependencies (bunyan)

@@ -12,6 +12,7 @@ userSchema = new mongoose.Schema
     bottle: { # full denormalization!
       appellation: String
       producer: String
+      name: String
       year: Number
       cepages: [String]
     }

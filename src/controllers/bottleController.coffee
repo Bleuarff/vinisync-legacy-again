@@ -8,6 +8,7 @@ normalizer = require '../services/normalizer.js'
 
 class BottleController
 
+  # Warning: creates duplicates, no first check
   @create = (req, res, next) ->
     try
       bottleSrv.validate req.params.bottle

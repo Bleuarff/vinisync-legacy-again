@@ -1,7 +1,9 @@
 moment = require 'moment'
 VError = require 'verror'
 logger = require('../utils/logger.js').create 'userService'
+Appellation = require '../models/appellation.js'
 Bottle = require '../models/bottle.js'
+Cepage = require '../models/cepage.js'
 
 class BottleService
 
@@ -52,12 +54,35 @@ class BottleService
   # creates a bottle and corresponding cepages, appellation and producer from a cave entry bottle
   @propagate: (params) ->
     bottle = params.toJSON()
+    prms = []
+    # propagate bottle
     # checks if bottle exists before creating duplicate
-    BottleService.find bottle
+    prms.push( BottleService.find bottle
     .then (bottles) ->
       if bottles.length == 0
         return BottleService.create bottle
       else
         return Promise.resolve()
-  
+    )
+
+    # propagate appellation
+    prms.push( Appellation.findOne {name: bottle.appellation}
+    .then (app) ->
+      if !app?
+        return Appellation.create {name: bottle.appellation, createDate: moment.utc()}
+      else
+        return Promise.resolve()
+    )
+
+    # propage cepages
+    # cpgPrm = bottle.cepages.reduce (prom, cpg) ->
+    #   return Cepage.findOne {name: cpg}
+    #   .then (cepage) ->
+    #     if !cepage?
+    #       Cepage.c
+    # , Promise.resolve()
+    # prms.push cpgPrm
+    return Promise.all prms
+
+
 module.exports = exports = BottleService
