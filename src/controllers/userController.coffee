@@ -33,6 +33,7 @@ class UserController
     try
       bottleSrv.validate req.params.bottle
     catch error
+      logger.info new VError error, "invalid bottle parameters"
       res.send 400, error.message
       return next()
 

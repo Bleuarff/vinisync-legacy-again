@@ -8,7 +8,7 @@ Producer = require '../models/producer.js'
 
 class BottleService
 
-  @mandatoryFields = ['appellation', 'producer', 'year']
+  @mandatoryFields = ['appellation', 'producer']
 
   # checks mandatory parameters are here
   @validate: (bottle) ->
@@ -19,7 +19,7 @@ class BottleService
       if !bottle[f]? || bottle[f] == ''
         throw new VError 'missing params %s', f
 
-    if typeof bottle.year != 'number' || bottle.year < 1800 || bottle.year > 2100
+    if bottle.year && (typeof bottle.year != 'number' || bottle.year < 1800 || bottle.year > 2100)
       throw new VError 'year must be an integer between 1800 and 2100'
     return true
 
