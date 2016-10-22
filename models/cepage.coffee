@@ -12,5 +12,5 @@ cepageSchema.pre 'save', (next) ->
   this.updateDate = moment.utc()
   next()
 
-Cepage = mongoose.model 'Cepage', cepageSchema, 'cepages'
+Cepage = mongoose.model 'Cepage', cepageSchema
 module.exports = exports = Cepage

@@ -16,6 +16,6 @@ bottleSchema.pre 'save', (next) ->
   this.updateDate = moment.utc()
   next()
 
-Bottle = mongoose.model 'Bottle', bottleSchema, 'bottles'
+Bottle = mongoose.model 'Bottle', bottleSchema
 
 module.exports = exports = Bottle

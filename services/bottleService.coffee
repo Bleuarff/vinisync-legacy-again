@@ -4,6 +4,7 @@ logger = require('../utils/logger.js').create 'userService'
 Appellation = require '../models/appellation.js'
 Bottle = require '../models/bottle.js'
 Cepage = require '../models/cepage.js'
+Producer = require '../models/producer.js'
 
 class BottleService
 
@@ -68,13 +69,23 @@ class BottleService
     )
 
     # propagate appellation
-    prms.push( Appellation.findOne {name: bottle.appellation}
+    prms.push(Appellation.findOne {name: bottle.appellation}
     .then (app) ->
       if !app?
         logger.debug "appellation #{bottle.appellation} not found"
         return Appellation.create {name: bottle.appellation, createDate: moment.utc()}
       else
         logger.debug 'appellation found'
+        return Promise.resolve()
+    )
+
+    prms.push(Producer.findOne {name: bottle.producer}
+    .then (producer) ->
+      if !producer?
+        logger.debug "producer #{bottle.producer} not found"
+        return Producer.create {name: bottle.producer, createDate: moment.utc()}
+      else
+        logger.debug 'producer found'
         return Promise.resolve()
     )
 

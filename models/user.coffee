@@ -34,6 +34,6 @@ userSchema.pre 'save', (next) ->
   this.updateDate = moment.utc()
   next()
 
-User = mongoose.model 'User', userSchema, 'users'
+User = mongoose.model 'User', userSchema
 
 module.exports = exports = User
