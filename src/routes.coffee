@@ -7,8 +7,10 @@ session = require './utils/session.js'
 csrf = require './utils/csrf.js'
 # declare controllers
 user = require './controllers/userController.js'
+appellation = require './controllers/appellationController.js'
 bottle = require './controllers/bottleController.js'
 cepage = require './controllers/cepageController.js'
+producer = require './controllers/producerController.js'
 
 registerRoutes = (server) ->
   logger.debug 'registering handlers & routes'
@@ -51,5 +53,7 @@ registerRoutes = (server) ->
   server.get '/bottle/:id', bottle.get
 
   server.get '/cepage', cepage.index
+  server.get '/appellation', appellation.index
+  server.get '/producer', producer.index
 
 module.exports.register = exports.register = registerRoutes
