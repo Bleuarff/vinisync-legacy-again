@@ -8,6 +8,7 @@ csrf = require './utils/csrf.js'
 # declare controllers
 user = require './controllers/userController.js'
 bottle = require './controllers/bottleController.js'
+cepage = require './controllers/cepageController.js'
 
 registerRoutes = (server) ->
   logger.debug 'registering handlers & routes'
@@ -48,5 +49,7 @@ registerRoutes = (server) ->
   server.put '/bottle', bottle.create
   server.get '/bottle', bottle.find
   server.get '/bottle/:id', bottle.get
+
+  server.get '/cepage', cepage.index
 
 module.exports.register = exports.register = registerRoutes

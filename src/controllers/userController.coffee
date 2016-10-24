@@ -53,6 +53,7 @@ class UserController
 
       # if so, update counter
       if in_cave?
+        # TODO: if cepages provided and != from existing entry, update
         logger.debug "found entry, update"
         in_cave.count += req.params.count
         in_cave.updateDate = moment.utc()

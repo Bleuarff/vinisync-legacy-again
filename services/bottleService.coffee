@@ -5,6 +5,7 @@ Appellation = require '../models/appellation.js'
 Bottle = require '../models/bottle.js'
 Cepage = require '../models/cepage.js'
 Producer = require '../models/producer.js'
+normalizer = require './normalizer.js'
 
 class BottleService
 
@@ -89,13 +90,14 @@ class BottleService
         return Promise.resolve()
     )
 
-    # propage cepages
+    # propagate cepages sequentially
     cpgPrm = bottle.cepages.reduce (prom, cpg) ->
-      return Cepage.findOne {name: cpg}
+      stdCpg = normalizer.getStandardForm cpg
+      return Cepage.findOne {stdForm: stdCpg}
       .then (cepage) ->
         if !cepage?
           logger.debug "cepage #{cpg} not found"
-          return Cepage.create {name: cpg, createDate: moment.utc()}
+          return Cepage.create {name: cpg, stdForm: stdCpg, createDate: moment.utc()}
         else
           logger.debug 'cepage found'
           return Promise.resolve()
@@ -103,6 +105,5 @@ class BottleService
     prms.push cpgPrm
 
     return Promise.all prms
-
 
 module.exports = exports = BottleService
