@@ -5,6 +5,7 @@ producerSchema = new mongoose.Schema
   createDate: Date
   updateDate: Date
   name: String
+  stdForm: String # standardized form of the name
 
 # Save hook: updates version and timestamp
 producerSchema.pre 'save', (next) ->

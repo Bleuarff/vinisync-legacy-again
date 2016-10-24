@@ -70,21 +70,23 @@ class BottleService
     )
 
     # propagate appellation
-    prms.push(Appellation.findOne {name: bottle.appellation}
+    stdApp = normalizer.getStandardForm bottle.appellation
+    prms.push(Appellation.findOne {stdForm: stdApp}
     .then (app) ->
       if !app?
         logger.debug "appellation #{bottle.appellation} not found"
-        return Appellation.create {name: bottle.appellation, createDate: moment.utc()}
+        return Appellation.create {name: bottle.appellation, stdForm: stdApp, createDate: moment.utc()}
       else
         logger.debug 'appellation found'
         return Promise.resolve()
     )
 
-    prms.push(Producer.findOne {name: bottle.producer}
+    stdPrd = normalizer.getStandardForm bottle.producer
+    prms.push(Producer.findOne {stdForm: stdPrd}
     .then (producer) ->
       if !producer?
         logger.debug "producer #{bottle.producer} not found"
-        return Producer.create {name: bottle.producer, createDate: moment.utc()}
+        return Producer.create {name: bottle.producer, stdForm: stdPrd, createDate: moment.utc()}
       else
         logger.debug 'producer found'
         return Promise.resolve()

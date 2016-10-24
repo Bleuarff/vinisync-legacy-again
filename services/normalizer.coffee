@@ -36,8 +36,8 @@ class Normalizer
 
   # get standard, lowercase, non-accented string, with non-alphanumeric chars converted to space
   @getStandardForm: (input) ->
-    # lowercase done at normalization step
-    value = Normalizer.undiacritics.removeAll input
+    value = input.toLowerCase()
+    value = Normalizer.undiacritics.removeAll value
     value = value.replace /[^a-z0-9]/gi, ' '
     return value
 
