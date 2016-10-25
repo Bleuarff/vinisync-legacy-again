@@ -38,7 +38,7 @@ class Normalizer
   @getStandardForm: (input) ->
     value = input.toLowerCase()
     value = Normalizer.undiacritics.removeAll value
-    value = value.replace /[^a-z0-9]/gi, ' '
+    value = value.replace /[^a-z0-9-]/gi, ' '
     return value
 
 
