@@ -1,4 +1,4 @@
-Undiacritics = require './undiacritics.js'
+Undiacritics = require '../utils/undiacritics.js'
 
 # Normalize bottle properties, to ensure consistency
 # Normalization should be done at the controller level, and services assume correct parameters.
