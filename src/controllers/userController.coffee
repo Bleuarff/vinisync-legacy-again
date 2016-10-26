@@ -1,5 +1,6 @@
 VError = require 'verror'
 moment = require 'moment'
+ObjectId = require('mongoose').Types.ObjectId
 logger = require('../utils/logger.js').create 'userController'
 utils = require '../utils/utils.js'
 User = require '../models/user.js'
@@ -86,6 +87,27 @@ class UserController
     .catch (err) ->
       logger.error new VError err, 'error adding bottle to cave `%s`', id
       res.send 500, "Error adding bottle"
+      return next()
+
+
+  # increments an entry count by 1
+  @increment = (req, res, next) ->
+    try
+      caveId = new ObjectId req.params.id
+      entryId = new ObjectId req.params.entryId
+    catch ex
+      res.send 400, 'invalid parameter'
+
+    userSrv.updateEntryCount caveId, entryId, 1
+    .then (ok) ->
+      if ok
+        res.send 204
+      else
+        res.send 404, 'cave/entry not found'
+      return next()
+    .catch (err) ->
+      logger.error new VError 'Error incrementing entry %s for user %s', entryId, caveId
+      res.send 500, 'error incrementing bottle count'
       return next()
 
 module.exports = exports = UserController

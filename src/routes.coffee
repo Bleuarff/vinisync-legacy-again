@@ -47,6 +47,9 @@ registerRoutes = (server) ->
   # then register routes
   server.get '/cave/:id', user.get
   server.put '/cave/:id/bottle', user.addBottle
+  # server.post '/cave/:id/bottle/:entryId', user.updateBottle
+  server.post '/cave/:id/entry/:entryId/increment', user.increment
+  # server.post '/cave/:id/entry/:entryId/decrement'
 
   server.put '/bottle', bottle.create
   server.get '/bottle', bottle.find

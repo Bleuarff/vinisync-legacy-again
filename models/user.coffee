@@ -34,6 +34,13 @@ userSchema.pre 'save', (next) ->
   this.updateDate = moment.utc()
   next()
 
+# update hook
+userSchema.pre 'update', () ->
+  this.update {}, {
+    $inc: {__v: 1}
+    $set: {updateDate: moment.utc()}
+  }
+
 User = mongoose.model 'User', userSchema
 
 module.exports = exports = User
