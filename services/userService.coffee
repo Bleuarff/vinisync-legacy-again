@@ -21,16 +21,4 @@ class UserService
       logger.debug "user: #{user.name}"
       return Promise.resolve user
 
-  # updates entry count by the given increment
-  @updateEntryCount: (caveId, entryId, increment) ->
-    User.update {_id: caveId, 'bottles._id': entryId}, {
-      $inc: {'bottles.$.count': increment}
-      $set: {'bottles.$.updateDate': moment.utc()}
-    }
-    .then (r) ->
-      # resolves with wether a match was found and updated
-      return Promise.resolve(r.nModified == 1)
-    .catch (err) ->
-      throw new VError err, 'Error updating entry counter for bottle %s in cave %s', entryId, caveId
-
 module.exports = exports = UserService

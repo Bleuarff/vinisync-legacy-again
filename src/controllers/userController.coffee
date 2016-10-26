@@ -99,12 +99,16 @@ class UserController
       res.send 400, 'invalid parameters'
       return next()
 
-    userSrv.updateEntryCount caveId, entryId, 1
-    .then (ok) ->
-      if ok
-        res.send 204
-      else
+    User.findOneAndUpdate {_id: caveId, 'bottles._id': entryId}, {
+      $inc: {'bottles.$.count': 1}
+      $set: {'bottles.$.updateDate': moment.utc()}
+    }, {new: true}
+    .then (cave) ->
+      if !cave?
         res.send 404, 'cave/entry not found'
+      else
+        entry = cave.bottles.find (x) -> x._id.equals entryId
+        res.send 200, {count: entry.count}
       return next()
     .catch (err) ->
       logger.error new VError 'Error incrementing entry %s for user %s', entryId, caveId
@@ -112,7 +116,7 @@ class UserController
       return next()
 
 
-  # decrements an entry count by 1, or remove entry
+  # decrements an entry count by 1, or removes entry
   @decrement = (req, res, next) ->
     try
       caveId = new ObjectId req.params.id
