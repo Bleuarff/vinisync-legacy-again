@@ -96,7 +96,8 @@ class UserController
       caveId = new ObjectId req.params.id
       entryId = new ObjectId req.params.entryId
     catch ex
-      res.send 400, 'invalid parameter'
+      res.send 400, 'invalid parameters'
+      return next()
 
     userSrv.updateEntryCount caveId, entryId, 1
     .then (ok) ->
@@ -109,5 +110,41 @@ class UserController
       logger.error new VError 'Error incrementing entry %s for user %s', entryId, caveId
       res.send 500, 'error incrementing bottle count'
       return next()
+
+
+  # decrements an entry count by 1, or remove entry
+  @decrement = (req, res, next) ->
+    try
+      caveId = new ObjectId req.params.id
+      entryId = new ObjectId req.params.entryId
+    catch ex
+      res.send 400, 'invalid parameters'
+      return next()
+
+    newCount = -1
+
+    User.findOne {_id: caveId, 'bottles._id': entryId}
+    .then (cave) ->
+      if !cave?
+        throw utils.error null, 'cave/entry not found', 404
+
+      idx = cave.bottles.findIndex (x) -> x._id.equals entryId
+      entry = cave.bottles[idx]
+      newCount = entry.count -= 1
+      entry.updateDate = moment.utc()
+
+      # remove entry if no more bottle
+      if entry.count <= 0
+        cave.bottles.splice idx, 1
+
+      cave.save()
+    .then () ->
+      res.send 200, {count: newCount}
+      return next()
+    .catch (err) ->
+      logger.error new VError err,'Error decrementing entry  %s for user %s', entryId, caveId
+      res.send err.status || 500, 'error decrementing bottle count'
+      return next()
+
 
 module.exports = exports = UserController
