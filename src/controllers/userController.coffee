@@ -5,7 +5,7 @@ logger = require('../utils/logger.js').create 'userController'
 utils = require '../utils/utils.js'
 User = require '../models/user.js'
 userSrv = require '../services/userService.js'
-bottleSrv = require '../services/bottleService.js'
+wineSrv = require '../services/wineService.js'
 normalizer = require '../services/normalizer.js'
 
 class UserController
@@ -28,18 +28,18 @@ class UserController
       next()
 
 
-  # adds a bottle to the cave
-  @addBottle = (req, res, next) ->
+  # adds a wine to the cave
+  @addWine = (req, res, next) ->
     id = req.params.id
     try
-      bottleSrv.validate req.params.bottle
+      wineSrv.validate req.params.wine
     catch error
-      logger.info new VError error, "invalid bottle parameters"
+      logger.info new VError error, "invalid wine parameters"
       res.send 400, error.message
       return next()
 
-    bottle = normalizer.normalize req.params.bottle
-    logger.debug "add to cave: #{bottle.appellation}, #{bottle.producer}, #{bottle.name}, #{bottle.year} / count: #{req.params.count}"
+    wine = normalizer.normalize req.params.wine
+    logger.debug "add to cave: #{wine.appellation}, #{wine.producer}, #{wine.name}, #{wine.year} / count: #{req.params.count}"
     in_cave = null
 
     User.findById id
@@ -47,10 +47,10 @@ class UserController
       if !user?
         throw utils.error null, "User #{id} not found", 404
 
-      # checks wether bottle is already in this cave
+      # checks wether wine is already in this cave
       in_cave = user.bottles.find (x) ->
-        x.bottle.appellation == bottle.appellation && x.bottle.producer == bottle.producer &&
-        x.bottle.name == bottle.name && x.bottle.year == bottle.year
+        x.wine.appellation == wine.appellation && x.wine.producer == wine.producer &&
+        x.wine.name == wine.name && x.wine.year == wine.year
 
       # if so, update counter
       if in_cave?
@@ -62,7 +62,7 @@ class UserController
         # otherwise create new entry in array
         logger.debug 'entry not found, create'
         user.bottles.push {
-          bottle: bottle
+          wine: wine
           count: req.params.count
           createDate: moment.utc()
           updateDate: moment.utc()
@@ -76,17 +76,17 @@ class UserController
         entry = user.bottles[user.bottles.length - 1]
       res.send 200, entry
 
-      # add to bottle collection (and subsequently to appellation, producer, cepages collections)
-      bottleSrv.propagate entry.bottle
+      # add to winee collection (and subsequently to appellation, producer, cepages collections)
+      wineSrv.propagate entry.wine
       .then () ->
         return next()
       .catch (err) ->
-        # on error, log but do not send error to client - bottle has been added to the cave OK
-        logger.error new VError err, 'Error creating bottle'
+        # on error, log but do not send error to client - wine has been added to the cave OK
+        logger.error new VError err, 'Error creating wine'
         return next()
     .catch (err) ->
-      logger.error new VError err, 'error adding bottle to cave `%s`', id
-      res.send 500, "Error adding bottle"
+      logger.error new VError err, 'error adding wine to cave `%s`', id
+      res.send 500, "Error adding wine"
       return next()
 
 
@@ -112,7 +112,7 @@ class UserController
       return next()
     .catch (err) ->
       logger.error new VError 'Error incrementing entry %s for user %s', entryId, caveId
-      res.send 500, 'error incrementing bottle count'
+      res.send 500, 'error incrementing entry count'
       return next()
 
 
@@ -137,7 +137,7 @@ class UserController
       newCount = entry.count -= 1
       entry.updateDate = moment.utc()
 
-      # remove entry if no more bottle
+      # remove entry if no more bottles
       if entry.count <= 0
         cave.bottles.splice idx, 1
 
@@ -147,7 +147,7 @@ class UserController
       return next()
     .catch (err) ->
       logger.error new VError err,'Error decrementing entry  %s for user %s', entryId, caveId
-      res.send err.status || 500, 'error decrementing bottle count'
+      res.send err.status || 500, 'error decrementing entry count'
       return next()
 
 

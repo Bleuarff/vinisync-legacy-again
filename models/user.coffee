@@ -9,7 +9,7 @@ userSchema = new mongoose.Schema
   name: String
   email: String
   bottles: [{
-    bottle: { # full denormalization!
+    wine: { # full denormalization!
       appellation: String
       producer: String
       name: String

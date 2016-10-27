@@ -8,7 +8,7 @@ csrf = require './utils/csrf.js'
 # declare controllers
 user = require './controllers/userController.js'
 appellation = require './controllers/appellationController.js'
-bottle = require './controllers/bottleController.js'
+wine = require './controllers/wineController.js'
 cepage = require './controllers/cepageController.js'
 producer = require './controllers/producerController.js'
 
@@ -46,14 +46,14 @@ registerRoutes = (server) ->
 
   # then register routes
   server.get '/cave/:id', user.get
-  server.put '/cave/:id/bottle', user.addBottle
+  server.put '/cave/:id/wine', user.addWine
   # server.post '/cave/:id/bottle/:entryId', user.updateBottle
   server.post '/cave/:id/entry/:entryId/increment', user.increment
   server.post '/cave/:id/entry/:entryId/decrement', user.decrement
 
-  server.put '/bottle', bottle.create
-  server.get '/bottle', bottle.find
-  server.get '/bottle/:id', bottle.get
+  server.put '/wine', wine.create
+  server.get '/wine', wine.find
+  server.get '/wine/:id', wine.get
 
   server.get '/cepage', cepage.index
   server.get '/appellation', appellation.index

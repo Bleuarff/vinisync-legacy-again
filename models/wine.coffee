@@ -1,7 +1,7 @@
 moment = require 'moment'
 mongoose = require 'mongoose'
 
-bottleSchema = new mongoose.Schema
+wineSchema = new mongoose.Schema
   createDate: Date
   updateDate: Date
   appellation: String
@@ -11,11 +11,11 @@ bottleSchema = new mongoose.Schema
   cepages: [String]
 
 # Save hook: updates version and timestamp
-bottleSchema.pre 'save', (next) ->
+wineSchema.pre 'save', (next) ->
   this.increment()
   this.updateDate = moment.utc()
   next()
 
-Bottle = mongoose.model 'Bottle', bottleSchema
+Wine = mongoose.model 'Wine', wineSchema
 
-module.exports = exports = Bottle
+module.exports = exports = Wine

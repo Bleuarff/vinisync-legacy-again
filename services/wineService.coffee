@@ -1,31 +1,31 @@
 moment = require 'moment'
 VError = require 'verror'
-logger = require('../utils/logger.js').create 'userService'
+logger = require('../utils/logger.js').create 'wineService'
 Appellation = require '../models/appellation.js'
-Bottle = require '../models/bottle.js'
+Wine = require '../models/wine.js'
 Cepage = require '../models/cepage.js'
 Producer = require '../models/producer.js'
 normalizer = require './normalizer.js'
 
-class BottleService
+class WineService
 
   @mandatoryFields = ['appellation', 'producer']
 
   # checks mandatory parameters are here
-  @validate: (bottle) ->
-    if !bottle?
-      throw new VError 'missing param bottle'
+  @validate: (wine) ->
+    if !wine?
+      throw new VError 'missing param wine'
 
-    for f in BottleService.mandatoryFields
-      if !bottle[f]? || bottle[f] == ''
+    for f in WineService.mandatoryFields
+      if !wine[f]? || wine[f] == ''
         throw new VError 'missing params %s', f
 
-    if bottle.year && (typeof bottle.year != 'number' || bottle.year < 1800 || bottle.year > 2100)
+    if wine.year && (typeof wine.year != 'number' || wine.year < 1800 || wine.year > 2100)
       throw new VError 'year must be an integer between 1800 and 2100'
     return true
 
 
-  # returns bottles that match the given criteria
+  # returns wines that match the given criteria
   @find: (appellation, producer, name, year) ->
     # text index includes all text fields (appellation, producer, name). A search can match results from any of these fields.
     terms = []
@@ -41,59 +41,58 @@ class BottleService
       query.$text = { $search: terms.join ' ' }
     if year
       query.year = year
-    return Bottle.find query
+    return Wine.find query
 
 
-  # creates a new bottle
+  # creates a new wine
   @create: (params) ->
-    bottle = new Bottle params
-    # bottle.cepages = bottle.cepages || []
-    bottle.createDate = bottle.updateDate = moment.utc()
-    return bottle.save()
+    wine = new Wine params
+    wine.createDate = wine.updateDate = moment.utc()
+    return wine.save()
 
 
   # propagates data after creating a cave entry
-  # creates a bottle and corresponding cepages, appellation and producer from a cave entry bottle
+  # creates a wine and corresponding cepages, appellation and producer from a cave entry
   @propagate: (params) ->
-    bottle = params.toJSON()
+    wine = params.toJSON()
     prms = []
-    # propagate bottle
-    # checks if bottle exists before creating duplicate
-    prms.push( BottleService.find bottle.appellation, bottle.producer, bottle.name, bottle.year
-    .then (bottles) ->
-      if bottles.length == 0
-        logger.debug 'bottle not found, create'
-        return BottleService.create bottle
+    # propagate wine info
+    # checks if wine exists before creating duplicate
+    prms.push( WineService.find wine.appellation, wine.producer, wine.name, wine.year
+    .then (wines) ->
+      if wines.length == 0
+        logger.debug 'wine not found, create'
+        return WineService.create wine
       else
-        logger.debug 'bottle found, no update'
+        logger.debug 'wine found, no update'
         return Promise.resolve()
     )
 
     # propagate appellation
-    stdApp = normalizer.getStandardForm bottle.appellation
+    stdApp = normalizer.getStandardForm wine.appellation
     prms.push(Appellation.findOne {stdForm: stdApp}
     .then (app) ->
       if !app?
-        logger.debug "appellation #{bottle.appellation} not found"
-        return Appellation.create {name: bottle.appellation, stdForm: stdApp, createDate: moment.utc()}
+        logger.debug "appellation #{wine.appellation} not found"
+        return Appellation.create {name: wine.appellation, stdForm: stdApp, createDate: moment.utc()}
       else
         logger.debug 'appellation found'
         return Promise.resolve()
     )
 
-    stdPrd = normalizer.getStandardForm bottle.producer
+    stdPrd = normalizer.getStandardForm wine.producer
     prms.push(Producer.findOne {stdForm: stdPrd}
     .then (producer) ->
       if !producer?
-        logger.debug "producer #{bottle.producer} not found"
-        return Producer.create {name: bottle.producer, stdForm: stdPrd, createDate: moment.utc()}
+        logger.debug "producer #{wine.producer} not found"
+        return Producer.create {name: wine.producer, stdForm: stdPrd, createDate: moment.utc()}
       else
         logger.debug 'producer found'
         return Promise.resolve()
     )
 
     # propagate cepages sequentially
-    cpgPrm = bottle.cepages.reduce (prom, cpg) ->
+    cpgPrm = wine.cepages.reduce (prom, cpg) ->
       stdCpg = normalizer.getStandardForm cpg
       return Cepage.findOne {stdForm: stdCpg}
       .then (cepage) ->
@@ -108,4 +107,4 @@ class BottleService
 
     return Promise.all prms
 
-module.exports = exports = BottleService
+module.exports = exports = WineService

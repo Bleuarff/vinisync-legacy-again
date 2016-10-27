@@ -1,6 +1,6 @@
 Undiacritics = require '../utils/undiacritics.js'
 
-# Normalize bottle properties, to ensure consistency
+# Normalize wine properties, to ensure consistency
 # Normalization should be done at the controller level, and services assume correct parameters.
 class Normalizer
 
@@ -15,24 +15,24 @@ class Normalizer
     [/\b(Sainte?)\s+\b/g, '$1-'] # hyphenate Saint(e) when followed by a word
   ]
 
-  @normalize: (bottle) ->
-    for key in Object.keys bottle
-      if typeof bottle[key] == 'string'
-        value = bottle[key]
+  @normalize: (wine) ->
+    for key in Object.keys wine
+      if typeof wine[key] == 'string'
+        value = wine[key]
         continue if value == null
 
         value = Normalizer._toTitleCase value
         value = Normalizer._replacePatterns value
-        bottle[key] = value
+        wine[key] = value
       else if key =='cepages'
-        bottle.cepages = bottle.cepages.map (x) -> x.toLowerCase()
+        wine.cepages = wine.cepages.map (x) -> x.toLowerCase()
 
-    if bottle.name == null || bottle.name == ''
-      delete bottle.name
+    if wine.name == null || wine.name == ''
+      delete wine.name
 
-    bottle.cepages = bottle.cepages || []
+    wine.cepages = wine.cepages || []
 
-    return bottle
+    return wine
 
   # get standard, lowercase, non-accented string, with non-alphanumeric chars converted to space
   @getStandardForm: (input) ->
@@ -52,7 +52,7 @@ class Normalizer
   # Converts input to title case, except stop words not at the beginning
   @_toTitleCase: (input) ->
     # TODO: handle more accented chars
-    rx = /\b[\wàäâéèêëìïîôöòüûù]+\b/gi
+    rx = /\b[\wàäâéèêëìïîôöòüûùç]+\b/gi
     return input.replace rx, (match, offset) ->
       if (Normalizer.stopWords.indexOf(match) > -1 && offset  > 0)
         rep = match
