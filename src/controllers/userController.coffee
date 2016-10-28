@@ -45,7 +45,7 @@ class UserController
     User.findById id
     .then (user) ->
       if !user?
-        throw utils.error null, "User #{id} not found", 404
+        throw utils.error "User #{id} not found", 404
 
       # checks wether wine is already in this cave
       in_cave = user.bottles.find (x) ->
@@ -130,7 +130,7 @@ class UserController
     User.findOne {_id: caveId, 'bottles._id': entryId}
     .then (cave) ->
       if !cave?
-        throw utils.error null, 'cave/entry not found', 404
+        throw utils.error 'cave/entry not found', 404
 
       idx = cave.bottles.findIndex (x) -> x._id.equals entryId
       entry = cave.bottles[idx]
@@ -170,12 +170,12 @@ class UserController
     User.findById caveId
     .then (cave) ->
       if !cave?
-        throw utils.error null, 'cave not found', 404
+        throw utils.error 'cave not found', 404
 
       # looks for entry
       entry = cave.bottles.find (x) -> x._id.equals entryId
       if !entry?
-        throw utils.error null, 'entry not found', 404
+        throw utils.error 'entry not found', 404
 
       # build object with update values, or existing values for mandatory fields if not provided
       update = {

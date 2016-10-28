@@ -19,10 +19,10 @@ class WineService
 
     for f in WineService.mandatoryFields
       if !wine[f]? || wine[f] == ''
-        throw utils.error null, "missing params #{f}", 400
+        throw utils.error "missing params #{f}", 400
 
     if wine.year && (typeof wine.year != 'number' || wine.year < 1800 || wine.year > 2100)
-      throw utils.error null, 'year must be an integer between 1800 and 2100', 400
+      throw utils.error 'year must be an integer between 1800 and 2100', 400
     return true
 
 

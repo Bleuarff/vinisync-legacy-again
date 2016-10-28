@@ -109,8 +109,11 @@ class Utils
     return res
 
   # Creates and returns a new VError instance
-  @error = (innerErr, message, status) ->
-    err = new VError innerErr, message
+  @error = (message, status = 500, innerErr) ->
+    if innerErr
+      err = new VError innerErr, message
+    else
+      err = new VError message
     err.status = status
     return err
 
