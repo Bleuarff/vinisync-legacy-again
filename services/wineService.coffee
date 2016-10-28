@@ -1,6 +1,7 @@
 moment = require 'moment'
 VError = require 'verror'
 logger = require('../utils/logger.js').create 'wineService'
+utils = require '../utils/utils.js'
 Appellation = require '../models/appellation.js'
 Wine = require '../models/wine.js'
 Cepage = require '../models/cepage.js'
@@ -18,10 +19,10 @@ class WineService
 
     for f in WineService.mandatoryFields
       if !wine[f]? || wine[f] == ''
-        throw new VError 'missing params %s', f
+        throw utils.error null, "missing params #{f}", 400
 
     if wine.year && (typeof wine.year != 'number' || wine.year < 1800 || wine.year > 2100)
-      throw new VError 'year must be an integer between 1800 and 2100'
+      throw utils.error null, 'year must be an integer between 1800 and 2100', 400
     return true
 
 

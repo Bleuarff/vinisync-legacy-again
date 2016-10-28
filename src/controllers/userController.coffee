@@ -151,4 +151,71 @@ class UserController
       return next()
 
 
+  # updates an entry with the given params
+  @updateEntry = (req, res, next) ->
+    try
+      caveId = new ObjectId req.params.id
+      entryId = new ObjectId req.params.entryId
+    catch ex
+      res.send 400, 'invalid parameters'
+      return next()
+
+    # return error if no parameter provided
+    if !req.params.appellation? && !req.params.producer? &&!req.params.name? && !req.params.year? && !req.params.cepages?
+      res.send 400, 'no parameter to update'
+      return next()
+
+    entry = null
+
+    User.findById caveId
+    .then (cave) ->
+      if !cave?
+        throw utils.error null, 'cave not found', 404
+
+      # looks for entry
+      entry = cave.bottles.find (x) -> x._id.equals entryId
+      if !entry?
+        throw utils.error null, 'entry not found', 404
+
+      # build object with update values, or existing values for mandatory fields if not provided
+      update = {
+        appellation: req.params.appellation || entry.wine.appellation
+        producer: req.params.producer || entry.wine.producer
+        name: req.params.name
+        year: req.params.year
+        cepages: req.params.cepages || []
+      }
+
+      wineSrv.validate update
+      update = normalizer.normalize update
+
+      # applies new values
+      entry.wine.appellation = update.appellation
+      entry.wine.producer = update.producer
+      if update.name?
+        entry.wine.name = update.name
+      if update.year?
+        entry.wine.year = update.year
+      if update.cepages?
+        entry.wine.cepages = update.cepages
+
+      cave.save()
+    .then () ->
+      res.send 200, entry
+      # add to wine collection (and subsequently to appellation, producer, cepages collections)
+      wineSrv.propagate entry.wine
+      .then () ->
+        return next()
+      .catch (err) ->
+        # on error, log but do not send error to client - wine has been added to the cave OK
+        logger.error new VError err, 'Error creating wine'
+        return next()
+    .catch (err) ->
+      logger.error new VError err, 'Error updating entry %s for user %s', req.params.entryId, req.params.id
+      switch err.status
+        when 400 then msg = 'invalid parameters'
+        else msg = 'error updating entry'
+      res.send err.status || 500, msg
+      return next()
+
 module.exports = exports = UserController
