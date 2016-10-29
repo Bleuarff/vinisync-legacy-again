@@ -15,6 +15,7 @@ userSchema = new mongoose.Schema
       name: String
       year: Number
       cepages: [String]
+      pictures: [String]
     }
     count: Number
     location: String

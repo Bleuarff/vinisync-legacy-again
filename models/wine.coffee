@@ -9,6 +9,7 @@ wineSchema = new mongoose.Schema
   name: String
   year: Number
   cepages: [String]
+  pictures: [String]
 
 # Save hook: updates version and timestamp
 wineSchema.pre 'save', (next) ->
