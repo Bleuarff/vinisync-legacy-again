@@ -1,0 +1,7 @@
+{
+  "name": "vinisync",
+  "short_name": "vinisync",
+  "description": "plain, simple cellar management",
+  "start_url": "/",
+  "display": "standalone"
+}

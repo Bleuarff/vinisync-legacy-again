@@ -13,13 +13,12 @@ module.exports = (grunt) ->
         src: ['*.coffee', '**/*.coffee']
         dest: 'app/'
         ext: '.js'
-      # client:
-      #   expand: true
-      #   cwd: 'assets/coffee'
-      #   src: ['**/*.coffee', '!presenters/**'] # ! indicates an exclusion pattern
-      #   dest: 'assets/js/'
-      #   ext: '.js'
-      #   extDot: 'last'
+      client:
+        expand: true
+        cwd: 'assets/elements'
+        src: ['*/*.coffee']
+        dest: 'assets/elements/'
+        ext: '.js'
       deps:
         expand: true
         src: ['utils/*.coffee', 'models/*.coffee', 'services/*.coffee']
@@ -30,7 +29,7 @@ module.exports = (grunt) ->
         max_line_length: { level: 'ignore' }
         eol_last: { level: 'warn' }
       srv: ['src/**/*.coffee']
-      # client: ['assets/coffee/**/*.coffee']
+      client: ['assets/elements/*/*.coffee']
       deps: ['utils/**/*.coffee', 'models/*.coffee', 'services/*.coffee']
     # concat:
     #   less:

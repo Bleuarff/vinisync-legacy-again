@@ -32,6 +32,7 @@ build/Release
 # Dependency directories
 node_modules
 jspm_packages
+assets/bower_components
 
 # Optional npm cache directory
 .npm
@@ -44,3 +45,6 @@ config
 
 # compiled server files
 app
+
+# compiled elements
+assets/elements/*/*.js
