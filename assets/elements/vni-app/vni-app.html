@@ -1,0 +1,82 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+
+<dom-module id="vni-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100vh;
+      }
+
+      paper-scroll-header-panel {
+        height: 100%;
+      }
+
+      paper-toolbar {
+        --paper-toolbar-background: darkred;
+      }
+
+      .pseudo-title {
+        flex: 1;
+        margin-left: 56px;
+      }
+
+      paper-toolbar a {
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 2em;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      paper-toolbar a:last-child{
+        margin-right: 0;
+      }
+
+    </style>
+
+    <app-location use-hash-as-path route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+
+    <paper-scroll-header-panel class="flex">
+      <paper-toolbar>
+        <!-- <span class='title'>[[name]]</span> -->
+        <!-- TODO: vinisync icon, return to home page -->
+        <div class="pseudo-title">
+          <a  href="#/home">Home</a>
+          <a  href="#/cave">Cave</a>
+        </div>
+        <paper-icon-button icon="add">Ajouter une entrée</paper-icon-button>
+        <paper-icon-button icon="settings">Settings</paper-icon-button>
+      </paper-toolbar>
+
+      <!-- <span>Current page: [[page]]</span> -->
+      <iron-pages
+          selected="[[page]]"
+          attr-for-selected="name"
+          fallback-selection="z404"
+          role="main">
+        <vni-home name="home"></vni-home>
+        <vni-cave name="cave"></vni-cave>
+        <vni-z404 name="z404"></vni-z404>
+      </iron-pages>
+    </paper-scroll-header-panel>
+
+  </template>
+  <script src="vni-app.js"></script>
+</dom-module>

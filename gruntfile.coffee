@@ -70,6 +70,9 @@ module.exports = (grunt) ->
       deps:
         files: ['models/*.coffee', 'utils/*.coffee', 'services/*.coffee']
         tasks: ['coffeelint:deps', 'clean:deps', 'coffee:deps']
+      client:
+        files: ['assets/elements/*/*.coffee']
+        tasks: ['coffeelint:client', 'coffee:client']
     clean:
       options: {force: true}
       srv: ['app/*.js', 'app/controllers/**']
