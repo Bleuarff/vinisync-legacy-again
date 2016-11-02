@@ -45,6 +45,8 @@ registerRoutes = (server) ->
   # server.use csrf.checkToken # CSRF verification
 
   # then register routes
+  server.post '/user/signin', user.signin
+
   server.get '/cave/:id', user.get
   server.put '/cave/:id/wine', user.addWine
   server.post '/cave/:id/entry/:entryId/increment', user.increment

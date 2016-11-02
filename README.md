@@ -15,6 +15,10 @@ Create *config/config.yml* with the following:
       duration: 3600 # session duration, in seconds
       appName: 'vinisync'
 
+    auth:
+      googleApiId: [googleapis's project id]
+
+
     log:
       level: debug
       output:
@@ -25,4 +29,4 @@ Then:
 
     npm -g grunt-cli
     npm install
-    grunt # runs local server 
+    grunt # runs local server

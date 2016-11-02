@@ -14,6 +14,9 @@ Polymer({
     }
   }
 
+  listeners:
+    'redirect': 'onRedirect'
+
   observers: [
     '_routePageChanged(routeData.page)'
   ],
@@ -31,10 +34,17 @@ Polymer({
   _showPage404: () ->
     this.page = 'z404'
 
+  onRedirect: (e) ->
+    if e.detail && e.detail.path
+      this.set 'route.path', e.detail.path
+
 })
 
 # App object
 class App
+
+  user: null # base user info (without entries)
+  csrfToken: null
 
   # Sends an ajax request
   send: (url, payload = {}, verb = 'GET') ->

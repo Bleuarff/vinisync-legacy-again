@@ -6,8 +6,10 @@ ObjectId = mongoose.Schema.Types.ObjectId
 userSchema = new mongoose.Schema
   createDate: Date
   updateDate: Date
-  name: String
   email: String
+  firstName: String
+  lastName: String
+  enabled: Boolean
   bottles: [{
     wine: { # full denormalization!
       appellation: String

@@ -21,4 +21,20 @@ class UserService
       logger.debug "user: #{user.name}"
       return Promise.resolve user
 
+  @create: (profile) ->
+    logger.info 'create user'
+    profile.email = profile.email.toLowerCase()
+    # Check email is not already registered for that application
+    User.findOne { email: profile.email }
+    .then (result) ->
+      if result?
+        throw new VError 'email %s already exists', profile.email
+
+      # ready to create a new user
+      profile.enabled = true
+      profile.createDate = moment.utc()
+      user = new User profile
+      return user.save()
+
+
 module.exports = exports = UserService
