@@ -32,3 +32,42 @@ Polymer({
     this.page = 'z404'
 
 })
+
+# App object
+class App
+
+  # Sends an ajax request
+  send: (url, payload = {}, verb = 'GET') ->
+    client = new XMLHttpRequest()
+    uri = url
+
+    if verb == 'GET' || verb == 'HEAD'
+      args = []
+      for key in Object.keys payload
+        args.push encodeURIComponent(key) + '=' + encodeURIComponent payload[key]
+
+      if args.length > 0
+        uri += '?' + args.join '&'
+
+    return new Promise (resolve, reject) ->
+      client.open verb, uri
+
+      client.setRequestHeader 'Content-Type', 'application/json'
+      client.setRequestHeader 'Charset', 'utf-8'
+
+      if verb == 'GET' || verb == 'HEAD'
+        client.send()
+      else
+        client.send JSON.stringify payload
+
+      client.onload = () ->
+        if this.status >= 200 && this.status < 300
+          json = JSON.parse this.response
+          resolve json
+        else
+          reject this
+
+      client.onerror = () ->
+        reject this
+
+window.app = new App()
