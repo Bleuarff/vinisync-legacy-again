@@ -40,7 +40,9 @@ Polymer({
 
 })
 
+###
 # App object
+###
 class App
 
   user: null # base user info (without entries)
@@ -58,6 +60,8 @@ class App
 
       if args.length > 0
         uri += '?' + args.join '&'
+    else if this.csrfToken?
+      payload.csrfToken = this.csrfToken
 
     return new Promise (resolve, reject) ->
       client.open verb, uri

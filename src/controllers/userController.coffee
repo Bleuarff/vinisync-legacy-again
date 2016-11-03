@@ -29,7 +29,9 @@ class UserController
       res.send err.status || 500, 'Error retrieving user'
       next()
 
+  ###
   # authenticate user, set user data into session
+  ###
   @_authenticate = (req, user) ->
     if !user.enabled
       throw new VError 'user {id: %s, email: %s} is disabled', user.id, user.email
@@ -43,7 +45,9 @@ class UserController
       req.session.update('csrfToken', token) # add new token to session
       return user
 
-  # authentication request
+  ###
+  # signin request
+  ###
   @signin = (req, res, next) ->
     if !utils.hasParams req, res, 'token', false
       return next()
