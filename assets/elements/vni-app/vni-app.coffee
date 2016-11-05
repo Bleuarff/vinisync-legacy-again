@@ -14,16 +14,17 @@ Polymer({
     }
     signedIn: {
       type: Boolean
-      observer: '_signedInChanged'
+      value: false
     }
   }
 
   listeners:
     'redirect': 'onRedirect'
+    'signout': 'signout'
 
   observers: [
     '_routePageChanged(routeData.page)'
-  ],
+  ]
 
   _routePageChanged: (page) ->
     this.page = page || 'home'
@@ -42,11 +43,7 @@ Polymer({
     if e.detail && e.detail.path
       this.set 'route.path', e.detail.path
 
-  _signedInChanged: (signedIn) ->
-    console.log 'signed in changed to ' + signedIn
-
-  signinSuccess: (details) ->
-    # console.log 'signin success. Now what?'
+  signinSuccess: (evt) ->
     currentUser = gapi.auth2.getAuthInstance().currentUser.get()
     tokenId = currentUser.getAuthResponse().id_token
     userProfileImage = currentUser.getBasicProfile().getImageUrl()
@@ -54,15 +51,21 @@ Polymer({
     .then (res) =>
       app.user = res.user
       app.csrfToken = res.csrfToken
-      elem = @$.pages.querySelector "[name='#{@page}']"
-      if elem
-        elem.fire 'show'
+      if @route.path == ''
+        @fire 'redirect', {path: '/cave'}
       else
-        console.log 'err' # TODO: show error toast instead
+        elem = @$.pages.querySelector "[name='#{@page}']"
+        if elem
+          elem.fire 'show'
+        else
+          console.log 'err' # TODO: show error toast instead
     .catch (err) =>
       # TODO: show error toast
       console.log 'signin err'
 
+
+  signout: () ->
+    @$['google-signin'].signOut()
 })
 
 ###

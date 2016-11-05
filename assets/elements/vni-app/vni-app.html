@@ -53,7 +53,7 @@
     <app-location use-hash-as-path route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
-    <google-signin-aware client-id="822030501141-4dn7d2h8ueid9h7ot7m788vqokclodg5.apps.googleusercontent.com"
+    <google-signin-aware id='google-signin' client-id="822030501141-4dn7d2h8ueid9h7ot7m788vqokclodg5.apps.googleusercontent.com"
     on-google-signin-aware-success='signinSuccess' offline='true' signed-in={{signedIn}}></google-signin-aware>
 
     <paper-scroll-header-panel class="flex">
@@ -68,13 +68,12 @@
         <paper-icon-button icon="settings">Settings</paper-icon-button>
       </paper-toolbar>
 
-      <!-- <span>Current page: [[page]]</span> -->
       <iron-pages id='pages'
           selected="[[page]]"
           attr-for-selected="name"
           fallback-selection="z404"
           role="main">
-        <vni-home name="home"></vni-home>
+        <vni-home name="home" signed-in='[[signedIn]]'></vni-home>
         <vni-cave name="cave" route={{subroute}}></vni-cave>
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
