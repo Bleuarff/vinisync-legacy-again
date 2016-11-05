@@ -12,6 +12,10 @@ Polymer({
       reflectToAttribute: true,
       observer: '_pageChanged'
     }
+    signedIn: {
+      type: Boolean
+      observer: '_signedInChanged'
+    }
   }
 
   listeners:
@@ -37,6 +41,27 @@ Polymer({
   onRedirect: (e) ->
     if e.detail && e.detail.path
       this.set 'route.path', e.detail.path
+
+  _signedInChanged: (signedIn) ->
+    console.log 'signed in changed to ' + signedIn
+
+  signinSuccess: (details) ->
+    # console.log 'signin success. Now what?'
+    currentUser = gapi.auth2.getAuthInstance().currentUser.get()
+    tokenId = currentUser.getAuthResponse().id_token
+    userProfileImage = currentUser.getBasicProfile().getImageUrl()
+    app.send '/user/signin', {token: tokenId}, 'POST'
+    .then (res) =>
+      app.user = res.user
+      app.csrfToken = res.csrfToken
+      elem = @$.pages.querySelector "[name='#{@page}']"
+      if elem
+        elem.fire 'show'
+      else
+        console.log 'err' # TODO: show error toast instead
+    .catch (err) =>
+      # TODO: show error toast
+      console.log 'signin err'
 
 })
 

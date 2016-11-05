@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 
 <dom-module id="vni-app">
@@ -52,6 +53,8 @@
     <app-location use-hash-as-path route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
+    <google-signin-aware client-id="822030501141-4dn7d2h8ueid9h7ot7m788vqokclodg5.apps.googleusercontent.com"
+    on-google-signin-aware-success='signinSuccess' offline='true' signed-in={{signedIn}}></google-signin-aware>
 
     <paper-scroll-header-panel class="flex">
       <paper-toolbar>
@@ -66,13 +69,13 @@
       </paper-toolbar>
 
       <!-- <span>Current page: [[page]]</span> -->
-      <iron-pages
+      <iron-pages id='pages'
           selected="[[page]]"
           attr-for-selected="name"
           fallback-selection="z404"
           role="main">
         <vni-home name="home"></vni-home>
-        <vni-cave name="cave"></vni-cave>
+        <vni-cave name="cave" route={{subroute}}></vni-cave>
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
     </paper-scroll-header-panel>

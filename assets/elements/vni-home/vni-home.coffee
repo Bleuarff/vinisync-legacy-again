@@ -15,7 +15,7 @@ Polymer({
     .then (res) =>
       app.user = res.user
       app.csrfToken = res.csrfToken
-      @fire 'redirect', {path: '/cave'}
+      @fire 'redirect', {path: "/cave/#{app.user._id}"}
     .catch (err) =>
       # TODO: show error toast
       console.log 'signin err'

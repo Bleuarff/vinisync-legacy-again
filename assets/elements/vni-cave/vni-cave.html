@@ -1,24 +1,20 @@
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <dom-module id="vni-cave">
   <template>
     <style>
       :host {
         display: block;
-        background: lightblue;
-        border: 1px solid blue;
-        height: 400px;
       }
-
-
     </style>
 
-    <!-- <app-route
-    route="{{route}}"
-    pattern="/:view"
-    data="{{routeData}}"
-    tail="{{subroute}}"></app-route> -->
+    <app-route
+      route="{{route}}"
+      pattern="/:id"
+      data="{{routeData}}">
+    </app-route>
 
-    <span>Ceci est une cave: une liste d'items</span>
+    <span>Votre cave contient [[bottles.length]] entrées</span>
 
   </template>
 
