@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="vni-app">
   <template>
@@ -78,6 +79,8 @@
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
     </paper-scroll-header-panel>
+
+  <paper-toast id='errorToast'></paper-toast>
 
   </template>
   <script src="vni-app.js"></script>

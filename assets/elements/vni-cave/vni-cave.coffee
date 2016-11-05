@@ -24,6 +24,6 @@ Polymer({
       @bottles = cave.bottles
     .catch (err) ->
       console.log 'err'
-      # TODO: show toast
+      @fire 'error', {text: 'Impossible de récuperer votre cave.'}
 
 })

@@ -19,8 +19,9 @@ Polymer({
   }
 
   listeners:
-    'redirect': 'onRedirect'
-    'signout': 'signout'
+    redirect: '_redirect'
+    signout: 'signout'
+    error: '_error'
 
   observers: [
     '_routePageChanged(routeData.page)'
@@ -39,9 +40,13 @@ Polymer({
   _showPage404: () ->
     this.page = 'z404'
 
-  onRedirect: (e) ->
+  _redirect: (e) ->
     if e.detail && e.detail.path
       this.set 'route.path', e.detail.path
+
+  _error: (e) ->
+    toast = this.$.errorToast
+    toast.show e.detail.text
 
   signinSuccess: (evt) ->
     currentUser = gapi.auth2.getAuthInstance().currentUser.get()
@@ -58,9 +63,9 @@ Polymer({
         if elem
           elem.fire 'show'
         else
-          console.log 'err' # TODO: show error toast instead
+          @fire 'error', {text: "La page #{@page} est introuvable"}
     .catch (err) =>
-      # TODO: show error toast
+      @fire 'error', {text: 'Erreur de connexion'}
       console.log 'signin err'
 
 
