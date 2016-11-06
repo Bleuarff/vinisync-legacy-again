@@ -1,4 +1,8 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel='import' href="../../styles/shared-styles.html">
 
 <dom-module id='vni-entry'>
   <template>
@@ -11,14 +15,24 @@
     </app-route>
 
     <!-- TODO:
-    - appellation
-    - producer
-    - name
-    - millesime
     - type/couleur
-    - pays
-
+    - cepages
    -->
+
+    <vaadin-combo-box id='appellation' label='Appellation' allow-custom-value='true'
+    on-input='appellationChanged'>
+    </vaadin-combo-box>
+
+    <vaadin-combo-box id='producer' label='Producteur' allow-custom-value='true'
+    on-input='producerChanged'>
+    </vaadin-combo-box>
+
+    <paper-input id='name' label='Cuvée'></paper-input>
+
+    <paper-input id='year' label='Millésime' type='number' min='1700' max='[[currentYear]]'></paper-input>
+
+    <vaadin-combo-box id='country' label='Pays' value='France' items='[[countries]]' allow-custom-value='true'></vaadin-combo-box>
+
     <paper-button class='default'>Enregistrer</paper-button>
   </template>
   <script src="vni-entry.js"></script

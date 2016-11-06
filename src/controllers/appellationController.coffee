@@ -12,7 +12,7 @@ class AppellationController
 
     if req.params.name?
       normValue = normalizer.getStandardForm req.params.name
-      filter.stdForm = new RegExp "^#{normValue}", 'i'
+      filter.stdForm = new RegExp "#{normValue}", 'i'
 
     Appellation.find filter
     .sort {name: 1}
