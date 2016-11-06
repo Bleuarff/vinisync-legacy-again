@@ -26,4 +26,9 @@ Polymer({
       console.log 'err'
       @fire 'error', {text: 'Impossible de récuperer votre cave.'}
 
+
+  addEntry: () ->
+    @fire 'redirect', {path: '/entry'}
+
+
 })

@@ -1,8 +1,11 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../styles/shared-styles.html">
+
 
 <dom-module id="vni-cave">
   <template>
-    <style>
+    <style include='shared-styles'>
       :host {
         display: block;
       }
@@ -14,8 +17,15 @@
       data="{{routeData}}">
     </app-route>
 
-    <span>Votre cave contient [[bottles.length]] entrées</span>
+    <template is='dom-if' if='[[!bottles.length]]'>
+      <p>Votre cave est vide :(. Cliquez sur le bouton ci-dessous pour commencer à la remplir.</p>
+      <paper-button class='default' on-tap='addEntry'>Ajouter une bouteille</paper-button>
+    </template>
 
+
+    <template is='dom-if' if='[[bottles.length]]'>
+      <span>Votre cave contient [[bottles.length]] entrées</span>
+    </template>
   </template>
 
   <script src="vni-cave.js"></script>

@@ -3,11 +3,11 @@
 <link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
 
 <dom-module id="vni-app">
   <template>
@@ -75,7 +75,8 @@
           fallback-selection="z404"
           role="main">
         <vni-home name="home" signed-in='[[signedIn]]'></vni-home>
-        <vni-cave name="cave" route={{subroute}}></vni-cave>
+        <vni-cave name="cave" route='{{subroute}}'></vni-cave>
+        <vni-entry name='entry' route='{{subroute}}'></vni-entry>
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
     </paper-scroll-header-panel>

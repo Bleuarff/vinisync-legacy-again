@@ -1,0 +1,25 @@
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id='vni-entry'>
+  <template>
+    <style include='shared-styles'>
+    </style>
+
+    <app-route route="{{route}}"
+    pattern="/:id"
+    data="{{routeData}}">
+    </app-route>
+
+    <!-- TODO:
+    - appellation
+    - producer
+    - name
+    - millesime
+    - type/couleur
+    - pays
+
+   -->
+    <paper-button class='default'>Enregistrer</paper-button>
+  </template>
+  <script src="vni-entry.js"></script
+</dom-module>
