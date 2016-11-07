@@ -7,6 +7,11 @@
 <dom-module id='vni-entry'>
   <template>
     <style include='shared-styles'>
+      .apogee {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+      }
     </style>
 
     <app-route route="{{route}}"
@@ -19,26 +24,32 @@
     - cepages
    -->
 
-    <vaadin-combo-box id='appellation' label='Appellation' allow-custom-value='true'
+    <vaadin-combo-box id='appellation' label='Appellation' value='{{entry.bottle.appellation}}' allow-custom-value='true'
     on-input='appellationChanged'>
     </vaadin-combo-box>
 
-    <vaadin-combo-box id='producer' label='Producteur' allow-custom-value='true'
+    <vaadin-combo-box id='producer' label='Producteur' value='{{entry.bottle.producer}}' allow-custom-value='true'
     on-input='producerChanged'>
     </vaadin-combo-box>
 
-    <paper-input id='name' label='Cuvée'></paper-input>
+    <paper-input id='name' label='Cuvée' value='{{entry.bottle.name}}'></paper-input>
 
-    <paper-input id='year' label='Millésime' type='number' min='1700' max='[[currentYear]]'></paper-input>
+    <paper-input id='year' label='Millésime' value='{{entry.bottle.year}}' type='number' min='1700' max='[[currentYear]]'>
+    </paper-input>
 
-    <vaadin-combo-box id='country' label='Pays' value='France' items='[[countries]]' allow-custom-value='true'></vaadin-combo-box>
+    <vaadin-combo-box label='Pays' value='{{entry.bottle.country}}' items='[[countries]]' allow-custom-value='true'></vaadin-combo-box>
 
-    <paper-input label='Apogée' type='number' min='1700'></paper-input>
-    <paper-input label="Jusqu'à" type='number' min='1700'></paper-input>
+    <div class='apogee'>
+      <paper-input label='Apogée' value='{{entry.bottle.apogeeStart}}' type='number' min='1700'></paper-input>
+      -
+      <paper-input label="Jusqu'à" value='{{entry.bottle.apogeeEnd}}' type='number' min='[[entry.bottle.apogeeStart]]'></paper-input>
+    </div>
 
-    <paper-input label='Offert par'></paper-input>
+    <paper-input label='Quantité' type='number' value='{{entry.count}}' min='1' max='100'></paper-input>
 
-    <paper-button class='default'>Enregistrer</paper-button>
+    <paper-input label='Offert par' value='{{entry.offeredBy}}'></paper-input>
+
+    <paper-button class='default' on-tap='save'>Enregistrer</paper-button>
   </template>
   <script src="vni-entry.js"></script
 </dom-module>

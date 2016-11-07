@@ -6,6 +6,7 @@ Polymer {
       type: Number
       value: (new Date()).getUTCFullYear()
     countries: Array
+    entry: Object
 
   listeners:
     show: '_show'
@@ -18,7 +19,24 @@ Polymer {
     if app.user?
       this.fire 'show', {entryId: id}
 
-  _show: () ->
+  _show: (e) ->
+    if e.detail.entryId?
+      # TODO: retrieve entry
+      console.log 'retrieve entry ' + e.detail.entryId
+    else
+      this.entry =
+        bottle:
+          appellation: null
+          producer: null
+          name: null
+          year: null
+          country: 'France'
+          apogeeStart: null
+          apogeeEnd: null
+        count: 1
+        offeredBy: null
+
+
 
   ready: () ->
     this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
@@ -46,5 +64,9 @@ Polymer {
 
   producerChanged: (e) ->
     @inputChanged e.target.value, '/producer', @$.producer
+
+  save: () ->
+    # TODO: save entry
+    console.log 'save entry'
 
 }
