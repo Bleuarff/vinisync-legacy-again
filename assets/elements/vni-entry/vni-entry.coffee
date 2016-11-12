@@ -7,6 +7,7 @@ Polymer {
       value: (new Date()).getUTCFullYear()
     countries: Array
     entry: Object
+    cepages : Array
 
   listeners:
     show: '_show'
@@ -14,6 +15,9 @@ Polymer {
   observers: [
     '_routeChanged(routeData.id)'
   ],
+
+  created: () ->
+    this.fire 'pageCreated', {name: this.tagName.toLowerCase()}
 
   _routeChanged: (id) ->
     if app.user?
@@ -33,10 +37,11 @@ Polymer {
           country: 'France'
           apogeeStart: null
           apogeeEnd: null
+          cepages: ['grenache', 'syrah', 'mourvèdre']
         count: 1
         offeredBy: null
 
-
+    this.cepages = this.entry.bottle.cepages.map (x) -> {value: x}
 
   ready: () ->
     this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
@@ -45,7 +50,7 @@ Polymer {
 
   inputChanged: (value, endpoint, target) ->
     return if this.requestWip
-    return if value.length < 4
+    return if value.length != 3
 
     # throttles requests
     this.requestWip = setTimeout () =>

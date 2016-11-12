@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<dom-module is='vni-cepages'>
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 8px 5px;
+      }
+
+      .label {
+        display: block;
+        margin-bottom: 0.4rem;
+      }
+
+      .cpg {
+        display: inline-block;
+        margin-left: 5px;
+        background-color: darkred;
+        color: white;
+        border-radius: 5px;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+      }
+
+      .value {
+        display: inline-block;
+        padding: 8px;
+      }
+
+      .clear {display: none;}
+
+      .selected .clear {
+        display: inline-block;
+        padding-right: 5px;
+      }
+    </style>
+
+    <span class='label'>Cepages:</span>
+
+    <template is='dom-repeat' items='[[cepages]]'>
+      <span class='cpg' on-blur='unselect' tabindex='1'>
+        <span class='value' on-tap='select'>{{item.value}}</span>
+        <iron-icon class='clear' icon='icons:clear' on-tap='delete'></iron-icon>
+      </span>
+    </template>
+
+  </template>
+  <script src='vni-cepages.js'></script>
+</dom-module>

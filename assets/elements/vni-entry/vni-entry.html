@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel='import' href="../../styles/shared-styles.html">
+<link rel='import' href="../vni-cepages/vni-cepages.html">
 
 <dom-module id='vni-entry'>
   <template>
@@ -47,9 +48,11 @@
 
     <paper-input label='Quantité' type='number' value='{{entry.count}}' min='1' max='100'></paper-input>
 
+    <vni-cepages cepages='[[cepages]]'></vni-cepages>
+
     <paper-input label='Offert par' value='{{entry.offeredBy}}'></paper-input>
 
     <paper-button class='default' on-tap='save'>Enregistrer</paper-button>
   </template>
-  <script src="vni-entry.js"></script
+  <script src="vni-entry.js"></script>
 </dom-module>

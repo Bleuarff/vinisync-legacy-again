@@ -27,9 +27,18 @@ Polymer({
     '_routePageChanged(routeData.page)'
   ]
 
+  created: () ->
+    self = this
+
+    # resolves when the tag for the current page is created
+    @pageLoadPromise = new Promise (resolve, reject) ->
+      this.addEventListener 'pageCreated', (e) ->
+        tagPage = e.detail.name.split('-')[1]
+        if self.page == tagPage
+          resolve()
+
   _routePageChanged: (page) ->
     this.page = page || 'home'
-
 
   _pageChanged: (page) ->
     # Load page import on demand. Show 404 page if fails
@@ -61,12 +70,16 @@ Polymer({
       else
         elem = @$.pages.querySelector "[name='#{@page}']"
         if elem
-          elem.fire 'show'
+          if elem.fire
+            elem.fire 'show'
+          else
+            @pageLoadPromise.then () ->
+              elem.fire 'show'
         else
           @fire 'error', {text: "La page #{@page} est introuvable"}
     .catch (err) =>
       @fire 'error', {text: 'Erreur de connexion'}
-      console.log 'signin err'
+      console.log err
 
 
   signout: () ->
