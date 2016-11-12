@@ -5,7 +5,6 @@ Polymer {
     cepages: {type: Array }
     fullList: {type: Array}
 
-  # listeners: {}
   ready: () ->
     app.send '/cepage'
     .then (data) =>
@@ -22,21 +21,16 @@ Polymer {
   delete: (e) ->
     this.splice 'cepages', e.model.index, 1
 
-  showInput: () ->
+  add: () ->
     input = this.$.input
-    input.classList.toggle 'hidden'
-    input.value = null
-    input.querySelector('input').focus()
-    input.close()
-
-  add: (e) ->
-    newValue = e.currentTarget.value
+    newValue = input.value
     return if newValue == '' || !newValue?
 
+    input.value = null
     item = this.cepages.find (x) -> x.value == newValue
-    return if item
+    if item
+      this.fire 'error', {text: "Ce vin contient déjà le cépage '#{newValue}'."}
+      return
 
     this.push 'cepages', {value: newValue}
-    e.currentTarget.classList.add 'hidden'
-    # e.currentTarget.value = null
 }
