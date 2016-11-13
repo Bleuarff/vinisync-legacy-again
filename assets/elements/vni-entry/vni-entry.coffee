@@ -6,6 +6,7 @@ Polymer {
       type: Number
       value: (new Date()).getUTCFullYear()
     countries: Array
+    containings: Array
     entry: Object
     cepages : Array
 
@@ -38,6 +39,7 @@ Polymer {
           apogeeStart: null
           apogeeEnd: null
           cepages: ['grenache', 'syrah', 'mourvèdre']
+          containing: '75cl'
         count: 1
         offeredBy: null
 
@@ -47,6 +49,8 @@ Polymer {
     this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
     'Chili', 'Espagne', 'Etats-Unis', 'France', 'Italie', 'Nouvelle Zélande',
     'Portugal']
+
+    this.containings = ['37.5cl', '50cl', '75cl', '1.5L', '3l', '4.5l','6l']
 
   inputChanged: (value, endpoint, target) ->
     return if this.requestWip
