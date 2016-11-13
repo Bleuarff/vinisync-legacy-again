@@ -27,6 +27,6 @@ Create *config/config.yml* with the following:
 
 Then:
 
-    npm -g grunt-cli
+    npm -g grunt-cli bower
     npm install
     grunt # runs local server
