@@ -40,6 +40,7 @@ Polymer {
           apogeeEnd: null
           cepages: ['grenache', 'syrah', 'mourvèdre']
           containing: '75cl'
+          tags: []
         count: 1
         offeredBy: null
 

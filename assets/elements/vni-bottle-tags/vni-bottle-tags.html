@@ -1,0 +1,92 @@
+<dom-module id='vni-bottle-tags'>
+  <template>
+    <style include='shared-styles'>
+      :host {
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+      .colors {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      .color {
+        flex: 1 1 33%;
+        height: 3rem;
+        border-radius: 8px;
+        text-align: center;
+        margin: 0 0.2rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .color, .tag {
+        cursor: pointer;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      .red {
+        background: darkred;
+        color: white;
+      }
+
+      .white {
+        background: yellow;
+      }
+
+      .rose {
+        background: pink;
+      }
+
+      .tags {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+      }
+
+      .tag {
+        background: grey;
+        border-radius: 5px;
+        margin-left: 0.4rem;
+        padding: 0.3rem 0.7rem;
+        color: white;
+        /*box-sizing: border-box;*/
+        border: 3px solid transparent;
+      }
+
+      .color:focus, .selected {
+        border: 3px solid black;
+      }
+
+    </style>
+
+    <span>Couleur:</span>
+    <div class='colors'>
+      <span class='color red' on-tap='selectColor' tabindex="1">
+        <span>ROUGE</span>
+      </span>
+      <span class='color white' on-tap='selectColor' tabindex="1">
+        <span>BLANC</span>
+      </span>
+      <span class='color rose' on-tap='selectColor' tabindex="1">
+        <span>ROSÉ</span>
+      </span>
+    </div>
+
+    <span>Description:</span>
+    <div class='tags'>
+      <div class='tag' on-tap='selectTag'>pétillant</div>
+      <div class='tag' on-tap='selectTag'>liquoreux</div>
+    </div>
+
+  </template>
+  <script src='vni-bottle-tags.js'></script>
+</dom-module>

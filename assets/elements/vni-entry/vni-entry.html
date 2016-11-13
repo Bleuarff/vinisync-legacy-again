@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel='import' href="../../styles/shared-styles.html">
 <link rel='import' href="../vni-cepages/vni-cepages.html">
+<link rel="import" href="../vni-bottle-tags/vni-bottle-tags.html">
 
 <dom-module id='vni-entry'>
   <template>
@@ -25,6 +26,7 @@
         --paper-tabs-selection-bar-color: darkred;
         font-size: 1rem;
       }
+
     </style>
 
     <app-route route="{{route}}"
@@ -56,6 +58,8 @@
       -
       <paper-input label="Jusqu'à" value='{{entry.bottle.apogeeEnd}}' type='number' min='[[entry.bottle.apogeeStart]]'></paper-input>
     </div>
+
+    <vni-bottle-tags tags='[[entry.bottle.tags]]'></vni-bottle-tags>
 
     <paper-input label='Quantité' type='number' value='{{entry.count}}' min='1' max='100'></paper-input>
 
