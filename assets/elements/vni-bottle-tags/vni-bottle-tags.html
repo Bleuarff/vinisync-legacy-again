@@ -58,11 +58,10 @@
         margin-left: 0.4rem;
         padding: 0.3rem 0.7rem;
         color: white;
-        /*box-sizing: border-box;*/
         border: 3px solid transparent;
       }
 
-      .color:focus, .selected {
+      .selected {
         border: 3px solid black;
       }
 
@@ -70,21 +69,21 @@
 
     <span>Couleur:</span>
     <div class='colors'>
-      <span class='color red' on-tap='selectColor' tabindex="1">
+      <span class='color red' data-color='red' on-tap='selectColor' tabindex="1">
         <span>ROUGE</span>
       </span>
-      <span class='color white' on-tap='selectColor' tabindex="1">
+      <span class='color white' data-color='white' on-tap='selectColor' tabindex="1">
         <span>BLANC</span>
       </span>
-      <span class='color rose' on-tap='selectColor' tabindex="1">
+      <span class='color rose' data-color='rose' on-tap='selectColor' tabindex="1">
         <span>ROSÉ</span>
       </span>
     </div>
 
     <span>Description:</span>
     <div class='tags'>
-      <div class='tag' on-tap='selectTag'>pétillant</div>
-      <div class='tag' on-tap='selectTag'>liquoreux</div>
+      <div class='tag' data-value='sparkling' on-tap='selectTag'>pétillant</div>
+      <div class='tag' data-value='sweet' on-tap='selectTag'>liquoreux</div>
     </div>
 
   </template>
