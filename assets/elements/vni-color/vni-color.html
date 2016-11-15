@@ -26,7 +26,7 @@
         align-items: center;
       }
 
-      .color, .tag {
+      .color {
         cursor: pointer;
         -moz-user-select: none;
         -webkit-user-select: none;
@@ -44,21 +44,6 @@
 
       .rose {
         background: pink;
-      }
-
-      .tags {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: flex-start;
-      }
-
-      .tag {
-        background: grey;
-        border-radius: 5px;
-        margin-left: 0.4rem;
-        padding: 0.3rem 0.7rem;
-        color: white;
-        border: 3px solid transparent;
       }
 
       .color[selected] {
@@ -79,12 +64,6 @@
         <span>ROSÉ</span>
       </span>
     </div>
-
-    <!-- <span>Description:</span>
-    <div class='tags'>
-      <div class='tag' data-value='sparkling' on-tap='selectTag'>pétillant</div>
-      <div class='tag' data-value='sweet' on-tap='selectTag'>liquoreux</div>
-    </div> -->
 
   </template>
   <script src='vni-color.js'></script>

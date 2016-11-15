@@ -9,6 +9,17 @@ Polymer {
     containings: Array
     entry: Object
     cepages : Array
+    # tags:
+    #   type: Array
+    #   notify: true
+    # isSweet:
+    #   type: Boolean
+    #   computed: 'hasValue(tags, "sweet")'
+    #   notify: true
+    # isSparkling:
+    #   type: Boolean
+    #   computed: 'hasValue(tags, "sparkling")'
+    #   notify: true
 
   listeners:
     show: '_show'
@@ -40,8 +51,9 @@ Polymer {
           apogeeEnd: null
           cepages: ['grenache', 'syrah', 'mourvèdre']
           containing: '75cl'
-          color: 'white'
-          tags: ['sweet']
+          color: null
+          sweet: false
+          sparkling: false
         count: 1
         offeredBy: null
 
@@ -79,5 +91,18 @@ Polymer {
   save: () ->
     # TODO: save entry
     console.log 'save entry'
+
+  # hasValue: (tags, value) ->
+  #   return tags.find (x) -> x.value == value
+  #
+  # tagSelect: (e) ->
+  #   value = e.currentTarget.dataset.value
+  #   idx = this.tags.findIndex (x) -> x.value == value
+  #   if idx > -1
+  #     # this.tags.splice idx, 1
+  #     this.splice 'tags', idx, 1
+  #   else
+  #     # this.tags.push {value: value}
+  #     this.push 'tags', {value: value}
 
 }
