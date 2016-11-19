@@ -9,18 +9,7 @@ Polymer {
     containings: Array
     entry: Object
     cepages : Array
-    # tags:
-    #   type: Array
-    #   notify: true
-    # isSweet:
-    #   type: Boolean
-    #   computed: 'hasValue(tags, "sweet")'
-    #   notify: true
-    # isSparkling:
-    #   type: Boolean
-    #   computed: 'hasValue(tags, "sparkling")'
-    #   notify: true
-
+    hasPhoto: {type: Boolean, value: false}
   listeners:
     show: '_show'
 
@@ -54,6 +43,7 @@ Polymer {
           color: null
           sweet: false
           sparkling: false
+          image: null
         count: 1
         offeredBy: null
 
@@ -92,17 +82,32 @@ Polymer {
     # TODO: save entry
     console.log 'save entry'
 
-  # hasValue: (tags, value) ->
-  #   return tags.find (x) -> x.value == value
-  #
-  # tagSelect: (e) ->
-  #   value = e.currentTarget.dataset.value
-  #   idx = this.tags.findIndex (x) -> x.value == value
-  #   if idx > -1
-  #     # this.tags.splice idx, 1
-  #     this.splice 'tags', idx, 1
-  #   else
-  #     # this.tags.push {value: value}
-  #     this.push 'tags', {value: value}
+  # open file selector/camera
+  selectPhoto: () ->
+    # @fire 'debug', 'selectPhoto'
+    picker = this.querySelector(".uploader")
+    picker.click()
+
+  # reads selected image
+  setPhoto: (e) ->
+    return if !e.currentTarget.files.length
+
+    fileInfo = e.currentTarget.files[0]
+    if fileInfo.type.indexOf('image/') != 0
+      @fire 'error', {text: "Le fichier #{fileInfo.name} n'est pas une image"}
+      return
+
+    # @fire 'debug', "fileinfo: #{fileInfo.name} / #{fileInfo.size} bytes"
+    reader = new FileReader()
+    reader.onload = (e) =>
+      # @fire 'debug', 'photo loaded'
+      content = e.target.result
+      @entry.bottle.image = content
+      @hasPhoto = true
+
+    reader.onerror = (e) =>
+      @fire 'error', {"Impossible de lire le fichier #{fileInfo.name}: #{reader.error.name}"}
+
+    reader.readAsDataURL(fileInfo)
 
 }

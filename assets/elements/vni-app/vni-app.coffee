@@ -22,6 +22,7 @@ Polymer({
     redirect: '_redirect'
     signout: 'signout'
     error: '_error'
+    debug: '_debug'
 
   observers: [
     '_routePageChanged(routeData.page)'
@@ -53,6 +54,7 @@ Polymer({
     if e.detail && e.detail.path
       this.set 'route.path', e.detail.path
 
+  # show error toast
   _error: (e) ->
     toast = this.$.errorToast
     toast.show e.detail.text
@@ -84,6 +86,12 @@ Polymer({
 
   signout: () ->
     @$['google-signin'].signOut()
+
+  # display message in log section
+  _debug: (e) ->
+    nd = document.createElement 'div'
+    nd.innerHTML = e.detail
+    this.$.debug.appendChild nd
 })
 
 ###

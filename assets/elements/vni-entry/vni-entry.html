@@ -6,6 +6,9 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel='import' href='../../bower_components/iron-icons/iron-icons.html'>
+<link rel='import' href='../../bower_components/iron-icons/image-icons.html'>
+<link rel='import' href='../../bower_components/iron-icon/iron-icon.html'>
 <link rel='import' href="../vni-cepages/vni-cepages.html">
 <link rel="import" href="../vni-color/vni-color.html">
 <link rel='import' href="../../styles/shared-styles.html">
@@ -34,12 +37,52 @@
         justify-content: space-around;
       }
 
+      .photo-btn {
+        background: transparent;
+        border: none;
+        display: block;
+        margin: auto;
+        width: 50%;
+        max-width: 10em;
+      }
+
+      .photo-icon {
+        width: 3em;
+        height: 3em;
+        color: grey;
+        cursor: pointer;
+      }
+
+      .uploader {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .entry-img {
+        display: block;
+        margin: auto;
+        max-width: 100%;
+        max-height: 12em;
+      }
+
     </style>
 
     <app-route route="{{route}}"
     pattern="/:id"
     data="{{routeData}}">
     </app-route>
+
+    <div class='photo'>
+      <template is='dom-if' if='[[!hasPhoto]]'>
+        <input type="file" name="logo" id="logo" class="uploader" accept='image/*' capture on-change='setPhoto'/>
+        <button on-tap='selectPhoto' class='photo-btn'>
+          <iron-icon icon='image:camera-alt' class='photo-icon'></iron-icon>
+        </button>
+      </template>
+      <template is='dom-if' if='[[hasPhoto]]'>
+        <img class='entry-img' src='[[entry.bottle.image]]'>
+      </template>
+    </div>
 
     <vaadin-combo-box id='appellation' label='Appellation' value='{{entry.bottle.appellation}}' allow-custom-value='true'
     on-input='appellationChanged'>

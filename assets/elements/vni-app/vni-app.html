@@ -49,6 +49,12 @@
         margin-right: 0;
       }
 
+      #debug {
+        height: 100px;
+        scroll: auto;
+        border-top: 3px solid darkred;
+      }
+
     </style>
 
     <app-location use-hash-as-path route="{{route}}"></app-location>
@@ -79,6 +85,9 @@
         <vni-entry name='entry' route='{{subroute}}'></vni-entry>
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
+
+      <div id='debug'>
+      </div>
     </paper-scroll-header-panel>
 
   <paper-toast id='errorToast'></paper-toast>
