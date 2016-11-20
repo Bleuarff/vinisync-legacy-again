@@ -48,7 +48,7 @@ registerRoutes = (server) ->
   server.post '/user/signin', user.signin
 
   server.get '/cave/:id', user.get
-  server.put '/cave/:id/wine', user.addWine
+  server.put '/cave/:id/entry', user.addWine
   server.post '/cave/:id/entry/:entryId/increment', user.increment
   server.post '/cave/:id/entry/:entryId/decrement', user.decrement
   server.post '/cave/:id/entry/:entryId', user.updateEntry

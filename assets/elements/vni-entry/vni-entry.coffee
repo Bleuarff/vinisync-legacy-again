@@ -81,6 +81,14 @@ Polymer {
   save: () ->
     # TODO: save entry
     console.log 'save entry'
+    # TODO: validation
+    this.entry.bottle.cepages = this.cepages.map (x) -> return x.value
+    app.send "/cave/#{app.user._id}/entry", this.entry, 'PUT'
+    .then (newEntry) =>
+      @fire 'error', {"Entrée créée"}
+      # TODO: add entry to local value. redirect cave ?
+    .catch (err) =>
+      @fire 'error', {"Impossible de rajouter cette entrée"}
 
   # open file selector/camera
   selectPhoto: () ->
