@@ -27,6 +27,7 @@ Create *config/config.yml* with the following:
 
 Then:
 
-    npm -g grunt-cli bower
+    npm install -g grunt-cli bower polymer-cli
     npm install
+    cd assets && bower install
     grunt # runs local server
