@@ -80,32 +80,32 @@
         </button>
       </template>
       <template is='dom-if' if='[[hasPhoto]]'>
-        <img class='entry-img' src='[[entry.bottle.image]]'>
+        <img class='entry-img' src='[[entry.wine.image]]'>
       </template>
     </div>
 
-    <vaadin-combo-box id='appellation' label='Appellation' value='{{entry.bottle.appellation}}' allow-custom-value='true'
+    <vaadin-combo-box id='appellation' label='Appellation' value='{{entry.wine.appellation}}' allow-custom-value='true'
     on-input='appellationChanged'>
     </vaadin-combo-box>
 
-    <vaadin-combo-box id='producer' label='Producteur' value='{{entry.bottle.producer}}' allow-custom-value='true'
+    <vaadin-combo-box id='producer' label='Producteur' value='{{entry.wine.producer}}' allow-custom-value='true'
     on-input='producerChanged'>
     </vaadin-combo-box>
 
-    <paper-input id='name' label='Cuvée' value='{{entry.bottle.name}}'></paper-input>
+    <paper-input id='name' label='Cuvée' value='{{entry.wine.name}}'></paper-input>
 
-    <paper-input id='year' label='Millésime' value='{{entry.bottle.year}}' type='number' min='1700' max='[[currentYear]]'>
+    <paper-input id='year' label='Millésime' value='{{entry.wine.year}}' type='number' min='1700' max='[[currentYear]]'>
     </paper-input>
 
-    <vaadin-combo-box label='Pays' value='{{entry.bottle.country}}' items='[[countries]]' allow-custom-value='true'></vaadin-combo-box>
+    <vaadin-combo-box label='Pays' value='{{entry.wine.country}}' items='[[countries]]' allow-custom-value='true'></vaadin-combo-box>
 
     <div class='apogee'>
-      <paper-input label='Apogée' value='{{entry.bottle.apogeeStart}}' type='number' min='1700'></paper-input>
+      <paper-input label='Apogée' value='{{entry.wine.apogeeStart}}' type='number' min='1700'></paper-input>
       -
-      <paper-input label="Jusqu'à" value='{{entry.bottle.apogeeEnd}}' type='number' min='[[entry.bottle.apogeeStart]]'></paper-input>
+      <paper-input label="Jusqu'à" value='{{entry.wine.apogeeEnd}}' type='number' min='[[entry.wine.apogeeStart]]'></paper-input>
     </div>
 
-    <vni-color color='{{entry.bottle.color}}'></vni-color>
+    <vni-color color='{{entry.wine.color}}'></vni-color>
 
     <paper-input label='Quantité' type='number' value='{{entry.count}}' min='1' max='100'></paper-input>
 
@@ -113,12 +113,12 @@
 
     <span>Détails:</span>
     <div class='tags'>
-      <paper-checkbox checked='{{entry.bottle.sparkling}}' class='tag'>pétillant</paper-checkbox>
-      <paper-checkbox checked='{{entry.bottle.sweet}}' class='tag'>liquoreux</paper-checkbox>
+      <paper-checkbox checked='{{entry.wine.sparkling}}' class='tag'>pétillant</paper-checkbox>
+      <paper-checkbox checked='{{entry.wine.sweet}}' class='tag'>liquoreux</paper-checkbox>
     </div>
 
     <paper-dropdown-menu-light label='Contenant' class='containing'>
-      <paper-tabs class='dropdown-content' attr-for-selected='value' selected='{{entry.bottle.containing}}'>
+      <paper-tabs class='dropdown-content' attr-for-selected='value' selected='{{entry.wine.containing}}'>
         <template is='dom-repeat' items='[[containings]]'>
           <paper-tab value='[[item]]'>[[item]]</paper-tab>
         </template>

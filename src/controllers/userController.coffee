@@ -91,7 +91,7 @@ class UserController
 
 
   # adds a wine to the cave
-  @addWine = (req, res, next) ->
+  @addEntry = (req, res, next) ->
     id = req.params.id
     try
       wineSrv.validate req.params.wine

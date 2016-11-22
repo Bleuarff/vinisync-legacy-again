@@ -30,7 +30,7 @@ Polymer {
       console.log 'retrieve entry ' + e.detail.entryId
     else
       this.entry =
-        bottle:
+        wine:
           appellation: null
           producer: null
           name: null
@@ -47,7 +47,7 @@ Polymer {
         count: 1
         offeredBy: null
 
-    this.cepages = this.entry.bottle.cepages.map (x) -> {value: x}
+    this.cepages = this.entry.wine.cepages.map (x) -> {value: x}
 
   ready: () ->
     this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
@@ -82,13 +82,23 @@ Polymer {
     # TODO: save entry
     console.log 'save entry'
     # TODO: validation
-    this.entry.bottle.cepages = this.cepages.map (x) -> return x.value
+    this.entry.wine.cepages = this.cepages.map (x) -> return x.value
+    this.entry.wine.year = this.setYear this.entry.wine.year
+    this.entry.wine.apogeeStart = this.setYear this.entry.wine.apogeeStart
+    this.entry.wine.apogeeEnd = this.setYear this.entry.wine.apogeeEnd
+
     app.send "/cave/#{app.user._id}/entry", this.entry, 'PUT'
     .then (newEntry) =>
       @fire 'error', {"Entrée créée"}
       # TODO: add entry to local value. redirect cave ?
     .catch (err) =>
       @fire 'error', {"Impossible de rajouter cette entrée"}
+
+  setYear: (value) ->
+    year = parseInt value, 10
+    if !isNaN year
+      return year
+    else return null
 
   # open file selector/camera
   selectPhoto: () ->
@@ -110,7 +120,7 @@ Polymer {
     reader.onload = (e) =>
       # @fire 'debug', 'photo loaded'
       content = e.target.result
-      @entry.bottle.image = content
+      @entry.wine.image = content
       @hasPhoto = true
 
     reader.onerror = (e) =>
