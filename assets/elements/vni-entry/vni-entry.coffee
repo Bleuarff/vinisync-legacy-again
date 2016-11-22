@@ -33,19 +33,19 @@ Polymer {
         wine:
           appellation: null
           producer: null
-          name: null
-          year: null
+          # name: null
+          # year: null
           country: 'France'
-          apogeeStart: null
-          apogeeEnd: null
-          cepages: ['grenache', 'syrah', 'mourvèdre']
-          containing: '75cl'
-          color: null
+          # apogeeStart: null
+          # apogeeEnd: null
+          cepages: []
+          # containing: '75cl'
+          # color: null
           sweet: false
           sparkling: false
-          image: null
+          # image: null
         count: 1
-        offeredBy: null
+        # offeredBy: null
 
     this.cepages = this.entry.wine.cepages.map (x) -> {value: x}
 

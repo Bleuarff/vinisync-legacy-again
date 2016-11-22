@@ -126,6 +126,7 @@ class UserController
         user.bottles.push {
           wine: wine
           count: req.params.count
+          offeredBy: req.params.offeredBy
           createDate: moment.utc()
           updateDate: moment.utc()
         }
