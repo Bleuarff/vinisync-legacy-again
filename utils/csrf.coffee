@@ -13,8 +13,8 @@ class CSRF
   # For any non-GET request, ensures the payload contains a CSRF token equals to the current one for the session.
   # If not found, destroys the session and returns an error.
   @checkToken = (req, res, next) ->
-    # GET, non-authenticated requests and requests to public urls are not checked
-    if req.method == 'GET' || !req.session.data.uid? || utils.isPublic(req.path(), CSRF.publicUrls)
+    # GET/HEAD, non-authenticated requests and requests to public urls are not checked
+    if req.method == 'GET' || req.method == 'HEAD' || !req.session.data.uid? || utils.isPublic(req.path(), CSRF.publicUrls)
       return next()
 
     clientToken = req.params.csrfToken
@@ -30,11 +30,8 @@ class CSRF
     # Invalid token: possible attack. Delete session & cookies.
     logger.error 'invalid CSRF token at ' + req.path()
     CSRF.destroy req, res
-    # for cName in CSRF.cookies
-    #   cookies.delete res, cName
 
     res.send 401, {msg: 'err_invalid_csrf'}
-    # req.session.destroy()
     next false
 
   # deletes cookies and kills session

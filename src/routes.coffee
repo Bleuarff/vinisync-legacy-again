@@ -15,6 +15,7 @@ producer = require './controllers/producerController.js'
 registerRoutes = (server) ->
   logger.debug 'registering handlers & routes'
   csrf.cookies = ['rmrid', 'sessid']
+  csrf.publicUrls = ['/user/signin']
 
   # First register handlers
   server.pre restify.pre.sanitizePath() # normalize urls
@@ -42,7 +43,7 @@ registerRoutes = (server) ->
   server.use restify.bodyParser({mapParams: true})
   server.use session.handle # creates or retrieves session and attach it to request object
   # server.use user.checkAuth # remember me feature
-  # server.use csrf.checkToken # CSRF verification
+  server.use csrf.checkToken # CSRF verification
 
   # then register routes
   server.post '/user/signin', user.signin
