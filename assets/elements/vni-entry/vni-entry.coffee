@@ -39,7 +39,7 @@ Polymer {
           # apogeeStart: null
           # apogeeEnd: null
           cepages: []
-          # containing: '75cl'
+          containing: '75cl'
           # color: null
           sweet: false
           sparkling: false
@@ -89,16 +89,16 @@ Polymer {
 
     app.send "/cave/#{app.user._id}/entry", this.entry, 'PUT'
     .then (newEntry) =>
-      @fire 'error', {"Entrée créée"}
+      @fire 'error', {text: "Entrée créée"}
       # TODO: add entry to local value. redirect cave ?
     .catch (err) =>
-      @fire 'error', {"Impossible de rajouter cette entrée"}
+      @fire 'error', {text: "Impossible de rajouter cette entrée"}
 
   setYear: (value) ->
     year = parseInt value, 10
     if !isNaN year
       return year
-    else return null
+    else return undefined
 
   # open file selector/camera
   selectPhoto: () ->
