@@ -9,6 +9,22 @@
     <style include='shared-styles'>
       :host {
         display: block;
+        position: relative;
+        height: calc(100vh - 64px);
+      }
+
+      @media (max-width: 600px) {
+        :host {
+          height: calc(100vh - 56px);
+        }
+      }
+
+      paper-fab {
+        --paper-fab: {
+          position: absolute;
+          right: 1em;
+          bottom: 1em;
+        }
       }
     </style>
 

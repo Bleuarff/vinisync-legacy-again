@@ -4,9 +4,15 @@
       * {
         font-family: 'Roboto', 'Noto', sans-serif;
         outline: none;
+        box-sizing: border-box;
       }
+
+      :host {
+        --vni-main-color: darkred;
+      }
+
       paper-button.default {
-        background-color: darkred;
+        background-color: var(--vni-main-color);
         color: white;
       }
       .hidden {
@@ -14,8 +20,9 @@
       }
 
       paper-fab {
-        --paper-fab-background: darkred;
+        --paper-fab-background: var(--vni-main-color);
       }
+
     </style>
   </template>
 </dom-module>

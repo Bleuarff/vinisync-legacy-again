@@ -8,10 +8,11 @@
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel='import' href="../../styles/shared-styles.html">
 
 <dom-module id="vni-app">
   <template>
-    <style>
+    <style include='shared-styles'>
       :host {
         display: block;
         height: 100vh;
@@ -27,7 +28,7 @@
       }
 
       paper-toolbar {
-        --paper-toolbar-background: darkred;
+        --paper-toolbar-background: var(--vni-main-color);
       }
 
       .pseudo-title {
@@ -57,7 +58,7 @@
       #debug {
         height: 100px;
         scroll: auto;
-        border-top: 3px solid darkred;
+        border-top: 3px solid var(--vni-main-color);
       }
 
     </style>
