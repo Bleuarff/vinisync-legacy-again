@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
 
@@ -25,6 +26,7 @@
 
     <template is='dom-if' if='[[bottles.length]]'>
       <span>Votre cave contient [[bottles.length]] entrées</span>
+      <paper-fab icon='icons:add' on-tap='addEntry'></paper-fab>
     </template>
   </template>
 
