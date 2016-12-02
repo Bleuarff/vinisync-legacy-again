@@ -29,6 +29,31 @@ class UserController
       res.send err.status || 500, 'Error retrieving user'
       next()
 
+
+  @bottles = (req, res, next) ->
+    uid = req.params.id
+    offset = parseInt(req.params.offset, 10) || 0
+    pageCount = parseInt(req.params.count, 10) || 20
+    totalCount = 0
+    userSrv.load uid
+    .then (user) ->
+      bottleCount = user.bottles.reduce (prev, cur) ->
+        return prev + cur.count
+      , 0
+
+      data =
+        entryCount: user.bottles.length
+        bottles: user.bottles.slice offset, offset + pageCount
+        bottleCount: bottleCount
+
+      res.send 200, data
+      next()
+    .catch (err) ->
+      logger.error new VError 'Error retrieving bottles for user %s', uid
+      res.send err.status || 500, 'Error retrieving bottles'
+      next()
+
+
   ###
   # authenticate user, set user data into session
   ###
