@@ -24,9 +24,14 @@
         padding: 0.2em 0.3em;
         display: flex;
         flex-flow: row nowrap;
+        justify-content: space-between;
       }
 
-      .ids {
+      .line:last-of-type {
+        border-bottom: 1px solid #5f5f5f;
+      }
+
+      /*.ids {
         flex: 0 0 70%;
         display: flex;
         flex-flow: row wrap;
@@ -45,14 +50,24 @@
       .year, .count {
         flex: 0 0 15%;
         text-align: center;
-      }
+      }*/
 
-      .line:last-of-type {
-        border-bottom: 1px solid #5f5f5f;
-      }
 
       @media (max-width: 700px) {
+        .names {
+          display: flex;
+          flex-flow: column nowrap;
+        }
 
+        .year-count {
+          display: flex;
+          flex-flow: column-reverse; nowrap;
+          margin: 0 .5em;
+          min-width: 2em;
+        }
+        .year, .count {
+          text-align: center;
+        }
       }
 
       @media (min-width: 701px) {
@@ -99,18 +114,22 @@
       <div id='grid'>
         <template is='dom-repeat' items='[[bottles]]' as='entry'>
           <div class='line'>
-            <div class='ids'>
-              <template is='dom-if' if='[[entry.wine.name]]'>
-                <span>[[entry.wine.name]]</span>
-              </template>
-              <span>[[entry.wine.producer]]</span>
-              <span>[[entry.wine.appellation]]</span>
+            <div class='names'>
+              <div class='name-prod'>
+                <template is='dom-if' if='[[entry.wine.name]]'>
+                [[entry.wine.name]]&nbsp;-&nbsp;
+                </template>
+                [[entry.wine.producer]]
+              </div>
+              <div class='appellation'>[[entry.wine.appellation]]</div>
             </div>
-            <div class='year'>
-              [[entry.wine.year]]
-            </div>
-            <div class='count'>
-              [[entry.count]]
+            <div class='year-count'>
+              <div class='count'>
+                [[entry.count]]
+              </div>
+              <div class='year'>
+                [[entry.wine.year]]
+              </div>
             </div>
           </div>
         </template>
