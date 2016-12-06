@@ -14,7 +14,7 @@
       }
 
       #grid {
-        margin-top: 1.2em;
+        margin: 1.2em 0 2em 0;
         width: 100%;
       }
 
@@ -54,9 +54,14 @@
 
 
       @media (max-width: 700px) {
-        .names {
+        .details {
           display: flex;
           flex-flow: column nowrap;
+        }
+
+        .name::after {
+          content: '–';
+          margin: 0 0.3em;
         }
 
         .year-count {
@@ -71,7 +76,21 @@
       }
 
       @media (min-width: 701px) {
+        .details {
+          display: flex;
+          flex-flow: row nowrap;
+        }
 
+        .year-count {
+          display: flex;
+          flex-flow: row-reverse nowrap;
+          margin: 0 .5em;
+        }
+        .year, .count {
+          margin-left: 1em;
+          min-width: 1.8em;
+          text-align: right;
+        }
       }
 
       .add-btn {
@@ -114,12 +133,16 @@
       <div id='grid'>
         <template is='dom-repeat' items='[[bottles]]' as='entry'>
           <div class='line'>
-            <div class='names'>
+            <div class='details'>
               <div class='name-prod'>
                 <template is='dom-if' if='[[entry.wine.name]]'>
-                [[entry.wine.name]]&nbsp;-&nbsp;
+                  <span class='name'>
+                    [[entry.wine.name]]
+                  </name>
                 </template>
-                [[entry.wine.producer]]
+                <span class='producer'>
+                  [[entry.wine.producer]]
+                </span>
               </div>
               <div class='appellation'>[[entry.wine.appellation]]</div>
             </div>
