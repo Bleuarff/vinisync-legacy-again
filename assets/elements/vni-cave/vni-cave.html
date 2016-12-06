@@ -76,9 +76,34 @@
       }
 
       @media (min-width: 701px) {
+        .line {
+            padding: .5em;
+        }
+
         .details {
+          flex-grow: 1;
           display: flex;
           flex-flow: row nowrap;
+          margin: 0 1em 0 0.5em;
+          justify-content: space-between;
+        }
+
+        .name-prod {
+          flex-basis: 66%;
+          display: flex;
+          flex-flow: row nowrap;
+        }
+
+        .name, .producer {
+          flex-basis: 50%;
+        }
+
+        .producer:first-of-type {
+          margin-left: 50%;
+        }
+
+        .appellation {
+          flex-basis: 33%;
         }
 
         .year-count {
