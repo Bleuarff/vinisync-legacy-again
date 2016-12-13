@@ -9,7 +9,7 @@ Polymer({
     }
     page: {
       type: String,
-      reflectToAttribute: true,
+      # reflectToAttribute: true,
       observer: '_pageChanged'
     }
     signedIn: {
@@ -38,6 +38,10 @@ Polymer({
         if self.page == tagPage
           resolve()
 
+  # ready: () ->
+  #   window.addEventListener 'location-changed', () ->
+  #     console.log('location-changed: ' + location.pathname)
+
   _routePageChanged: (page) ->
     this.page = page || 'home'
 
@@ -45,7 +49,6 @@ Polymer({
     # Load page import on demand. Show 404 page if fails
     resolvedPageUrl = this.resolveUrl('../vni-' + page + '/' + 'vni-' + page + '.html')
     this.importHref(resolvedPageUrl, null, this._showPage404, true)
-
 
   _showPage404: () ->
     this.page = 'z404'
@@ -67,7 +70,7 @@ Polymer({
     .then (res) =>
       app.user = res.user
       app.csrfToken = res.csrfToken
-      if @route.path == ''
+      if @route.path == '/'
         @fire 'redirect', {path: '/cave'}
       else
         elem = @$.pages.querySelector "[name='#{@page}']"

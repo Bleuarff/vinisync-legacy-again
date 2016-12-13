@@ -63,7 +63,7 @@
 
     </style>
 
-    <app-location use-hash-as-path route="{{route}}"></app-location>
+    <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
     <google-signin-aware id='google-signin' client-id="822030501141-4dn7d2h8ueid9h7ot7m788vqokclodg5.apps.googleusercontent.com"
@@ -74,21 +74,22 @@
         <!-- <span class='title'>[[name]]</span> -->
         <!-- TODO: vinisync icon, return to home page -->
         <div class="pseudo-title">
-          <a  href="#/home">Home</a>
-          <a  href="#/cave">Cave</a>
+          <a  href="/home">Home</a>
+          <a  href="/cave">Cave</a>
         </div>
         <paper-icon-button icon="add">Ajouter une entrée</paper-icon-button>
         <paper-icon-button icon="settings">Settings</paper-icon-button>
       </paper-toolbar>
 
+      <!-- <div>route: [[route.path]]</div> -->
       <iron-pages id='pages'
           selected="[[page]]"
           attr-for-selected="name"
           fallback-selection="z404"
           role="main">
         <vni-home name="home" signed-in='[[signedIn]]'></vni-home>
-        <vni-cave name="cave" route='{{subroute}}'></vni-cave>
-        <vni-entry name='entry' route='{{subroute}}'></vni-entry>
+        <vni-cave name="cave" route='[[subroute]]'></vni-cave>
+        <vni-entry name='entry' route='[[subroute]]'></vni-entry>
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
 

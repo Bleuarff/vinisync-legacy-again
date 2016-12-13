@@ -22,14 +22,26 @@ Polymer {
 
   _routeChanged: (id) ->
     if app.user?
+      # console.log 'route changed & logged: ' + id
       this.fire 'show', {entryId: id}
 
   _show: (e) ->
     if e.detail.entryId?
       # TODO: retrieve entry
       console.log 'retrieve entry ' + e.detail.entryId
+      p = Promise.resolve {
+        wine:
+          appellation: 'Faugère'
+          producer: 'Château la Liquière'
+          country: 'France'
+          cepages: []
+          containing: '75cl'
+          sweet: false
+          sparkling: false
+        count: 13
+      }
     else
-      this.entry =
+      p = Promise.resolve
         wine:
           appellation: null
           producer: null
@@ -47,7 +59,9 @@ Polymer {
         count: 1
         # offeredBy: null
 
-    this.cepages = this.entry.wine.cepages.map (x) -> {value: x}
+    p.then (entry) =>
+      this.entry = entry
+      this.cepages = this.entry.wine.cepages.map (x) -> {value: x}
 
   ready: () ->
     this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',

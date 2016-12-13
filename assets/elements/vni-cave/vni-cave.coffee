@@ -17,7 +17,7 @@ Polymer({
 
 
   _routeChanged: (id) ->
-    if app.user?
+    if app.user? && this.route.prefix == '/cave'
       this.fire 'show'
 
   show: () ->
@@ -31,6 +31,6 @@ Polymer({
       @fire 'error', {text: 'Impossible de récuperer votre cave.'}
 
   addEntry: () ->
-    @fire 'redirect', {path: '/entry'}
+    @fire 'redirect', {path: '/entry/'}
 
 })
