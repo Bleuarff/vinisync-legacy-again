@@ -29,17 +29,7 @@ Polymer {
     if e.detail.entryId?
       # TODO: retrieve entry
       console.log 'retrieve entry ' + e.detail.entryId
-      p = Promise.resolve {
-        wine:
-          appellation: 'Faugère'
-          producer: 'Château la Liquière'
-          country: 'France'
-          cepages: []
-          containing: '75cl'
-          sweet: false
-          sparkling: false
-        count: 13
-      }
+      p = app.send "/cave/#{app.user._id}/entry/#{e.detail.entryId}"
     else
       p = Promise.resolve
         wine:
@@ -62,6 +52,8 @@ Polymer {
     p.then (entry) =>
       this.entry = entry
       this.cepages = this.entry.wine.cepages.map (x) -> {value: x}
+    p.catch (err) =>
+      this.fire 'error', {text: 'Impossible de retrouver le vin'}
 
   ready: () ->
     this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',

@@ -20,8 +20,8 @@ class UserController
 
     userSrv.load uid
     .then (user) ->
-      logger.debug "user: #{JSON.stringify user}"
-      logger.debug "instanceof user: " + user instanceof Promise
+      # logger.debug "user: #{JSON.stringify user}"
+      # logger.debug "instanceof user: " + user instanceof Promise
       res.send 200, user
       next()
     .catch (err) ->
@@ -304,6 +304,29 @@ class UserController
         when 400 then msg = 'invalid parameters'
         else msg = 'error updating entry'
       res.send err.status || 500, msg
+      return next()
+
+  # Retrieves a given entry
+  @getEntry = (req, res, next) ->
+    try
+      uid = new ObjectId req.params.id
+      entryId = new ObjectId req.params.entryId
+    catch err
+      logger.error new VError err, 'Error casting into ObjectId'
+      res.send 400, 'Error casting to ObjectId'
+      return next()
+
+    userSrv.load req.params.id
+    .then (user) ->
+      entry = user.bottles.find (x) -> x._id.equals entryId
+      if !entry?
+        res.send 404, "Entry not found"
+      else
+        res.send 200, entry
+      return next()
+    .catch (err) ->
+      logger.error new VError err, 'Error retrieving entry %s', req.params.entryId
+      res.send err.status || 500, 'Error retrieving entry'
       return next()
 
 module.exports = exports = UserController
