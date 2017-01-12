@@ -66,7 +66,7 @@ Polymer({
     currentUser = gapi.auth2.getAuthInstance().currentUser.get()
     tokenId = currentUser.getAuthResponse().id_token
     userProfileImage = currentUser.getBasicProfile().getImageUrl()
-    app.send '/user/signin', {token: tokenId}, 'POST'
+    app.send '/api/user/signin', {token: tokenId}, 'POST'
     .then (res) =>
       app.user = res.user
       app.csrfToken = res.csrfToken

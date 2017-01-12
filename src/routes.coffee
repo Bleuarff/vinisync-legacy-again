@@ -15,7 +15,7 @@ producer = require './controllers/producerController.js'
 registerRoutes = (server) ->
   logger.debug 'registering handlers & routes'
   csrf.cookies = ['rmrid', 'sessid']
-  csrf.publicUrls = ['/user/signin']
+  csrf.publicUrls = ['/api/user/signin']
 
   # First register handlers
   server.pre restify.pre.sanitizePath() # normalize urls
@@ -46,22 +46,22 @@ registerRoutes = (server) ->
   server.use csrf.checkToken # CSRF verification
 
   # then register routes
-  server.post '/user/signin', user.signin
+  server.post '/api/user/signin', user.signin
 
-  server.get '/cave/:id', user.get
-  server.get '/cave/:id/bottles', user.bottles
-  server.put '/cave/:id/entry', user.addEntry
-  server.post '/cave/:id/entry/:entryId', user.updateEntry
-  server.get  '/cave/:id/entry/:entryId', user.getEntry
-  server.post '/cave/:id/entry/:entryId/increment', user.increment
-  server.post '/cave/:id/entry/:entryId/decrement', user.decrement
+  server.get '/api/cave/:id', user.get
+  server.get '/api/cave/:id/bottles', user.bottles
+  server.put '/api/cave/:id/entry', user.addEntry
+  server.post '/api/cave/:id/entry/:entryId', user.updateEntry
+  server.get  '/api/cave/:id/entry/:entryId', user.getEntry
+  server.post '/api/cave/:id/entry/:entryId/increment', user.increment
+  server.post '/api/cave/:id/entry/:entryId/decrement', user.decrement
 
-  server.put '/wine', wine.create
-  server.get '/wine', wine.find
-  server.get '/wine/:id', wine.get
+  server.put '/api/wine', wine.create
+  server.get '/api/wine', wine.find
+  server.get '/api/wine/:id', wine.get
 
-  server.get '/cepage', cepage.index
-  server.get '/appellation', appellation.index
-  server.get '/producer', producer.index
+  server.get '/api/cepage', cepage.index
+  server.get '/api/appellation', appellation.index
+  server.get '/api/producer', producer.index
 
 module.exports.register = exports.register = registerRoutes

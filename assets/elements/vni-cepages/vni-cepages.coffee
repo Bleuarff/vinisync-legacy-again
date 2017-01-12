@@ -6,7 +6,7 @@ Polymer {
     fullList: {type: Array}
 
   ready: () ->
-    app.send '/cepage'
+    app.send '/api/cepage'
     .then (data) =>
       @fullList = data
 

@@ -29,7 +29,7 @@ Polymer {
     if e.detail.entryId?
       # TODO: retrieve entry
       console.log 'retrieve entry ' + e.detail.entryId
-      p = app.send "/cave/#{app.user._id}/entry/#{e.detail.entryId}"
+      p = app.send "/api/cave/#{app.user._id}/entry/#{e.detail.entryId}"
     else
       p = Promise.resolve
         wine:
@@ -79,10 +79,10 @@ Polymer {
     , 200
 
   appellationChanged: (e) ->
-    @inputChanged e.target.value, '/appellation', @$.appellation
+    @inputChanged e.target.value, '/api/appellation', @$.appellation
 
   producerChanged: (e) ->
-    @inputChanged e.target.value, '/producer', @$.producer
+    @inputChanged e.target.value, '/api/producer', @$.producer
 
   save: () ->
     # TODO: save entry
@@ -93,7 +93,7 @@ Polymer {
     this.entry.wine.apogeeStart = this.setYear this.entry.wine.apogeeStart
     this.entry.wine.apogeeEnd = this.setYear this.entry.wine.apogeeEnd
 
-    app.send "/cave/#{app.user._id}/entry", this.entry, 'PUT'
+    app.send "/api/cave/#{app.user._id}/entry", this.entry, 'PUT'
     .then (newEntry) =>
       @fire 'error', {text: "Entrée créée"}
       # TODO: add entry to local value. redirect cave ?
