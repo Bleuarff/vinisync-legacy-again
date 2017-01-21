@@ -1,6 +1,7 @@
 Polymer {
   is: 'vni-entry'
   properties:
+    entryId: String
     requestWip: Number
     currentYear:
       type: Number
@@ -21,15 +22,15 @@ Polymer {
     this.fire 'pageCreated', {name: this.tagName.toLowerCase()}
 
   _routeChanged: (id) ->
-    if app.user?
-      # console.log 'route changed & logged: ' + id
-      this.fire 'show', {entryId: id}
+    if app.user? && id != @entryId
+      @entryId = id
+      this.fire 'show'
 
-  _show: (e) ->
-    if e.detail.entryId?
+  _show: () ->
+    if @entryId? && @entryId != ''
       # TODO: retrieve entry
-      console.log 'retrieve entry ' + e.detail.entryId
-      p = app.send "/api/cave/#{app.user._id}/entry/#{e.detail.entryId}"
+      console.log 'retrieve entry ' + @entryId
+      p = app.send "/api/cave/#{app.user._id}/entry/#{@entryId}"
     else
       p = Promise.resolve
         wine:

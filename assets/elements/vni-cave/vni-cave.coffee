@@ -17,7 +17,7 @@ Polymer({
 
 
   _routeChanged: (id) ->
-    if app.user? && this.route.prefix == '/cave'
+    if app.user?
       this.fire 'show'
 
   show: () ->
