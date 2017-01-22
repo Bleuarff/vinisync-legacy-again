@@ -248,9 +248,11 @@ class UserController
       res.send 400, 'invalid parameters'
       return next()
 
-    # return error if no parameter provided
-    if !req.params.appellation? && !req.params.producer? &&!req.params.name? && !req.params.year? && !req.params.cepages?
-      res.send 400, 'no parameter to update'
+    try
+      wineSrv.validate req.params.wine
+    catch error
+      logger.info new VError error, "invalid wine parameters"
+      res.send 400, error.message
       return next()
 
     entry = null
@@ -265,28 +267,21 @@ class UserController
       if !entry?
         throw utils.error 'entry not found', 404
 
-      # build object with update values, or existing values for mandatory fields if not provided
-      update = {
-        appellation: req.params.appellation || entry.wine.appellation
-        producer: req.params.producer || entry.wine.producer
-        name: req.params.name
-        year: req.params.year
-        cepages: req.params.cepages || []
-      }
-
-      wineSrv.validate update
-      update = normalizer.normalize update
+      update = normalizer.normalize req.params.wine
 
       # applies new values
       entry.wine.appellation = update.appellation
       entry.wine.producer = update.producer
-      if update.name?
-        entry.wine.name = update.name
-      if update.year?
-        entry.wine.year = update.year
-      if update.cepages?
-        entry.wine.cepages = update.cepages
 
+      fields = ['name', 'year', 'cepages', 'country', 'apogeeStart', 'apogeeEnd', 'containing', 'color', 'sweet',
+      'sparkling']
+      for f in fields
+        if update[f]?
+          entry.wine[f] = update[f]
+
+      if req.params.count?
+        entry.count = req.params.count
+      entry.updateDate = moment.utc()
       cave.save()
     .then () ->
       res.send 200, entry
