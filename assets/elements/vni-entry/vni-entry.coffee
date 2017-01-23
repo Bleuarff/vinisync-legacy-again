@@ -2,6 +2,7 @@ Polymer {
   is: 'vni-entry'
   properties:
     entryId: String
+    edit: Boolean
     requestWip: Number
     currentYear:
       type: Number
@@ -27,8 +28,9 @@ Polymer {
       this.fire 'show'
 
   _show: () ->
-    if @entryId? && @entryId != ''
-      # TODO: retrieve entry
+    # edit mode disabled when an entry id is provided. Otherwise it's a new entry, set to true
+    @edit = utils.isNullOrEmpty @entryId
+    if !utils.isNullOrEmpty @entryId
       console.log 'retrieve entry ' + @entryId
       p = app.send "/api/cave/#{app.user._id}/entry/#{@entryId}"
     else
@@ -85,8 +87,12 @@ Polymer {
   producerChanged: (e) ->
     @inputChanged e.target.value, '/api/producer', @$.producer
 
+  setEdit: () ->
+    console.log 'go into edit mode'
+    @edit = true
+    window.scrollTo 0, 0
+
   save: () ->
-    # TODO: save entry
     console.log 'save entry'
     # TODO: validation
     this.entry.wine.cepages = this.cepages.map (x) -> return x.value
@@ -94,10 +100,20 @@ Polymer {
     this.entry.wine.apogeeStart = this.setYear this.entry.wine.apogeeStart
     this.entry.wine.apogeeEnd = this.setYear this.entry.wine.apogeeEnd
 
-    app.send "/api/cave/#{app.user._id}/entry", this.entry, 'PUT'
+    url = "/api/cave/#{app.user._id}/entry"
+    if utils.isNullOrEmpty @entryId
+      method = 'PUT'
+      txt = 'créée'
+    else
+      url += "/#{@entryId}"
+      method = 'POST'
+      txt = 'sauvegardée'
+
+    app.send url, this.entry, method
     .then (newEntry) =>
-      @fire 'error', {text: "Entrée créée"}
-      # TODO: add entry to local value. redirect cave ?
+      if utils.isNullOrEmpty @entryId
+        @fire 'error', {text: "Entrée " + txt}
+      # TODO: add entry to local value. redirect cave?
     .catch (err) =>
       @fire 'error', {text: "Impossible de rajouter cette entrée"}
 
@@ -135,4 +151,24 @@ Polymer {
 
     reader.readAsDataURL(fileInfo)
 
+  # show field for property if it exists or in edit mode
+  _showProp: (o, propName, edit) ->
+    return !utils.isNullOrEmpty(o.value[propName]) || edit
+
+  # same as showProp but for cepage array only.
+  # Property is directly referenced since array should not be null but empty
+  _showCepages: (cepages, edit) ->
+    return cepages.length > 0 || edit
+
+  # same as showProp but for details values - show if any is set, or in edit mode
+  _showDetails: (o, edit) ->
+    return o.value.sparkling || o.value.sweet || edit
+
+  # show readonly version of field for property if it exists and not in edit mode
+  _showReadonlyProp: (property, edit) ->
+    return !utils.isNullOrEmpty(property) && !edit
+
+  # show separator between apogee start & end only if both are defined, or in edit mode
+  _showApogeeSeparator: (o, edit) ->
+    return o.value.apogeeStart? && o.value.apogeeEnd? || edit
 }

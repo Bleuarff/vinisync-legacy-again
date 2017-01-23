@@ -142,3 +142,9 @@ class App
         reject this
 
 window.app = new App()
+
+class Utils
+  isNullOrEmpty: (value) ->
+    return !value? || value == ''
+
+window.utils = new Utils()

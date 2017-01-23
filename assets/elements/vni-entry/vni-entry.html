@@ -15,10 +15,18 @@
 <dom-module id='vni-entry'>
   <template>
     <style include='shared-styles'>
+      :host {
+        display: block;
+      }
       .apogee {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
+      }
+
+      .separator {
+        display: inline-block;
+        margin: 0 1em;
       }
 
       .containing {
@@ -84,49 +92,89 @@
     </div>
 
     <vaadin-combo-box id='appellation' label='Appellation' value='{{entry.wine.appellation}}' allow-custom-value='true'
-    on-input='appellationChanged'>
+    on-input='appellationChanged' readonly='[[!edit]]'>
     </vaadin-combo-box>
 
     <vaadin-combo-box id='producer' label='Producteur' value='{{entry.wine.producer}}' allow-custom-value='true'
-    on-input='producerChanged'>
+    on-input='producerChanged' readonly='[[!edit]]'>
     </vaadin-combo-box>
 
-    <paper-input id='name' label='Cuvée' value='{{entry.wine.name}}'></paper-input>
+    <template is='dom-if' if="[[_showProp(entry.wine.*, 'name', edit)]]">
+      <paper-input id='name' label='Cuvée' value='{{entry.wine.name}}' readonly='[[!edit]]'>
+      </paper-input>
+    </template>
 
-    <paper-input id='year' label='Millésime' value='{{entry.wine.year}}' type='number' min='1700' max='[[currentYear]]'>
-    </paper-input>
+    <template is='dom-if' if="[[_showProp(entry.wine.*, 'year', edit)]]">
+      <paper-input id='year' label='Millésime' value='{{entry.wine.year}}' type='number' min='1700' max='[[currentYear]]'
+        readonly='[[!edit]]'>
+      </paper-input>
+    </template>
 
-    <vaadin-combo-box label='Pays' value='{{entry.wine.country}}' items='[[countries]]' allow-custom-value='true'></vaadin-combo-box>
+    <template  is='dom-if' if="[[_showProp(entry.wine.*, 'country', edit)]]">
+      <vaadin-combo-box label='Pays' value='{{entry.wine.country}}' items='[[countries]]' allow-custom-value='true'
+         readonly='[[!edit]]'>
+      </vaadin-combo-box>
+    </template>
 
     <div class='apogee'>
-      <paper-input label='Apogée' value='{{entry.wine.apogeeStart}}' type='number' min='1700'></paper-input>
-      -
-      <paper-input label="Jusqu'à" value='{{entry.wine.apogeeEnd}}' type='number' min='[[entry.wine.apogeeStart]]'></paper-input>
+      <template is='dom-if' if="[[_showProp(entry.wine.*, 'apogeeStart', edit)]]">
+        <paper-input label='Apogée' value='{{entry.wine.apogeeStart}}' type='number' min='1700' readonly='[[!edit]]'>
+        </paper-input>
+      </template>
+      <template is='dom-if' if="[[_showApogeeSeparator(entry.wine.*, edit)]]"><span class='separator'>–</span></template>
+      <template is='dom-if' if="[[_showProp(entry.wine.*, 'apogeeEnd', edit)]]">
+        <paper-input label="Jusqu'à" value='{{entry.wine.apogeeEnd}}' type='number' min='[[entry.wine.apogeeStart]]'
+          readonly='[[!edit]]'>
+        </paper-input>
+      </template>
     </div>
 
-    <vni-color color='{{entry.wine.color}}'></vni-color>
+    <template is='dom-if' if="[[_showProp(entry.wine.*, 'color', edit)]]">
+      <vni-color color='{{entry.wine.color}}' readonly='[[!edit]]'></vni-color>
+    </template>
 
-    <paper-input label='Quantité' type='number' value='{{entry.count}}' min='1' max='100'></paper-input>
+    <paper-input label='Quantité' type='number' value='{{entry.count}}' min='1' max='100' readonly='[[!edit]]'>
+    </paper-input>
 
-    <vni-cepages cepages='[[cepages]]'></vni-cepages>
+    <template is='dom-if' if='[[_showCepages(entry.wine.cepages, edit)]]'>
+      <vni-cepages cepages='[[cepages]]' readonly='[[!edit]]'></vni-cepages>
+    </template>
 
-    <span>Détails:</span>
-    <div class='tags'>
-      <paper-checkbox checked='{{entry.wine.sparkling}}' class='tag'>pétillant</paper-checkbox>
-      <paper-checkbox checked='{{entry.wine.sweet}}' class='tag'>liquoreux</paper-checkbox>
-    </div>
-
-    <paper-dropdown-menu-light label='Contenant' class='containing'>
-      <paper-tabs class='dropdown-content' attr-for-selected='value' selected='{{entry.wine.containing}}'>
-        <template is='dom-repeat' items='[[containings]]'>
-          <paper-tab value='[[item]]'>[[item]]</paper-tab>
+    <template is='dom-if' if="[[_showDetails(entry.wine.*, edit)]]">
+      <span>Détails:</span>
+      <div class='tags'>
+        <template is='dom-if' if="[[_showProp(entry.wine.*, 'sparkling', edit)]]">
+          <paper-checkbox checked='{{entry.wine.sparkling}}' class='tag' disabled='[[!edit]]'>pétillant</paper-checkbox>
         </template>
-      </paper-tabs>
-    </paper-dropdown-menu-light>
+        <template is='dom-if' if="[[_showProp(entry.wine.*, 'sweet', edit)]]">
+          <paper-checkbox checked='{{entry.wine.sweet}}' class='tag' disabled='[[!edit]]'>liquoreux</paper-checkbox>
+        </template>
+      </div>
+    </template>
 
-    <paper-input label='Offert par' value='{{entry.offeredBy}}'></paper-input>
+    <template is='dom-if' if='[[edit]]'>
+      <paper-dropdown-menu-light label='Contenant' class='containing'>
+        <paper-tabs class='dropdown-content' attr-for-selected='value' selected='{{entry.wine.containing}}'>
+          <template is='dom-repeat' items='[[containings]]'>
+            <paper-tab value='[[item]]'>[[item]]</paper-tab>
+          </template>
+        </paper-tabs>
+      </paper-dropdown-menu-light>
+    </template>
+    <template is='dom-if' if='[[_showReadonlyProp(entry.wine.containing, edit)]]'>
+      <paper-input label='Contenant' value='[[entry.wine.containing]]' readonly='true'></paper-input>
+    </template>
 
-    <paper-button class='default' on-tap='save'>Enregistrer</paper-button>
+    <template is='dom-if' if="[[_showProp(entry.*, 'offeredBy', edit)]]">
+      <paper-input label='Offert par' value='{{entry.offeredBy}}' readonly='[[!edit]]'></paper-input>
+    </template>
+
+    <template is='dom-if' if=[[edit]]>
+      <paper-button class='default' on-tap='save'>Enregistrer</paper-button>
+    </template>
+    <template is='dom-if' if=[[!edit]]>
+      <paper-button class='default' on-tap='setEdit'>Editer</paper-button>
+    </template>
   </template>
   <script src="vni-entry.js"></script>
 </dom-module>

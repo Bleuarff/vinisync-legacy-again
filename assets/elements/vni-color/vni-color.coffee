@@ -4,21 +4,12 @@ Polymer {
     color:
       type: String
       notify: true
-
-    isRed:
-      type: Boolean,
-      computed: 'isColor(color, "red")'
-    isWhite:
-      type: Boolean,
-      computed: 'isColor(color, "white")'
-    isRose:
-      type: Boolean,
-      computed: 'isColor(color, "rose")'
-
+    readonly: {type: Boolean, value: false}
 
   isColor: (value, compare) ->
     return value == compare
 
   selectColor: (e) ->
+    return if @readonly
     this.color = e.currentTarget.dataset.color
 }

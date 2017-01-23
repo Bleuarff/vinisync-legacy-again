@@ -32,33 +32,40 @@
       }
 
       .red {
-        background: var(--vni-main-color);
+        background: var(--vni-red-wine);
         color: white;
       }
 
       .white {
-        background: yellow;
+        background: var(--vni-white-wine);
       }
 
       .rose {
-        background: pink;
+        background: var(--vni-rose-wine);
       }
 
       .color[selected] {
         border: 3px solid black;
       }
 
+      .readonly-true .color {
+        cursor: default;
+      }
+
+      .readonly-true .color:not([selected])  {
+        display: none;
+      }
     </style>
 
     <span>Couleur:</span>
-    <div class='colors'>
-      <span class='color red' data-color='red' on-tap='selectColor' selected$='[[isRed]]'>
+    <div class$='colors readonly-[[readonly]]'>
+      <span class='color red' data-color='red' on-tap='selectColor' selected$="[[isColor(color, 'red')]]">
         <span>ROUGE</span>
       </span>
-      <span class='color white' data-color='white' on-tap='selectColor' selected$='[[isWhite]]'>
+      <span class='color white' data-color='white' on-tap='selectColor' selected$="[[isColor(color, 'white')]]">
         <span>BLANC</span>
       </span>
-      <span class='color rose' data-color='rose' on-tap='selectColor' selected$='[[isRose]]'>
+      <span class='color rose' data-color='rose' on-tap='selectColor' selected$="[[isColor(color, 'rose')]]">
         <span>ROSÉ</span>
       </span>
     </div>

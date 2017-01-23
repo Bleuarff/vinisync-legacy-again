@@ -2,8 +2,8 @@ Polymer {
   is: 'vni-cepages'
 
   properties:
-    cepages: {type: Array }
-    fullList: {type: Array}
+    cepages: Array
+    readonly: {type: Boolean, value: false}
 
   ready: () ->
     app.send '/api/cepage'
@@ -11,9 +11,10 @@ Polymer {
       @fullList = data
 
   select: (e) ->
+    e.stopPropagation()
+    return if @readonly
     e.currentTarget.parentElement.classList.toggle 'selected'
     e.currentTarget.parentElement.focus()
-    e.stopPropagation()
 
   unselect: (e) ->
     e.currentTarget.classList.remove 'selected'
