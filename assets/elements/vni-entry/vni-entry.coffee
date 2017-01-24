@@ -92,6 +92,9 @@ Polymer {
     @edit = true
     window.scrollTo 0, 0
 
+  cancelEdit: () ->
+    @edit = false
+
   save: () ->
     console.log 'save entry'
     # TODO: validation
@@ -103,19 +106,19 @@ Polymer {
     url = "/api/cave/#{app.user._id}/entry"
     if utils.isNullOrEmpty @entryId
       method = 'PUT'
-      txt = 'créée'
+      okTxt = 'créée'
     else
       url += "/#{@entryId}"
       method = 'POST'
-      txt = 'sauvegardée'
+      okTxt = 'sauvegardée'
 
     app.send url, this.entry, method
     .then (newEntry) =>
-      if utils.isNullOrEmpty @entryId
-        @fire 'error', {text: "Entrée " + txt}
+      @fire 'success', {text: "Entrée " + okTxt}
+      @edit = false
       # TODO: add entry to local value. redirect cave?
     .catch (err) =>
-      @fire 'error', {text: "Impossible de rajouter cette entrée"}
+      @fire 'error', {text: "Erreur de sauvegarde."}
 
   setYear: (value) ->
     year = parseInt value, 10

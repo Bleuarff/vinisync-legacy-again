@@ -173,6 +173,7 @@
 
     <template is='dom-if' if=[[edit]]>
       <paper-button class='default big' on-tap='save'>Enregistrer</paper-button>
+      <paper-button class='default big' on-tap='cancelEdit'>Annuler</paper-button>
     </template>
     <template is='dom-if' if=[[!edit]]>
       <paper-fab class='edit' icon='editor:mode-edit' on-tap='setEdit'></paper-fab>

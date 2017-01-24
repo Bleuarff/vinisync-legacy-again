@@ -22,6 +22,7 @@ Polymer({
     redirect: '_redirect'
     signout: 'signout'
     error: '_error'
+    success: '_success'
     debug: '_debug'
 
   observers: [
@@ -61,6 +62,13 @@ Polymer({
   _error: (e) ->
     toast = this.$.errorToast
     toast.show e.detail.text
+
+  _success: (e) ->
+    toast = this.$.successToast
+    toast.show e.detail.text
+
+  hideError: () ->
+    this.$.errorToast.hide()
 
   signinSuccess: (evt) ->
     currentUser = gapi.auth2.getAuthInstance().currentUser.get()

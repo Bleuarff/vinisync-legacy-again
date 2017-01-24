@@ -61,6 +61,12 @@
         border-top: 3px solid var(--vni-main-color);
       }
 
+      .toast-hide-btn {
+        color: #eeff41;
+        float: right;
+        cursor: pointer;
+      }
+
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -99,7 +105,10 @@
       </div> -->
     </paper-scroll-header-panel>
 
-  <paper-toast id='errorToast'></paper-toast>
+  <paper-toast id='errorToast' duration='0'>
+    <span class="toast-hide-btn" role="button" tabindex="0" on-tap="hideError">OK</span>
+  </paper-toast>
+  <paper-toast id='successToast'></paper-toast>
 
   </template>
   <script src="vni-app.js"></script>
