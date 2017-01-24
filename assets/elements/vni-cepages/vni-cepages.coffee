@@ -23,7 +23,7 @@ Polymer {
     this.splice 'cepages', e.model.index, 1
 
   add: () ->
-    input = this.$.input
+    input = this.querySelector '.input'
     newValue = input.value
     return if newValue == '' || !newValue?
 

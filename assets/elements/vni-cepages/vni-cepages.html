@@ -67,7 +67,7 @@
         cursor: pointer;
       }
 
-      #input {
+      .input {
         flex-grow: 1;
       }
 
@@ -86,7 +86,7 @@
 
     <template is='dom-if' if='[[!readonly]]'>
       <div class='input-block'>
-        <vaadin-combo-box label='Ajouter un cépage' id='input'
+        <vaadin-combo-box label='Ajouter un cépage' class='input'
         allow-custom-value='true' items='[[fullList]]'>
         </vaadin-combo-box>
         <div class='add'>
