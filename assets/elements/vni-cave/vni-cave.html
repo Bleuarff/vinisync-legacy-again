@@ -143,22 +143,6 @@
         }
       }
 
-      .add-btn {
-        position: fixed;
-        bottom: 1em;
-      }
-
-      @media (max-width: 1000px) {
-        .add-btn {
-          right: 1em;
-        }
-      }
-
-      @media (min-width: 1001px) {
-        .add-btn {
-          right: calc((100vw - 1000px)/2);
-        }
-      }
     </style>
 
     <app-route
@@ -215,7 +199,7 @@
         </template>
       </div>
 
-      <paper-fab class='add-btn' icon='icons:add' on-tap='addEntry'></paper-fab>
+      <paper-fab icon='icons:add' on-tap='addEntry'></paper-fab>
     </template>
   </template>
 

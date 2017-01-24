@@ -19,12 +19,36 @@
         background-color: var(--vni-main-color);
         color: white;
       }
+
+      paper-button.big {
+        display: block;
+        width: 80%;
+        margin: auto;
+        margin-top: 2em;
+        margin-bottom: .5em;
+        text-align: center;
+      }
+
       .hidden {
         display: none;
       }
 
       paper-fab {
         --paper-fab-background: var(--vni-main-color);
+        position: fixed;
+        bottom: 1em;
+      }
+
+      @media (max-width: 1000px) {
+        paper-fab {
+          right: 1em;
+        }
+      }
+
+      @media (min-width: 1001px) {
+        paper-fab {
+          right: calc((100vw - 1000px)/2);
+        }
       }
 
     </style>
