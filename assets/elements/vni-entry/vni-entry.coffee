@@ -87,6 +87,18 @@ Polymer {
   producerChanged: (e) ->
     @inputChanged e.target.value, '/api/producer', @$.producer
 
+  # hide fab, open display menu & overlay
+  openEditMenu: (e) ->
+    e.currentTarget.classList.add 'hidden'
+    this.querySelector('.editMenu').classList.remove 'hidden'
+    this.querySelector('.overlay').classList.remove 'hidden'
+
+  # hide overlay & menu, display fab
+  hideMenu: () ->
+    this.querySelector('.overlay').classList.add 'hidden'
+    this.querySelector('.editMenu').classList.add 'hidden'
+    @querySelector('.edit-fab').classList.remove 'hidden'
+
   setEdit: () ->
     console.log 'go into edit mode'
     @edit = true
@@ -94,6 +106,7 @@ Polymer {
 
   cancelEdit: () ->
     @edit = false
+    @hideMenu()
 
   save: () ->
     console.log 'save entry'
@@ -115,7 +128,7 @@ Polymer {
     app.send url, this.entry, method
     .then (newEntry) =>
       @fire 'success', {text: "Entrée " + okTxt}
-      @edit = false
+      @cancelEdit()
       # TODO: add entry to local value. redirect cave?
     .catch (err) =>
       @fire 'error', {text: "Erreur de sauvegarde."}
