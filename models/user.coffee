@@ -10,29 +10,9 @@ userSchema = new mongoose.Schema
   firstName: String
   lastName: String
   enabled: Boolean
-  bottles: [{
-    wine: { # full denormalization!
-      appellation: String
-      producer: String
-      name: String
-      year: Number
-      cepages: [String]
-      pictures: [String]
-      apogeeStart: Number
-      apogeeEnd: Number
-      country: String
-      color: String
-      containing: String
-      sweet: Boolean
-      sparkling: Boolean
-    }
-    count: Number
-    offeredBy: String
-    location: String
-    createDate: Date
-    updateDate: Date
-  }]
 
+  # TODO: store last login
+  
 # Removes sensitive and uneeded fields on serialization
 userSchema.set 'toJSON', transform: (doc, ret, options) ->
   # delete ret.password
