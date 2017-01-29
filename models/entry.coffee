@@ -4,7 +4,7 @@ ObjectId = mongoose.Schema.Types.ObjectId
 
 # Entry model
 entrySchema = new mongoose.Schema
-  userId: ObjectId 
+  userId: ObjectId
   wine: { # full denormalization!
     appellation: String
     producer: String

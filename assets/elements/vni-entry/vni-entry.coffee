@@ -134,6 +134,23 @@ Polymer {
     .catch (err) =>
       @fire 'error', {text: "Erreur de sauvegarde."}
 
+  increment: () ->
+    app.send "/api/cave/#{app.user._id}/entry/#{@entryId}/increment", {}, 'POST'
+    .then () =>
+      @fire 'success', {text: 'Quantité + 1'}
+      @set 'entry.count', @entry.count + 1
+    .catch (err) =>
+      @fire 'error', {text: 'Erreur: quantité ' + @entry.count}
+
+  decrement: () ->
+    app.send "/api/cave/#{app.user._id}/entry/#{@entryId}/decrement", {}, 'POST'
+    .then () =>
+      @fire 'success', {text: 'Quantité - 1'}
+      @set 'entry.count', @entry.count - 1
+    .catch (err) =>
+      @fire 'error', {text: 'Erreur: quantité ' + @entry.count}
+
+
   setYear: (value) ->
     year = parseInt value, 10
     if !isNaN year

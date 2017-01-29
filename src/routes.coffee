@@ -7,6 +7,7 @@ session = require './utils/session.js'
 csrf = require './utils/csrf.js'
 # declare controllers
 user = require './controllers/userController.js'
+entry = require './controllers/entryController.js'
 appellation = require './controllers/appellationController.js'
 wine = require './controllers/wineController.js'
 cepage = require './controllers/cepageController.js'
@@ -42,6 +43,7 @@ registerRoutes = (server) ->
   server.use restify.queryParser({mapParams: true})
   server.use restify.bodyParser({mapParams: true})
   server.use session.handle # creates or retrieves session and attach it to request object
+  # TODO: checkAuth !!!!
   # server.use user.checkAuth # remember me feature
   server.use csrf.checkToken # CSRF verification
 
@@ -49,12 +51,13 @@ registerRoutes = (server) ->
   server.post '/api/user/signin', user.signin
 
   server.get '/api/cave/:id', user.get
-  server.get '/api/cave/:id/bottles', user.bottles
-  server.put '/api/cave/:id/entry', user.addEntry
-  server.post '/api/cave/:id/entry/:entryId', user.updateEntry
-  server.get  '/api/cave/:id/entry/:entryId', user.getEntry
-  server.post '/api/cave/:id/entry/:entryId/increment', user.increment
-  server.post '/api/cave/:id/entry/:entryId/decrement', user.decrement
+
+  server.get '/api/cave/:id/bottles', entry.index
+  server.put '/api/cave/:id/entry', entry.addEntry
+  server.post '/api/cave/:id/entry/:entryId', entry.updateEntry
+  server.get  '/api/cave/:id/entry/:entryId', entry.getEntry
+  server.post '/api/cave/:id/entry/:entryId/increment', entry.increment
+  server.post '/api/cave/:id/entry/:entryId/decrement', entry.decrement
 
   server.put '/api/wine', wine.create
   server.get '/api/wine', wine.find
