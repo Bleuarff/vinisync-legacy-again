@@ -18,6 +18,7 @@ class Normalizer
   @normalize: (wine) ->
     for key in Object.keys wine
       if typeof wine[key] == 'string'
+        continue if key == 'color'
         value = wine[key]
         continue if value == null
 

@@ -25,7 +25,7 @@ Polymer({
     .then (entries) =>
       @bottles = entries.bottles
       @entryCount = entries.entryCount
-      @bottleCount = entries.bottleCount
+      # @bottleCount = entries.bottleCount
     .catch (err) ->
       console.log 'err'
       @fire 'error', {text: 'Impossible de récuperer votre cave.'}

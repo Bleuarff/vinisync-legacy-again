@@ -115,6 +115,7 @@ Polymer {
     this.entry.wine.year = this.setYear this.entry.wine.year
     this.entry.wine.apogeeStart = this.setYear this.entry.wine.apogeeStart
     this.entry.wine.apogeeEnd = this.setYear this.entry.wine.apogeeEnd
+    this.entry.count = this.setCount this.entry.count
 
     url = "/api/cave/#{app.user._id}/entry"
     if utils.isNullOrEmpty @entryId
@@ -138,6 +139,12 @@ Polymer {
     if !isNaN year
       return year
     else return undefined
+
+  setCount: (value) ->
+    count = parseInt value, 10
+    if !isNaN count
+      return count
+    else return 1
 
   # open file selector/camera
   selectPhoto: () ->
