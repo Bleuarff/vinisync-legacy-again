@@ -32,7 +32,7 @@ Polymer {
     @edit = utils.isNullOrEmpty @entryId
     if !utils.isNullOrEmpty @entryId
       console.log 'retrieve entry ' + @entryId
-      p = app.send "/api/cave/#{app.user._id}/entry/#{@entryId}"
+      p = app.send "/api/entry/#{@entryId}"
     else
       p = Promise.resolve
         wine:
@@ -95,9 +95,12 @@ Polymer {
 
   # hide overlay & menu, display fab
   hideMenu: () ->
-    this.querySelector('.overlay').classList.add 'hidden'
-    this.querySelector('.editMenu').classList.add 'hidden'
-    @querySelector('.edit-fab').classList.remove 'hidden'
+    overlay = this.querySelector('.overlay')
+    overlay.classList.add 'hidden' if overlay?
+    menu = this.querySelector('.editMenu')
+    menu.classList.add 'hidden' if menu?
+    fab = @querySelector('.edit-fab')
+    fab.classList.remove 'hidden' if fab?
 
   setEdit: () ->
     console.log 'go into edit mode'
@@ -117,7 +120,7 @@ Polymer {
     this.entry.wine.apogeeEnd = this.setYear this.entry.wine.apogeeEnd
     this.entry.count = this.setCount this.entry.count
 
-    url = "/api/cave/#{app.user._id}/entry"
+    url = "/api/entry"
     if utils.isNullOrEmpty @entryId
       method = 'PUT'
       okTxt = 'créée'
@@ -128,6 +131,7 @@ Polymer {
 
     app.send url, this.entry, method
     .then (newEntry) =>
+      @entryId = newEntry._id
       @fire 'success', {text: "Entrée " + okTxt}
       @cancelEdit()
       # TODO: add entry to local value. redirect cave?
@@ -135,17 +139,17 @@ Polymer {
       @fire 'error', {text: "Erreur de sauvegarde."}
 
   increment: () ->
-    app.send "/api/cave/#{app.user._id}/entry/#{@entryId}/increment", {}, 'POST'
+    app.send "/api/entry/#{@entryId}/increment", {}, 'POST'
     .then () =>
-      @fire 'success', {text: 'Quantité + 1'}
+      # @fire 'success', {text: 'Quantité + 1'}
       @set 'entry.count', @entry.count + 1
     .catch (err) =>
       @fire 'error', {text: 'Erreur: quantité ' + @entry.count}
 
   decrement: () ->
-    app.send "/api/cave/#{app.user._id}/entry/#{@entryId}/decrement", {}, 'POST'
+    app.send "/api/entry/#{@entryId}/decrement", {}, 'POST'
     .then () =>
-      @fire 'success', {text: 'Quantité - 1'}
+      # @fire 'success', {text: 'Quantité - 1'}
       @set 'entry.count', @entry.count - 1
     .catch (err) =>
       @fire 'error', {text: 'Erreur: quantité ' + @entry.count}

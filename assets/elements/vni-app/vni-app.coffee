@@ -113,10 +113,17 @@ class App
   user: null # base user info (without entries)
   csrfToken: null
 
+  isLogged: () ->
+    return app.user? && app.user._id?
+
   # Sends an ajax request
   send: (url, payload = {}, verb = 'GET') ->
     client = new XMLHttpRequest()
     uri = url
+
+    if app.isLogged() && !payload.uid? && !url.startsWith('/api/user/') && !url.startsWith('/api/cave/')
+      payload.uid = app.user._id
+
 
     if verb == 'GET' || verb == 'HEAD'
       args = []

@@ -5,8 +5,6 @@ logger = require('../utils/logger.js').create 'entryController'
 config = require '../utils/config.js'
 utils = require '../utils/utils.js'
 Entry = require '../models/entry.js'
-# userSrv = require '../services/userService.js'
-User = require '../models/user.js'
 wineSrv = require '../services/wineService.js'
 normalizer = require '../services/normalizer.js'
 
@@ -15,9 +13,11 @@ class EntryController
 
   # retrieves all entries for a given user
   @index = (req, res, next) ->
-    uid = null
+    if !utils.hasParams req, res, []
+      return next()
+
     try
-      uid = new ObjectId req.params.id
+      uid = new ObjectId req.params.uid
     catch err
       logger.error new VError err, 'Error casting into ObjectId'
       res.send 400, 'Error casting to ObjectId'
@@ -45,9 +45,11 @@ class EntryController
 
   # Retrieves a given entry
   @getEntry = (req, res, next) ->
-    uid = null
+    if !utils.hasParams req, res
+      return next()
+
     try
-      uid = new ObjectId req.params.id
+      uid = new ObjectId req.params.uid
       entryId = new ObjectId req.params.entryId
     catch err
       logger.error new VError err, 'Error casting into ObjectId'
@@ -69,10 +71,11 @@ class EntryController
 
   # adds an entry to the cave
   @addEntry = (req, res, next) ->
-    # id = req.params.id
-    uid = null
+    if !utils.hasParams req, res, ['wine', 'count']
+      return next()
+
     try
-      uid = new ObjectId req.params.id
+      uid = new ObjectId req.params.uid
     catch err
       res.send 400, 'userId is not an ObjectId'
       return next()
@@ -86,22 +89,15 @@ class EntryController
 
     wine = normalizer.normalize req.params.wine
     logger.debug "add to cave: #{wine.appellation}, #{wine.producer}, #{wine.name}, #{wine.year} / count: #{req.params.count}"
-    in_cave = null
 
-    # Checks userid is valid - maybe not necessary once we use checkAuth
-    User.findById uid, {_id: 1}
-    .then (user) ->
-      if !user?
-        throw utils.error "User #{id} not found", 404
-
-      # checks if an entry already exists
-      Entry.findOne {
-        userId: uid
-        'wine.appellation': wine.appellation
-        'wine.producer': wine.producer
-        'wine.name': wine.name
-        'wine.year': wine.year
-      }
+    # checks if an entry already exists
+    Entry.findOne {
+      userId: uid
+      'wine.appellation': wine.appellation
+      'wine.producer': wine.producer
+      'wine.name': wine.name
+      'wine.year': wine.year
+    }
     .then (entry) ->
       # if so, update counter
       if entry?
@@ -141,8 +137,11 @@ class EntryController
 
   # updates an entry with the given params
   @updateEntry = (req, res, next) ->
+    if !utils.hasParams req, res, ['wine', 'count']
+      return next()
+
     try
-      caveId = new ObjectId req.params.id
+      uid = new ObjectId req.params.uid
       entryId = new ObjectId req.params.entryId
     catch ex
       res.send 400, 'invalid parameters'
@@ -156,13 +155,7 @@ class EntryController
       return next()
 
     entry = null
-
-    User.findById caveId, {_id: 1}
-    .then (cave) ->
-      if !cave?
-        throw utils.error 'cave not found', 404
-
-      Entry.findById entryId
+    Entry.findOne {_id: entryId, userId: uid}
     .then (entry) ->
       if !entry?
         throw utils.error 'entry not found', 404
@@ -197,7 +190,7 @@ class EntryController
         logger.error new VError err, 'Error creating wine'
         return next()
     .catch (err) ->
-      logger.error new VError err, 'Error updating entry %s for user %s', req.params.entryId, req.params.id
+      logger.error new VError err, 'Error updating entry %s for user %s', req.params.entryId, req.params.uid
       switch err.status
         when 400 then msg = 'invalid parameters'
         else msg = 'error updating entry'
@@ -207,8 +200,11 @@ class EntryController
 
   # increments an entry count by 1
   @increment = (req, res, next) ->
+    if !utils.hasParams req, res
+      return next()
+
     try
-      uid = new ObjectId req.params.id
+      uid = new ObjectId req.params.uid
       entryId = new ObjectId req.params.entryId
     catch ex
       res.send 400, 'invalid parameters'
@@ -233,14 +229,15 @@ class EntryController
   # decrements an entry count by 1
   # TODO: when 0, what ?
   @decrement = (req, res, next) ->
+    if !utils.hasParams req, res
+      return next()
+
     try
-      uid = new ObjectId req.params.id
+      uid = new ObjectId req.params.uid
       entryId = new ObjectId req.params.entryId
     catch ex
       res.send 400, 'invalid parameters'
       return next()
-
-    newCount = -1
 
     Entry.findOneAndUpdate {_id: entryId, userId: uid}, {
       $inc: {count: -1}

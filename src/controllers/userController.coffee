@@ -13,15 +13,12 @@ normalizer = require '../services/normalizer.js'
 class UserController
 
   @get = (req, res, next) ->
-    uid = req.params.id
-    # if uid != req.session.data.uid
-    #   res.send 403
-    #   return next()
+    if !utils.hasParams req, res, []
+      return next()
 
+    uid = req.params.uid
     userSrv.load uid
     .then (user) ->
-      # logger.debug "user: #{JSON.stringify user}"
-      # logger.debug "instanceof user: " + user instanceof Promise
       res.send 200, user
       next()
     .catch (err) ->

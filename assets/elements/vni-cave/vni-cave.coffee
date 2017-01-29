@@ -21,7 +21,7 @@ Polymer({
       this.fire 'show'
 
   show: () ->
-    app.send "/api/cave/#{app.user._id}/bottles", {offset: 0, count: 20}
+    app.send "/api/cave/#{app.user._id}", {offset: 0, count: 20}
     .then (entries) =>
       @bottles = entries.bottles
       @entryCount = entries.entryCount
