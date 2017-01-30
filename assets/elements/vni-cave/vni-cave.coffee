@@ -25,10 +25,13 @@ Polymer({
     .then (entries) =>
       @bottles = entries.bottles
       @entryCount = entries.entryCount
-      # @bottleCount = entries.bottleCount
     .catch (err) ->
       console.log 'err'
       @fire 'error', {text: 'Impossible de récuperer votre cave.'}
+
+    app.send "/api/cave/#{app.user._id}/count"
+    .then (res) =>
+      @bottleCount = res.count
 
   addEntry: () ->
     @fire 'redirect', {path: '/entry/'}

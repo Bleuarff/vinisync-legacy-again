@@ -51,6 +51,7 @@ registerRoutes = (server) ->
   server.get '/api/user/:uid', user.get
 
   server.get '/api/cave/:uid', entry.index
+  server.get '/api/cave/:uid/count', entry.getBottleCount
   server.put '/api/entry', entry.addEntry
   server.get  '/api/entry/:entryId', entry.getEntry
   server.post '/api/entry/:entryId', entry.updateEntry

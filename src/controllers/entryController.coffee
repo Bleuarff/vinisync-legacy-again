@@ -69,6 +69,31 @@ class EntryController
       return next()
 
 
+  # Returns the total number of bottles
+  @getBottleCount: (req, res, next) ->
+    if !utils.hasParams req, res, []
+      return next()
+
+    try
+      uid = new ObjectId req.params.uid
+    catch error
+      res.send 400, 'uid is not an ObjectId'
+      return next()
+
+    Entry.aggregate()
+    .match {userId: uid}
+    .group {_id: '$userId', total: {$sum: '$count'}}
+    .exec()
+    .then (results) ->
+      count = results[0].total
+      res.send 200, {count: count}
+      next()
+    .catch (err) ->
+      logger.error new VError err, 'Error retrieving bottle count'
+      res.send 500, 'Error retrieving bottle count'
+      next()
+
+
   # adds an entry to the cave
   @addEntry = (req, res, next) ->
     if !utils.hasParams req, res, ['wine', 'count']
