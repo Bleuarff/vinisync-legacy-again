@@ -8,6 +8,8 @@ Polymer({
     entryCount: Number
     bottleCount: Number
     page: {type: String, observer: '_pageChanged'}
+    # wether a query is currently in progress
+    loading: {type: Boolean, readOnly: true, value: false}
   }
 
   listeners:
@@ -52,20 +54,27 @@ Polymer({
 
   # actual query to retrieve entries
   queryPage: () ->
+    return Promise.resolve() if @loading # blocks new queries if one is in progress
+    @_setLoading true
     return app.send "/api/cave/#{app.user._id}", {offset: @offset, count: 20}
     .then (entries) =>
       # console.log 'got entries'
+      @_setLoading false
       @entries = @entries.concat entries.bottles
       @entryCount = entries.entryCount
       @offset += entries.bottles.length
+    .catch () =>
+      @_setLoading false
 
   # on scroll, check if we need to query a new chunk of entries.
   _scroll: () ->
-    # use setTimeout to throttle/debounce scroll events
+    # use setTimeout to debounce scroll events
     return if self.scrollItv
     self.scrollItv = setTimeout () ->
       gridBottom = self.$.grid.getBoundingClientRect().bottom
       if self.offset < self.entryCount && gridBottom < self.height + 500
+        # timeout id is reset when query is done to block scroll handling,
+        # and prevent new queries until current one is done
         self.queryPage()
         .then () ->
           self.scrollItv = 0
@@ -83,6 +92,10 @@ Polymer({
     # console.log 'bottom: ' + gridBottom
     if self.offset < self.entryCount && gridBottom < self.height + 500
       self.queryPage()
+      .catch (err) ->
+        console.log err
+        self.fire 'error', {text: 'Erreur de récupération de votre cave'}
+
 
   addEntry: () ->
     @fire 'redirect', {path: '/entry/'}
