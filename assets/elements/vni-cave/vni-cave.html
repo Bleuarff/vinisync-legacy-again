@@ -163,9 +163,10 @@
         * [[entryCount]] références,<br>
         * [[bottleCount]] bouteilles
       </p>
+    </template>
 
       <div id='grid'>
-        <template is='dom-repeat' items='[[bottles]]' as='entry'>
+        <template is='dom-repeat' items='[[entries]]' as='entry'>
           <a class='line' href$='/entry/[[entry._id]]'>
             <div class='color-ctnr'>
               <template is='dom-if' if='[[entry.wine.color]]'>
@@ -200,7 +201,6 @@
       </div>
 
       <paper-fab icon='icons:add' on-tap='addEntry'></paper-fab>
-    </template>
   </template>
 
   <script src="vni-cave.js"></script>
