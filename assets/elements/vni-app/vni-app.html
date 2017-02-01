@@ -33,10 +33,10 @@
 
       .pseudo-title {
         flex: 1;
-        margin-left: 56px;
+        margin-left: 2em;
       }
 
-      paper-toolbar a {
+      .pseudo-title a {
         color: white;
         text-decoration: none;
         display: inline-block;
@@ -53,12 +53,6 @@
 
       paper-toolbar a:last-child{
         margin-right: 0;
-      }
-
-      #debug {
-        height: 100px;
-        scroll: auto;
-        border-top: 3px solid var(--vni-main-color);
       }
 
       .toast-hide-btn {
@@ -79,17 +73,15 @@
 
     <paper-scroll-header-panel class="flex">
       <paper-toolbar>
-        <!-- <span class='title'>[[name]]</span> -->
-        <!-- TODO: vinisync icon, return to home page -->
+        <a href='/home'>
+          <img src='/img/vinisync-logo.svg' width='40' height='40'/>
+        </a>
         <div class="pseudo-title">
-          <a  href="/home">Home</a>
           <a  href="/cave">Cave</a>
         </div>
-        <paper-icon-button icon="add">Ajouter une entrée</paper-icon-button>
-        <paper-icon-button icon="settings">Settings</paper-icon-button>
+        <!-- <paper-icon-button icon="settings">Settings</paper-icon-button> -->
       </paper-toolbar>
 
-      <!-- <div>route: [[route.path]]</div> -->
       <iron-pages id='pages'
           selected="[[page]]"
           attr-for-selected="name"
@@ -101,14 +93,12 @@
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
 
-      <!-- <div id='debug'>
-      </div> -->
     </paper-scroll-header-panel>
 
-  <paper-toast id='errorToast' duration='0'>
-    <span class="toast-hide-btn" role="button" tabindex="0" on-tap="hideError">OK</span>
-  </paper-toast>
-  <paper-toast id='successToast'></paper-toast>
+    <paper-toast id='errorToast' duration='0'>
+      <span class="toast-hide-btn" role="button" tabindex="0" on-tap="hideError">OK</span>
+    </paper-toast>
+    <paper-toast id='successToast'></paper-toast>
 
   </template>
   <script src="vni-app.js"></script>
