@@ -76,17 +76,12 @@
       }
 
       .editMenu {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-around;
-        width: 100%;
-        z-index: 100;
-
         position: fixed;
         left: 0;
         bottom: 0;
         right: 0;
         padding: 0.3em;
+        z-index: 100;
 
         background-color: var(--vni-main-color);
         color: white;
@@ -94,6 +89,15 @@
         -moz-user-select: none;
         -webkit-user-select: none;
         user-select: none;
+      }
+
+      .editMenu-ctnr {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        width: 100%;
+        max-width: 1000px;
+        margin: auto;
       }
 
       .overlay {
@@ -209,9 +213,11 @@
     <template is='dom-if' if=[[!edit]]>
       <paper-fab class='edit-fab' icon='editor:mode-edit' on-tap='openEditMenu'></paper-fab>
       <div class='editMenu hidden' tabindex='100'>
-        <paper-icon-button icon="image:exposure-plus-1" on-tap="increment"></paper-icon-button>
-        <paper-icon-button icon="image:exposure-neg-1" on-tap="decrement"></paper-icon-button>
-        <paper-icon-button icon="editor:mode-edit" on-tap="setEdit"></paper-icon-button>
+        <div class='editMenu-ctnr'>
+          <paper-icon-button icon="image:exposure-plus-1" on-tap="increment"></paper-icon-button>
+          <paper-icon-button icon="image:exposure-neg-1" on-tap="decrement"></paper-icon-button>
+          <paper-icon-button icon="editor:mode-edit" on-tap="setEdit"></paper-icon-button>
+        </div>
       </div>
       <div class='overlay hidden' on-tap='hideMenu'>
     </template>
