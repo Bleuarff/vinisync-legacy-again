@@ -9,12 +9,22 @@
       }
     </style>
 
-    Vous devez vous authentifier pour voir cette page. Retournez à la <a href="/home">page d'accueil.</a>
+    <p>Vous devez vous authentifier pour voir cette page.<br>
+      Retourner à la <a href="/home[[_queryParam(from)]]">page d'accueil.</a>
+    </p>
   </template>
 
   <script>
     Polymer({
-      is: 'vni-z401'
+      is: 'vni-z401',
+      properties: {
+        from: {type: String}
+      },
+
+      // appends query params to home page url
+      _queryParam: function(){
+        return this.from == null ? '' : '?from=' + encodeURIComponent(this.from);
+      }
     });
   </script>
 </dom-module>

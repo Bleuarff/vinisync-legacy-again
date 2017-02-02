@@ -19,7 +19,6 @@ Polymer({
     '_routeChanged(routeData.id)'
   ],
 
-
   _routeChanged: (id) ->
     if app.user?
       this.fire 'show'

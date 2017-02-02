@@ -48,6 +48,7 @@ Polymer({
     if this.signedIn || !this.page? || page == 'home' || page == ''
       this.page = page || 'home'
     else
+      this.from = page # store page initially requested, for redirection
       this.page = 'z401'
 
   _pageChanged: (page) ->
@@ -61,6 +62,7 @@ Polymer({
   _redirect: (e) ->
     if e.detail && e.detail.path
       this.set 'route.path', e.detail.path
+      this.set 'route.__queryParams', {} # redirect removes query parameters
 
   # show error toast
   _error: (e) ->

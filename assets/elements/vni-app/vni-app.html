@@ -85,6 +85,7 @@
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
     <app-route route="[[route]]" pattern="/cave" tail="{{caveRoute}}"></app-route>
     <app-route route="[[route]]" pattern="/entry" tail="{{entryRoute}}"></app-route>
+    <app-route route="[[route]]" pattern="/home" tail="{{homeRoute}}"></app-route>
 
     <google-signin-aware id='google-signin' client-id="822030501141-4dn7d2h8ueid9h7ot7m788vqokclodg5.apps.googleusercontent.com"
     on-google-signin-aware-success='signinSuccess' offline='true' signed-in={{signedIn}}></google-signin-aware>
@@ -112,10 +113,10 @@
           attr-for-selected="name"
           fallback-selection="z404"
           role="main">
-        <vni-home name="home" signed-in='[[signedIn]]'></vni-home>
-        <vni-cave name="cave" route='[[caveRoute]]' page='[[page]]'></vni-cave>
+        <vni-home name="home" route='[[homeRoute]]' signed-in='[[signedIn]]'></vni-home>
+        <vni-cave name="cave" route='[[caveRoute]]' page='[[page]]' signed-in='[[signedIn]]'></vni-cave>
         <vni-entry name='entry' route='[[entryRoute]]'></vni-entry>
-        <vni-z401 name="z401"></vni-z401>
+        <vni-z401 name="z401" from='[[from]]'></vni-z401>
         <vni-z404 name="z404"></vni-z404>
       </iron-pages>
 
