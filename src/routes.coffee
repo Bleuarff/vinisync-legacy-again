@@ -47,7 +47,7 @@ registerRoutes = (server) ->
 
   # then register routes
   server.post '/api/user/signin', user.signin
-
+  server.post '/api/user/signout', user.signout
   server.get '/api/user/:uid', user.get
 
   server.get '/api/cave/:uid', entry.index

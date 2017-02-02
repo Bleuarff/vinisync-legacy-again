@@ -44,7 +44,11 @@ Polymer({
   #     console.log('location-changed: ' + location.pathname)
 
   _routePageChanged: (page) ->
-    this.page = page || 'home'
+    return if page == this.page
+    if this.signedIn || page == 'home' || page == ''
+      this.page = page || 'home'
+    else
+      this.page = 'z401'
 
   _pageChanged: (page) ->
     # Load page import on demand. Show 404 page if fails
@@ -97,6 +101,9 @@ Polymer({
 
   signout: () ->
     @$['google-signin'].signOut()
+    app.send '/api/user/signout', {}, 'POST'
+    app.user = null
+    app.csrfToken = null
 
   logout: () ->
     @signout()
@@ -159,7 +166,8 @@ class App
 
       client.onload = () ->
         if this.status >= 200 && this.status < 300
-          json = JSON.parse this.response
+          if this.status != 204
+            json = JSON.parse this.response
           resolve json
         else
           reject this

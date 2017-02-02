@@ -4,6 +4,7 @@ ObjectId = require('mongoose').Types.ObjectId
 restify = require 'restify'
 logger = require('../utils/logger.js').create 'userController'
 config = require '../utils/config.js'
+cookies = require '../utils/cookies.js'
 utils = require '../utils/utils.js'
 User = require '../models/user.js'
 userSrv = require '../services/userService.js'
@@ -87,5 +88,11 @@ class UserController
       res.send 400, 'invalid token'
       next()
 
+  # signout: destroy session, reset cookie
+  @signout = (req, res, next) ->
+    cookies.delete res, 'sessid'
+    req.session.destroy()
+    res.send 204
+    return next()
 
 module.exports = exports = UserController
