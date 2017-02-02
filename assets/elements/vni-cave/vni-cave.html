@@ -14,6 +14,10 @@
         margin-bottom: 5em;
       }
 
+      .stat {
+        font-weight: bold;
+      }
+
       #grid {
         margin: 1.2em 0 0 0;
         width: 100%;
@@ -172,9 +176,7 @@
 
     <template is='dom-if' if='[[entryCount]]'>
       <p>
-        Votre cave contient:<br>
-        * [[entryCount]] références,<br>
-        * [[bottleCount]] bouteilles
+        Votre cave contient <span class='stat'>[[entryCount]]</span> références et <span class='stat'>[[bottleCount]]</span> bouteilles.
       </p>
     </template>
 
