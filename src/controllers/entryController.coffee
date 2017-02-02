@@ -85,7 +85,10 @@ class EntryController
     .group {_id: '$userId', total: {$sum: '$count'}}
     .exec()
     .then (results) ->
-      count = results[0].total
+      if results.length
+        count = results[0].total
+      else
+        count = 0
       res.send 200, {count: count}
       next()
     .catch (err) ->

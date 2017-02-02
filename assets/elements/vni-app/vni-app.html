@@ -8,6 +8,8 @@
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel='import' href="../../styles/shared-styles.html">
 
 <dom-module id="vni-app">
@@ -61,6 +63,22 @@
         cursor: pointer;
       }
 
+      iron-dropdown .dropdown-content {
+        background-color: white;
+        color: #333;
+        line-height: 20px;
+        border-radius: 3px;
+        box-shadow: 0px 2px 6px #ccc;
+        min-width: 200px;
+      }
+
+      .dropdown-content paper-item {
+        border-top: 1px solid #ccc;
+      }
+
+      paper-item.action {
+        cursor: pointer;
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -79,7 +97,14 @@
         <div class="pseudo-title">
           <a  href="/cave">Cave</a>
         </div>
-        <!-- <paper-icon-button icon="settings">Settings</paper-icon-button> -->
+        <paper-icon-button icon='settings' on-tap='toggleAppMenu'>Settings</paper-icon-button>
+        <iron-dropdown id='settings-menu' horizontal-align="right" vertical-align="top" vertical-offset="40">
+          <div class='dropdown-content'>
+            <div role='listbox'>
+              <paper-item class='action' on-tap='logout'>Déconnexion</paper-item>
+            </div>
+          </div>
+        </iron-dropdown>
       </paper-toolbar>
 
       <iron-pages id='pages'

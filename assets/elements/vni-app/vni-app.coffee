@@ -98,11 +98,22 @@ Polymer({
   signout: () ->
     @$['google-signin'].signOut()
 
+  logout: () ->
+    @signout()
+    this.querySelector('#settings-menu').close()
+    @fire 'redirect', {path: '/home'}
+
   # display message in log section
   _debug: (e) ->
     nd = document.createElement 'div'
     nd.innerHTML = e.detail
     this.$.debug.appendChild nd
+
+  toggleAppMenu: (e) ->
+    console.log 'toggle menu'
+    menu = this.querySelector('#settings-menu')
+    menu.positionTarget = e.target
+    menu.open()
 })
 
 ###
