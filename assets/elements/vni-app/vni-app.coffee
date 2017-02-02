@@ -45,7 +45,7 @@ Polymer({
 
   _routePageChanged: (page) ->
     return if page == this.page
-    if this.signedIn || page == 'home' || page == ''
+    if this.signedIn || !this.page? || page == 'home' || page == ''
       this.page = page || 'home'
     else
       this.page = 'z401'
