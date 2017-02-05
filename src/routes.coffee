@@ -12,6 +12,7 @@ appellation = require './controllers/appellationController.js'
 wine = require './controllers/wineController.js'
 cepage = require './controllers/cepageController.js'
 producer = require './controllers/producerController.js'
+image = require './controllers/imageController.js'
 
 registerRoutes = (server) ->
   logger.debug 'registering handlers & routes'
@@ -41,6 +42,8 @@ registerRoutes = (server) ->
       res.send 503, 'down for maintenance'
 
   server.use restify.queryParser({mapParams: true})
+  server.put '/api/image/:id', image.upload
+
   server.use restify.bodyParser({mapParams: true})
   server.use session.handle # creates or retrieves session and attach it to request object
   server.use csrf.checkToken # CSRF verification

@@ -141,9 +141,13 @@ class App
     client = new XMLHttpRequest()
     uri = url
 
-    if app.isLogged() && !payload.uid? && !url.startsWith('/api/user/') && !url.startsWith('/api/cave/')
-      payload.uid = app.user._id
+    isBlob = payload instanceof Blob
 
+    if app.isLogged() && !payload.uid? && !url.startsWith('/api/user/') && !url.startsWith('/api/cave/')
+      if !isBlob
+        payload.uid = app.user._id
+      else
+        uri += '?uid=' + app.user._id
 
     if verb == 'GET' || verb == 'HEAD'
       args = []
@@ -152,19 +156,24 @@ class App
 
       if args.length > 0
         uri += '?' + args.join '&'
-    else if this.csrfToken?
+    else if this.csrfToken? & !isBlob
       payload.csrfToken = this.csrfToken
 
     return new Promise (resolve, reject) ->
       client.open verb, uri
 
-      client.setRequestHeader 'Content-Type', 'application/json'
-      client.setRequestHeader 'Charset', 'utf-8'
+      if !isBlob
+        client.setRequestHeader 'Content-Type', 'application/json'
+        client.setRequestHeader 'Charset', 'utf-8'
 
-      if verb == 'GET' || verb == 'HEAD'
-        client.send()
+        if verb == 'GET' || verb == 'HEAD'
+          client.send()
+        else
+          client.send JSON.stringify payload
+
+      # send blob
       else
-        client.send JSON.stringify payload
+        client.send payload
 
       client.onload = () ->
         if this.status >= 200 && this.status < 300

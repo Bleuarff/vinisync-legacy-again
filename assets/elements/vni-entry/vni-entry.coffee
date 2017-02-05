@@ -7,11 +7,20 @@ Polymer {
     currentYear:
       type: Number
       value: (new Date()).getUTCFullYear()
-    countries: Array
-    containings: Array
+    countries: {
+      type: Array
+      value: ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
+        'Chili', 'Espagne', 'Etats-Unis', 'France', 'Italie', 'Nouvelle Zélande',
+        'Portugal']
+    }
+    containings: {
+      type: Array
+      value: ['37.5cl', '50cl', '75cl', '1.5L', '3l', '4.5l','6l']
+    }
     entry: Object
     cepages : Array
     hasPhoto: {type: Boolean, value: false}
+    image: String
   listeners:
     show: '_show'
 
@@ -59,11 +68,9 @@ Polymer {
       this.fire 'error', {text: 'Impossible de retrouver le vin'}
 
   ready: () ->
-    this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
-    'Chili', 'Espagne', 'Etats-Unis', 'France', 'Italie', 'Nouvelle Zélande',
-    'Portugal']
-
-    this.containings = ['37.5cl', '50cl', '75cl', '1.5L', '3l', '4.5l','6l']
+    # this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
+    # 'Chili', 'Espagne', 'Etats-Unis', 'France', 'Italie', 'Nouvelle Zélande',
+    # 'Portugal']
 
   inputChanged: (value, endpoint, target) ->
     return if this.requestWip
@@ -182,18 +189,24 @@ Polymer {
       @fire 'error', {text: "Le fichier #{fileInfo.name} n'est pas une image"}
       return
 
-    # @fire 'debug', "fileinfo: #{fileInfo.name} / #{fileInfo.size} bytes"
     reader = new FileReader()
     reader.onload = (e) =>
-      # @fire 'debug', 'photo loaded'
+      # read as array buffer, so that we can convert to blob, which can be converted to data url.
+      # Reading as data url directly does not allow to upload, and data url cannot be generated from array buffer
       content = e.target.result
-      @entry.wine.image = content
+      blob = new Blob([content], {type : fileInfo.type})
+      @image = URL.createObjectURL(blob)
+      imgId = cuid()
+      @entry.wine.pictures = [imgId]
       @hasPhoto = true
+      # upload file
+      app.send '/api/image/' + imgId, blob, 'PUT'
+      return
 
     reader.onerror = (e) =>
-      @fire 'error', {"Impossible de lire le fichier #{fileInfo.name}: #{reader.error.name}"}
+      @fire 'error', {text: "Impossible de lire le fichier #{fileInfo.name}: #{reader.error.name}"}
 
-    reader.readAsDataURL(fileInfo)
+    reader.readAsArrayBuffer(fileInfo)
 
   # show field for property if it exists or in edit mode
   _showProp: (o, propName, edit) ->
