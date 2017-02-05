@@ -177,7 +177,7 @@ class App
 
       client.onload = () ->
         if this.status >= 200 && this.status < 300
-          if this.status != 204
+          if this.status != 204 && this.response != ''
             json = JSON.parse this.response
           resolve json
         else

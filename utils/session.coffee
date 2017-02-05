@@ -22,8 +22,15 @@ class Session
 
   constructor: (@token, @data) ->
 
-  # creates or retrieves session based on session id cookie
   @handle = (req, res, next) ->
+    p = Session.createOrRetrieve req, res
+    p.then () ->
+      return next()
+    p.catch  () ->
+      return next(false)
+
+  # creates or retrieves session based on session id cookie
+  @createOrRetrieve = (req, res) ->
     session = new Session()
     sessid = cookies.parse(req.headers.cookie).sessid
     if sessid
@@ -37,11 +44,11 @@ class Session
     promise = fn.call session, res, req.connection.remoteAddress
     promise.then () ->
       req.session = session
-      next()
+      return Promise.resolve()
     promise.catch (err) ->
       logger.error new VError err, 'session error'
+      return Promise.reject()
       res.send 500, { msg: 'session error' }
-      next(false)
 
   # Updates the session: saves the current data object
   # Can add 1 key/value to the session and save it, or update multiple keys at once.

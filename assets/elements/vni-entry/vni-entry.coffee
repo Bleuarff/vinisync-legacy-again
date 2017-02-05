@@ -68,9 +68,6 @@ Polymer {
       this.fire 'error', {text: 'Impossible de retrouver le vin'}
 
   ready: () ->
-    # this.countries = ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
-    # 'Chili', 'Espagne', 'Etats-Unis', 'France', 'Italie', 'Nouvelle Zélande',
-    # 'Portugal']
 
   inputChanged: (value, endpoint, target) ->
     return if this.requestWip
@@ -201,6 +198,10 @@ Polymer {
       @hasPhoto = true
       # upload file
       app.send '/api/image/' + imgId, blob, 'PUT'
+      .then () ->
+        console.log 'image uploaded'
+      .catch () ->
+        console.log 'image failed'
       return
 
     reader.onerror = (e) =>

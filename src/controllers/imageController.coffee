@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 VError = require 'verror'
 config = require '../utils/config.js'
+session = require '../utils/session.js'
 utils = require '../utils/utils.js'
 logger = require('../utils/logger.js').create 'picture'
 
@@ -18,40 +19,41 @@ class ImageController
       throw new VError err, "Image directory '#{config.imageDirectory}' is invalid"
 
   @upload: (req, res, next) ->
-    # if !utils.hasParams req, res, []
-    #   return next()
+    p = session.createOrRetrieve req, res
+    p.catch () ->
+      return next()
 
-    # TODO:
-    # - wait for session to make sure user is logged
-    # - define directory in config
-    # - check dir exists on module load
-    # - save to that directory
-    # - catch handler in client
-    # - error 413 request entity too large ?
+    p.then () ->
+      if !utils.hasParams req, res, []
+        return next()
 
-    try
-      length = req.contentLength()
-      imageData = new Buffer length
-      pos = 0
+      # TODO:
+      # - catch handler in client
+      # - error 413 request entity too large ?
 
-      req.on 'data', (chunk) ->
-        chunk.copy imageData, pos, 0
-        pos += chunk.length
+      try
+        length = req.contentLength()
+        imageData = new Buffer length
+        pos = 0
 
-      # save file
-      req.on 'end', () ->
-        # logger.debug 'End, got ' + fileName
-        filename = ImageController._getFilename req
-        fullpath = path.resolve config.imageDirectory, filename
-        logger.debug 'write to ' + fullpath
-        fs.writeFile fullpath, imageData, (err) ->
-          if err
-            logger.error new VError err, 'save file failure'
-          res.send 204
-          return next()
-    catch err
-      logger.error new VError err, 'Upload failure'
-      res.send 500, 'upload failure'
+        req.on 'data', (chunk) ->
+          chunk.copy imageData, pos, 0
+          pos += chunk.length
+
+        # save file
+        req.on 'end', () ->
+          # logger.debug 'End, got ' + fileName
+          filename = ImageController._getFilename req
+          fullpath = path.resolve config.imageDirectory, filename
+          logger.debug 'image saved at ' + fullpath
+          fs.writeFile fullpath, imageData, (err) ->
+            if err
+              logger.error new VError err, 'save file failure'
+            res.send 201
+            return next()
+      catch err
+        logger.error new VError err, 'Upload failure'
+        res.send 500, 'upload failure'
 
 
   @_getFilename = (req) ->
