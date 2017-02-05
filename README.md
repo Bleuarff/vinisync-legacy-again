@@ -18,12 +18,14 @@ Create *config/config.yml* with the following:
     auth:
       googleApiId: [googleapis's project id]
 
-
     log:
       level: debug
       output:
         -
           target: trace.log
+
+    # path to directory where images are saved. Must exist.
+    imageDirectory: /home/bleuarff/dev/vni_images  
 
 Then:
 

@@ -1,10 +1,21 @@
 fs = require 'fs'
 path = require 'path'
 VError = require 'verror'
+config = require '../utils/config.js'
 utils = require '../utils/utils.js'
 logger = require('../utils/logger.js').create 'picture'
 
 class ImageController
+
+  # ensures image directory is valid.
+  @init: () ->
+    if utils.isNullOrEmpty config.imageDirectory
+      throw new VError 'No image directory defined in config'
+
+    try
+      stats = fs.statSync path.resolve config.imageDirectory
+    catch err
+      throw new VError err, "Image directory '#{config.imageDirectory}' is invalid"
 
   @upload: (req, res, next) ->
     # if !utils.hasParams req, res, []
@@ -31,7 +42,7 @@ class ImageController
       req.on 'end', () ->
         # logger.debug 'End, got ' + fileName
         filename = ImageController._getFilename req
-        fullpath = path.resolve filename
+        fullpath = path.resolve config.imageDirectory, filename
         logger.debug 'write to ' + fullpath
         fs.writeFile fullpath, imageData, (err) ->
           if err
@@ -48,4 +59,5 @@ class ImageController
     extension = matches[1]
     return req.params.id + '.' + extension
 
+ImageController.init()
 module.exports = exports = ImageController
