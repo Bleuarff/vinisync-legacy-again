@@ -118,14 +118,14 @@
     </app-route>
 
     <div class='photo'>
-      <template is='dom-if' if='[[!hasPhoto]]'>
+      <template is='dom-if' if='[[_showAddPic(imageUrl, edit)]]'>
         <input type="file" name="logo" id="logo" class="uploader" accept='image/*' capture on-change='setPhoto'/>
         <button on-tap='selectPhoto' class='photo-btn'>
           <iron-icon icon='image:camera-alt' class='photo-icon'></iron-icon>
         </button>
       </template>
-      <template is='dom-if' if='[[hasPhoto]]'>
-        <img class='entry-img' src='[[image]]'>
+      <template is='dom-if' if='[[_hasPicture(imageUrl)]]'>
+        <img class='entry-img' src='[[imageUrl]]'>
       </template>
     </div>
 

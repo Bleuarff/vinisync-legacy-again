@@ -195,7 +195,7 @@ class EntryController
       entry.wine.producer = update.producer
 
       fields = ['name', 'year', 'cepages', 'country', 'apogeeStart', 'apogeeEnd', 'containing', 'color', 'sweet',
-      'sparkling']
+      'sparkling', 'pictures']
       for f in fields
         if update[f]?
           entry.wine[f] = update[f]

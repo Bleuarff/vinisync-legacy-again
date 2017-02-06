@@ -19,8 +19,12 @@ Polymer {
     }
     entry: Object
     cepages : Array
-    hasPhoto: {type: Boolean, value: false}
-    image: String
+    imageUrl: String
+    uploadPath:
+      type: String
+      value: '/uploads/'
+      readOnly: true
+
   listeners:
     show: '_show'
 
@@ -57,13 +61,16 @@ Polymer {
           # color: null
           sweet: false
           sparkling: false
-          # image: null
         count: 1
         # offeredBy: null
 
     p.then (entry) =>
       this.entry = entry
       this.cepages = this.entry.wine.cepages.map (x) -> {value: x}
+      if this.entry.wine.pictures? &&this.entry.wine.pictures.length > 0
+        this.imageUrl = this.uploadPath + this.entry.wine.pictures[0]
+      else
+        this.imageUrl = null
     p.catch (err) =>
       this.fire 'error', {text: 'Impossible de retrouver le vin'}
 
@@ -171,6 +178,14 @@ Polymer {
       return count
     else return 1
 
+  # whether the entry has a picture to display
+  _hasPicture: (imageUrl) ->
+    return imageUrl? && imageUrl != ''
+
+  # whether to show the add picture button
+  _showAddPic: (imageUrl, edit) ->
+    return edit && !@_hasPicture(imageUrl)
+
   # open file selector/camera
   selectPhoto: () ->
     # @fire 'debug', 'selectPhoto'
@@ -186,11 +201,10 @@ Polymer {
       @fire 'error', {text: "Le fichier #{file.name} n'est pas une image"}
       return
 
-    @image = URL.createObjectURL(file)
+    @imageUrl = URL.createObjectURL(file)
     extension = file.name.match(/\.\w+$/)[0]
     imageName = cuid() + extension
     @entry.wine.pictures = [imageName]
-    @hasPhoto = true
     app.send '/api/image/' + imageName, file, 'PUT'
     .then () ->
       console.log 'image uploaded'
