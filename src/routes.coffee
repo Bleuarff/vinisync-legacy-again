@@ -31,7 +31,6 @@ registerRoutes = (server) ->
     res.header 'content-type', 'application/json'
     next()
 
-
   # log all incoming queries
   server.use (req, res, next) -> logger.debug req.getPath(); next()
 
@@ -42,7 +41,7 @@ registerRoutes = (server) ->
       res.send 503, 'down for maintenance'
 
   server.use restify.queryParser({mapParams: true})
-  server.put '/api/image/:id', image.upload
+  server.put '/api/image/:name', image.upload
 
   server.use restify.bodyParser({mapParams: true})
   server.use session.handle # creates or retrieves session and attach it to request object

@@ -181,33 +181,22 @@ Polymer {
   setPhoto: (e) ->
     return if !e.currentTarget.files.length
 
-    fileInfo = e.currentTarget.files[0]
-    if fileInfo.type.indexOf('image/') != 0
-      @fire 'error', {text: "Le fichier #{fileInfo.name} n'est pas une image"}
+    file = e.currentTarget.files[0]
+    if file.type.indexOf('image/') != 0
+      @fire 'error', {text: "Le fichier #{file.name} n'est pas une image"}
       return
 
-    reader = new FileReader()
-    reader.onload = (e) =>
-      # read as array buffer, so that we can convert to blob, which can be converted to data url.
-      # Reading as data url directly does not allow to upload, and data url cannot be generated from array buffer
-      content = e.target.result
-      blob = new Blob([content], {type : fileInfo.type})
-      @image = URL.createObjectURL(blob)
-      imgId = cuid()
-      @entry.wine.pictures = [imgId]
-      @hasPhoto = true
-      # upload file
-      app.send '/api/image/' + imgId, blob, 'PUT'
-      .then () ->
-        console.log 'image uploaded'
-      .catch () ->
-        console.log 'image failed'
-      return
-
-    reader.onerror = (e) =>
-      @fire 'error', {text: "Impossible de lire le fichier #{fileInfo.name}: #{reader.error.name}"}
-
-    reader.readAsArrayBuffer(fileInfo)
+    @image = URL.createObjectURL(file)
+    extension = file.name.match(/\.\w+$/)[0]
+    imageName = cuid() + extension
+    @entry.wine.pictures = [imageName]
+    @hasPhoto = true
+    app.send '/api/image/' + imageName, file, 'PUT'
+    .then () ->
+      console.log 'image uploaded'
+    .catch () ->
+      console.log 'image failed'
+    return
 
   # show field for property if it exists or in edit mode
   _showProp: (o, propName, edit) ->

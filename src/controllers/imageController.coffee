@@ -19,23 +19,26 @@ class ImageController
       throw new VError err, "Image directory '#{config.imageDirectory}' is invalid"
 
   @upload: (req, res, next) ->
+    # manually retrieve session
     p = session.createOrRetrieve req, res
     p.catch () ->
       return next()
 
     p.then () ->
+      # ensures user is logged
       if !utils.hasParams req, res, []
-        return next()
+        return next(false)
 
-      # TODO:
-      # - catch handler in client
-      # - error 413 request entity too large ?
+      # ensures correct content type
+      if !req.contentType().startsWith 'image/'
+        res.send 415
+        return next(false)
+
+      length = req.contentLength()
+      imageData = new Buffer length
+      pos = 0
 
       try
-        length = req.contentLength()
-        imageData = new Buffer length
-        pos = 0
-
         req.on 'data', (chunk) ->
           chunk.copy imageData, pos, 0
           pos += chunk.length
@@ -43,23 +46,19 @@ class ImageController
         # save file
         req.on 'end', () ->
           # logger.debug 'End, got ' + fileName
-          filename = ImageController._getFilename req
-          fullpath = path.resolve config.imageDirectory, filename
-          logger.debug 'image saved at ' + fullpath
+          fullpath = path.resolve config.imageDirectory, req.params.name
+          # logger.debug 'image saved at ' + fullpath
           fs.writeFile fullpath, imageData, (err) ->
             if err
               logger.error new VError err, 'save file failure'
-            res.send 201
+              res.send 500
+            else
+              res.send 201
             return next()
       catch err
         logger.error new VError err, 'Upload failure'
         res.send 500, 'upload failure'
 
-
-  @_getFilename = (req) ->
-    matches = req.contentType().match(/\/(.*)/)
-    extension = matches[1]
-    return req.params.id + '.' + extension
 
 ImageController.init()
 module.exports = exports = ImageController
