@@ -202,12 +202,10 @@ Polymer {
       return
 
     @imageUrl = URL.createObjectURL(file)
-    extension = file.name.match(/\.\w+$/)[0]
-    imageName = cuid() + extension
-    @entry.wine.pictures = [imageName]
-    app.send '/api/image/' + imageName, file, 'PUT'
-    .then () ->
-      console.log 'image uploaded'
+    app.send '/api/image/' + file.name, file, 'PUT'
+    .then (res) =>
+      console.log 'image uploaded: ' + res.filepath
+      @entry.wine.pictures = [res.filepath]
     .catch () ->
       console.log 'image failed'
     return
