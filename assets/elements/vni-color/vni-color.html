@@ -19,6 +19,7 @@
         border-radius: 8px;
         text-align: center;
         margin: 0 0.2rem;
+        position: relative;
         box-sizing: border-box;
         display: flex;
         flex-flow: column nowrap;
@@ -35,17 +36,36 @@
         background: var(--vni-red-wine);
         color: white;
       }
+      .red[selected]:after {
+        border-color: white;
+      }
 
       .white {
         background: var(--vni-white-wine);
+      }
+      .white[selected]:after {
+        border-color: black;
       }
 
       .rose {
         background: var(--vni-rose-wine);
       }
+      .rose[selected]:after {
+        border-color: black;
+      }
 
-      .color[selected] {
-        border: 3px solid black;
+      .color[selected]:after {
+        display: block;
+        position: absolute;
+        content: ' ';
+        background: transparent;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 6px;
+        left: 5%;
+        right: 5%;
+        top: 15%;
+        bottom: 15%;
       }
 
       .readonly-true .color {
