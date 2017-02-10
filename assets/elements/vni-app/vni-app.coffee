@@ -109,7 +109,6 @@ Polymer({
 
   logout: () ->
     @signout()
-    this.querySelector('#settings-menu').close()
     @fire 'redirect', {path: '/home'}
 
   # display message in log section
@@ -118,11 +117,14 @@ Polymer({
     nd.innerHTML = e.detail
     this.$.debug.appendChild nd
 
-  toggleAppMenu: (e) ->
-    console.log 'toggle menu'
-    menu = this.querySelector('#settings-menu')
-    menu.positionTarget = e.target
-    menu.open()
+  toggleMenu: (e) ->
+    menu = this.querySelector('.drawer')
+    menu.classList.toggle 'hidden'
+    menu.selected = -1
+
+  hidden: (value) ->
+    if value then return ''
+    return 'hidden'
 })
 
 ###
