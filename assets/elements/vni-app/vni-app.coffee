@@ -106,9 +106,6 @@ Polymer({
     app.send '/api/user/signout', {}, 'POST'
     app.user = null
     app.csrfToken = null
-
-  logout: () ->
-    @signout()
     @fire 'redirect', {path: '/home'}
 
   # display message in log section
@@ -118,9 +115,7 @@ Polymer({
     this.$.debug.appendChild nd
 
   toggleMenu: (e) ->
-    menu = this.querySelector('.drawer')
-    menu.classList.toggle 'hidden'
-    menu.selected = -1
+    this.querySelector('.drawer').fire 'toggle'
 
   hidden: (value) ->
     if value then return ''

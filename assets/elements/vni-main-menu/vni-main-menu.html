@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-left-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-from-left-animation.html">
+<link rel='import' href="../../styles/shared-styles.html">
+
+<dom-module id='vni-main-menu'>
+  <template>
+    <style include='shared-styles'>
+      :host {
+        display: block;
+        position: fixed;
+        top: 4em;
+        left: 100%;
+        bottom: 0;
+        background: var(--vni-main-color);
+        color: white;
+      }
+
+      @media (max-width: 600px) {
+        :host {
+          top: 3.5em;
+        }
+      }
+
+      paper-menu {
+        background: var(--vni-main-color);
+        color: white;
+      }
+
+      paper-item {
+        cursor: pointer;
+      }
+
+      iron-icon {
+        margin-right: 0.5em;
+      }
+    </style>
+
+    <paper-menu class='menu' on-iron-select='_toggle'>
+      <paper-item on-tap='logout'>
+        <iron-icon icon='power-settings-new'></iron-icon>Déconnexion
+      </paper-item>
+    </paper-menu>
+
+  </template>
+  <script src='vni-main-menu.js'></script>
+</dom-module>

@@ -8,8 +8,8 @@
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
-<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../vni-main-menu/vni-main-menu.html">
+
 <link rel='import' href="../../styles/shared-styles.html">
 
 <dom-module id="vni-app">
@@ -63,22 +63,7 @@
         cursor: pointer;
       }
 
-      .drawer {
-        position: fixed;
-        top: 4em;
-        right: 0;
-        bottom: 0;
-        background: var(--vni-main-color);
-        color: white;
-      }
 
-      .drawer paper-item {
-        cursor: pointer;
-      }
-
-      .drawer iron-icon {
-        margin-right: 0.5em;
-      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -115,11 +100,8 @@
 
     </paper-scroll-header-panel>
 
-    <paper-menu class='drawer hidden' on-iron-select='toggleMenu'>
-      <paper-item on-tap='logout'>
-        <iron-icon icon='power-settings-new'></iron-icon>Déconnexion
-      </paper-item>
-    </paper-menu>
+    <vni-main-menu class='drawer'>
+    </vni-main-menu>
 
     <paper-toast id='errorToast' duration='0'>
       <span class="toast-hide-btn" role="button" tabindex="0" on-tap="hideError">OK</span>
