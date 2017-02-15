@@ -6,14 +6,18 @@ Polymer({
   properties: {
     entries: Array
     entryCount: Number
-    bottleCount: Number
+    filteredCount: {type: Number, value: -1}
+    bottleCount: Number # sum of bottles for all entries
     page: {type: String, observer: '_pageChanged'}
-    # wether a query is currently in progress
-    loading: {type: Boolean, readOnly: true, value: false}
+    loading: {type: Boolean, readOnly: true, value: false} # wether a query is currently in progress
+    filters:
+      type: Object
+      value: {}
   }
 
   listeners:
     show: 'show'
+    filterUpdate: '_filterUpdate'
 
   observers: [
     '_routeChanged(routeData.id)'
@@ -55,13 +59,26 @@ Polymer({
   queryPage: () ->
     return Promise.resolve() if @loading # blocks new queries if one is in progress
     @_setLoading true
-    return app.send "/api/cave/#{app.user._id}", {offset: @offset, count: 20}
+
+    filters = this._clone this.filters
+    filters.offset = @offset
+    filters.count = 20
+    return app.send "/api/cave/#{app.user._id}", filters
     .then (entries) =>
       # console.log 'got entries'
       @_setLoading false
       @entries = @entries.concat entries.bottles
-      @entryCount = entries.entryCount
+
+      # updates counters only if offset is 0. These counters do not change for
+      # pagination requests, no need to update them each and every time.
+      if @offset == 0
+        if Object.keys(this.filters).length == 0
+          @entryCount = entries.entryCount
+          @filteredCount = -1
+        else
+          @filteredCount = entries.entryCount
       @offset += entries.bottles.length
+      return entries.entryCount
     .catch () =>
       @_setLoading false
 
@@ -98,5 +115,36 @@ Polymer({
 
   addEntry: () ->
     @fire 'redirect', {path: '/entry/'}
+
+  # toggle filters display
+  toggleFilters: () ->
+    this.querySelector('#collapse-filters').toggle()
+
+  # filters have been updated, send a new request
+  _filterUpdate: (e) ->
+    this.filters = e.detail
+    console.log e.detail
+
+    this.entries = []
+    this.offset = 0
+    this.queryPage()
+    .catch (err) =>
+      console.error err
+      @fire 'error', {text: 'Impossible de récuperer votre cave.'}
+
+  # shallow clone
+  _clone: (o) ->
+    return o if !o?
+    res = {}
+    for k, v of o
+      res[k] = v
+    return res
+
+  _noFilterResults: (filteredCount) ->
+    return filteredCount == 0
+
+  _hasFilterResults: (filteredCount) ->
+    return filteredCount > 0
+
 
 })

@@ -25,11 +25,18 @@ class EntryController
 
     offset = parseInt(req.params.offset, 10) || 0
     pageCount = parseInt(req.params.count, 10) || 20
+
+    # build filters
+    filters = {userId: uid}
+    if req.params.appellation?
+      filters['wine.appellation'] = new RegExp req.params.appellation, 'i'
+
+    logger.debug filters
     totalCount = 0
-    Entry.count {userId: uid}
+    Entry.count filters
     .then (count) ->
       totalCount = count
-      Entry.find({userId: uid}).skip(offset).limit(pageCount)
+      Entry.find(filters).skip(offset).limit(pageCount)
     .then (entries) ->
       data =
         entryCount: totalCount

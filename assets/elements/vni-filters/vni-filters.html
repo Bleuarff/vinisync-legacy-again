@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="vni-filters">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        /*background-color: lightblue;*/
+      }
+
+      .list {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+      }
+
+      .title {
+        text-transform: capitalize;
+        padding: 0.3em 0.8em;
+        margin: 0;
+        font-weight: normal;
+      }
+
+      .filter-box {
+
+      }
+    </style>
+
+    <div class='list'>
+      <paper-button class='title' name='appellation' on-tap="toggleFilter">Appellation</paper-button>
+      <paper-button class='title' on-tap="toggleFilter">Couleur</paper-button>
+      <paper-button class='title' on-tap="toggleFilter">Année</paper-button>
+      <paper-button class='title' on-tap="toggleFilter">Domaine</paper-button>
+      <paper-button class='title' on-tap="toggleFilter">Apogée</paper-button>
+      <paper-button class='title' on-tap="toggleFilter">Région</paper-button>
+    </div>
+
+    <vaadin-combo-box class='filter-box hidden' name='appellation'
+      label='Appellation'
+      on-change="updateFilter"
+      allow-custom-value="true"
+      items="[[appellations]]"
+      value="{{values.appellation}}">
+    </vaadin-combo-box>
+
+  </template>
+  <script src="vni-filters.js"></script>
+</dom-module>
