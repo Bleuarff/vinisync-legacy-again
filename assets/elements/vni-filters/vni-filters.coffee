@@ -2,6 +2,7 @@ Polymer({
   is: 'vni-filters'
   properties: {
     appellations: Array
+    producers: Array
     values:
       type: Object
       value: {
@@ -14,7 +15,7 @@ Polymer({
       }
   }
 
-  # toggle dspaly of a filter input
+  # toggle dsplay of a filter input
   toggleFilter: (e) ->
     name = e.currentTarget.getAttribute 'name'
     elem = this.querySelector(".filter-box[name='#{name}']")
@@ -22,10 +23,17 @@ Polymer({
 
   ready: () ->
     self = this
-    # TODO: send this request for ~ each keystroke
-    app.send '/api/appellation'
+    app.send "/api/cave/#{app.user._id}/appellation"
     .then (values) ->
       self.appellations = values
+    .catch () ->
+      self.appellations = []
+
+    app.send "/api/cave/#{app.user._id}/producer"
+    .then (values) ->
+      self.producers = values
+    .catch () ->
+      self.producers = []
 
   # fire event to update entry list
   updateFilter: (e) ->
@@ -37,4 +45,5 @@ Polymer({
         delete this.values[k]
 
     this.fire 'filterUpdate', this.values
+
 })

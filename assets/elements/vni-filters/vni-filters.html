@@ -24,7 +24,7 @@
       }
 
       .filter-box {
-
+        margin: 0 0.5em;
       }
     </style>
 
@@ -32,7 +32,7 @@
       <paper-button class='title' name='appellation' on-tap="toggleFilter">Appellation</paper-button>
       <paper-button class='title' on-tap="toggleFilter">Couleur</paper-button>
       <paper-button class='title' on-tap="toggleFilter">Année</paper-button>
-      <paper-button class='title' on-tap="toggleFilter">Domaine</paper-button>
+      <paper-button class='title' name='producer' on-tap="toggleFilter">Domaine</paper-button>
       <paper-button class='title' on-tap="toggleFilter">Apogée</paper-button>
       <paper-button class='title' on-tap="toggleFilter">Région</paper-button>
     </div>
@@ -43,6 +43,14 @@
       allow-custom-value="true"
       items="[[appellations]]"
       value="{{values.appellation}}">
+    </vaadin-combo-box>
+
+    <vaadin-combo-box class='filter-box hidden' name='producer'
+      label='Producteur'
+      on-change="updateFilter"
+      allow-custom-value="true"
+      items="[[producers]]"
+      value="{{values.producer}}">
     </vaadin-combo-box>
 
   </template>

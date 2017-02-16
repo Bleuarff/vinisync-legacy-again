@@ -30,6 +30,8 @@ class EntryController
     filters = {userId: uid}
     if req.params.appellation?
       filters['wine.appellation'] = new RegExp req.params.appellation, 'i'
+    if req.params.producer?
+      filters['wine.producer'] = new RegExp req.params.producer, 'i'
 
     logger.debug filters
     totalCount = 0
@@ -288,5 +290,34 @@ class EntryController
       logger.error new VError err,'Error decrementing entry  %s for user %s', entryId, uid
       res.send err.status || 500, 'error decrementing entry count'
       return next()
+
+  # returns aggreated list of values for which the user already has wines
+  @getAggregatedValues = (req, res, next) ->
+    if !utils.hasParams req, res
+      return next()
+
+    try
+      uid = new ObjectId req.params.uid
+      property = req.params.property
+      if ['appellation', 'producer'].indexOf(property) == -1
+        throw new Error 'invalid property'
+    catch ex
+      res.send 400, 'invalid parameters'
+      return next()
+
+    Entry.aggregate()
+    .match {userId: uid}
+    .group _id: '$wine.' + property
+    .sort {_id: 1}
+    .exec()
+    .then (data) ->
+      list = data.map (x) -> return x._id
+      res.send 200, list
+      next()
+    .catch (err) ->
+      logger.error new VError err, 'Error retrieving entries %s for user %s', property, req.params.uid
+      res.send 500, 'error retrieving aggregated values'
+      return next()
+
 
 module.exports = exports = EntryController
