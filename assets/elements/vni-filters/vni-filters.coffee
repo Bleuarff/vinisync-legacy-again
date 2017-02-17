@@ -1,19 +1,17 @@
 Polymer({
   is: 'vni-filters'
-  properties: {
+  properties:
     appellations: Array
     producers: Array
     values:
       type: Object
-      value: {
+      value:
         appellation: ''
         region: ''
         producer: ''
         color: ''
-        year: 0
-        apogee: 0
-      }
-  }
+        year: null
+        apogee: null
 
   # toggle dsplay of a filter input
   toggleFilter: (e) ->
@@ -40,11 +38,10 @@ Polymer({
   updateFilter: (e) ->
     # clean empty values
     for k, v of this.values
-      if typeof v == 'string' && v == ''
-        delete this.values[k]
-      else if typeof v == 'number' && v == 0
+      if v == null || v == ''
         delete this.values[k]
 
     this.fire 'filterUpdate', this.values
+
 
 })

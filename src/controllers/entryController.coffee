@@ -32,8 +32,21 @@ class EntryController
       filters['wine.appellation'] = new RegExp req.params.appellation, 'i'
     if req.params.producer?
       filters['wine.producer'] = new RegExp req.params.producer, 'i'
+    if req.params.year?
+      filters['wine.year'] = parseInt req.params.year, 10
+    if req.params.apogee?
+      apogee = parseInt req.params.apogee, 10
+      # apogee: must be between start and end, or must be equal to start or end
+      filters.$or = [{
+        $and: [
+          {"wine.apogeeStart": {$lte: apogee}},
+          {"wine.apogeeEnd": {$gte: apogee}}
+        ]},
+        {"wine.apogeeStart": apogee}
+        {"wine.apogeeEnd": apogee}
+      ]
 
-    logger.debug filters
+    # logger.debug filters
     totalCount = 0
     Entry.count filters
     .then (count) ->

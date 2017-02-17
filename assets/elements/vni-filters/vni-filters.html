@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
@@ -42,9 +43,9 @@
     <div class='list'>
       <paper-button class='title' name='appellation' on-tap="toggleFilter">Appellation</paper-button>
       <paper-button class='title' on-tap="toggleFilter">Couleur</paper-button>
-      <paper-button class='title' on-tap="toggleFilter">Année</paper-button>
+      <paper-button class='title' name="year" on-tap="toggleFilter">Année</paper-button>
       <paper-button class='title' name='producer' on-tap="toggleFilter">Domaine</paper-button>
-      <paper-button class='title' on-tap="toggleFilter">Apogée</paper-button>
+      <paper-button class='title' name="apogee" on-tap="toggleFilter">Apogée</paper-button>
       <paper-button class='title' on-tap="toggleFilter">Région</paper-button>
     </div>
 
@@ -64,6 +65,21 @@
       value="{{values.producer}}">
     </vaadin-combo-box>
 
+    <paper-input class='filter-box hidden' name='year'
+      label="Année"
+      type="number"
+      on-change="updateFilter"
+      value="{{values.year}}"
+      min="1700">
+    </paper-input>
+
+    <paper-input class='filter-box hidden' name='apogee'
+      label="Apogée"
+      type="number"
+      on-change="updateFilter"
+      value="{{values.apogee}}"
+      min="1700">
+    </paper-input>
   </template>
   <script src="vni-filters.js"></script>
 </dom-module>
