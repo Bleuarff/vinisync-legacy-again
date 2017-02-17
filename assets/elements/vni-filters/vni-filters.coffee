@@ -17,6 +17,7 @@ Polymer({
 
   # toggle dsplay of a filter input
   toggleFilter: (e) ->
+    e.currentTarget.classList.toggle 'open'
     name = e.currentTarget.getAttribute 'name'
     elem = this.querySelector(".filter-box[name='#{name}']")
     elem.classList.toggle 'hidden'
