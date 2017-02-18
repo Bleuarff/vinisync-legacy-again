@@ -12,4 +12,5 @@ Polymer {
   selectColor: (e) ->
     return if @readonly
     this.color = e.currentTarget.dataset.color
+    this.fire 'change', {value: this.color}
 }
