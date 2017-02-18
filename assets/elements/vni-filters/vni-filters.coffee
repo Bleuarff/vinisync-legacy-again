@@ -7,7 +7,6 @@ Polymer({
       type: Object
       value:
         appellation: ''
-        region: ''
         producer: ''
         color: ''
         year: null

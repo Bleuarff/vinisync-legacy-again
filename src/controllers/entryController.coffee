@@ -11,6 +11,30 @@ normalizer = require '../services/normalizer.js'
 
 class EntryController
 
+  # build query object with filters
+  @_buildFilters = (params, uid) ->
+    filters = {userId: uid}
+    if params.appellation?
+      filters['wine.appellation'] = new RegExp params.appellation, 'i'
+    if params.producer?
+      filters['wine.producer'] = new RegExp params.producer, 'i'
+    if params.year?
+      filters['wine.year'] = parseInt params.year, 10
+    if params.color?
+      filters['wine.color'] = params.color
+    if params.apogee?
+      apogee = parseInt params.apogee, 10
+      # apogee: must be between start and end, or must be equal to start or end
+      filters.$or = [{
+        $and: [
+          {"wine.apogeeStart": {$lte: apogee}},
+          {"wine.apogeeEnd": {$gte: apogee}}
+        ]},
+        {"wine.apogeeStart": apogee}
+        {"wine.apogeeEnd": apogee}
+      ]
+    return filters
+
   # retrieves all entries for a given user
   @index = (req, res, next) ->
     if !utils.hasParams req, res, []
@@ -27,26 +51,9 @@ class EntryController
     pageCount = parseInt(req.params.count, 10) || 20
 
     # build filters
-    filters = {userId: uid}
-    if req.params.appellation?
-      filters['wine.appellation'] = new RegExp req.params.appellation, 'i'
-    if req.params.producer?
-      filters['wine.producer'] = new RegExp req.params.producer, 'i'
-    if req.params.year?
-      filters['wine.year'] = parseInt req.params.year, 10
-    if req.params.apogee?
-      apogee = parseInt req.params.apogee, 10
-      # apogee: must be between start and end, or must be equal to start or end
-      filters.$or = [{
-        $and: [
-          {"wine.apogeeStart": {$lte: apogee}},
-          {"wine.apogeeEnd": {$gte: apogee}}
-        ]},
-        {"wine.apogeeStart": apogee}
-        {"wine.apogeeEnd": apogee}
-      ]
-
+    filters = EntryController._buildFilters req.params, uid
     # logger.debug filters
+
     totalCount = 0
     Entry.count filters
     .then (count) ->
