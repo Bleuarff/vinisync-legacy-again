@@ -212,7 +212,7 @@ Polymer {
 
   # show field for property if it exists or in edit mode
   _showProp: (o, propName, edit) ->
-    return !utils.isNullOrEmpty(o.value[propName]) || edit
+    return !utils.isNullOrEmpty(o.base[propName]) || edit
 
   # same as showProp but for cepage array only.
   # Property is directly referenced since array should not be null but empty
@@ -221,7 +221,7 @@ Polymer {
 
   # same as showProp but for details values - show if any is set, or in edit mode
   _showDetails: (o, edit) ->
-    return o.value.sparkling || o.value.sweet || edit
+    return o.base.sparkling || o.base.sweet || edit
 
   # show readonly version of field for property if it exists and not in edit mode
   _showReadonlyProp: (property, edit) ->
@@ -229,5 +229,5 @@ Polymer {
 
   # show separator between apogee start & end only if both are defined, or in edit mode
   _showApogeeSeparator: (o, edit) ->
-    return o.value.apogeeStart? && o.value.apogeeEnd? || edit
+    return o.base.apogeeStart? && o.base.apogeeEnd? || edit
 }
