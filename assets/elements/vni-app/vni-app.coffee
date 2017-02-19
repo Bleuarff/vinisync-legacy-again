@@ -116,10 +116,15 @@ Polymer({
 
   toggleMenu: (e) ->
     this.querySelector('.drawer').fire 'toggle'
+    this.querySelector('.overlay').classList.toggle 'hidden'
 
   hidden: (value) ->
     if value then return ''
     return 'hidden'
+
+  hideMenu: (e) ->
+    this.querySelector('.drawer').fire 'toggle'
+    e.currentTarget.classList.add 'hidden'
 })
 
 ###
