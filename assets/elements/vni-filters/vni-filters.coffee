@@ -19,6 +19,14 @@ Polymer({
     elem = this.querySelector(".filter-box[name='#{name}']")
     elem.classList.toggle 'hidden'
 
+    # on close, reset filter
+    if !e.currentTarget.classList.contains('open') && this.values[name]
+      this.set "values.#{name}", null
+      # combo-box triggers and on-change event, but not the other filter types
+      if elem.tagName != 'VAADIN-COMBO-BOX'
+        return this.updateFilter()
+
+
   ready: () ->
     self = this
     app.send "/api/cave/#{app.user._id}/appellation"
