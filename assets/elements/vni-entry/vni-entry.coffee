@@ -30,6 +30,7 @@ Polymer {
 
   observers: [
     '_routeChanged(routeData.id)'
+    '_wineChanged(entry.wine.*)'
   ],
 
   created: () ->
@@ -75,6 +76,10 @@ Polymer {
       this.fire 'error', {text: 'Impossible de retrouver le vin'}
 
   ready: () ->
+
+  _wineChanged: () ->
+    this.querySelectorAll('vaadin-combo-box').forEach (e) ->
+      e.$.overlay.$.scroller.style.fontFamily = 'Roboto'
 
   inputChanged: (value, endpoint, target) ->
     return if this.requestWip

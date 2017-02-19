@@ -41,6 +41,9 @@ Polymer({
     .catch () ->
       self.producers = []
 
+    this.querySelectorAll('vaadin-combo-box').forEach (e) ->
+      e.$.overlay.$.scroller.style.fontFamily = 'Roboto'
+
   # fire event to update entry list
   updateFilter: (e) ->
     # clean empty values
