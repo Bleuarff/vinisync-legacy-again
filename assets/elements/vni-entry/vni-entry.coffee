@@ -58,7 +58,7 @@ Polymer {
           # apogeeEnd: null
           cepages: []
           containing: '75cl'
-          # color: null
+          color: null
           sweet: false
           sparkling: false
         count: 1

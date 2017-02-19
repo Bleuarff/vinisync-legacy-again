@@ -17,19 +17,23 @@ class Normalizer
 
   @normalize: (wine) ->
     for key in Object.keys wine
-      if typeof wine[key] == 'string'
-        continue if key == 'color'
-        value = wine[key]
-        continue if value == null
 
+      # delete null fields
+      if !wine[key]? || wine[key] == ''
+        delete wine[key]
+        continue
+
+      if typeof wine[key] == 'string'
+        if key == 'color'
+          wine.color = wine.color.toLowerCase()
+          continue
+
+        value = wine[key]
         value = Normalizer._toTitleCase value
         value = Normalizer._replacePatterns value
         wine[key] = value
       else if key =='cepages'
         wine.cepages = wine.cepages.map (x) -> x.toLowerCase()
-
-    if wine.name == null || wine.name == ''
-      delete wine.name
 
     wine.cepages = wine.cepages || []
 
