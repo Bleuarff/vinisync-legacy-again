@@ -145,6 +145,8 @@ Polymer {
       @entryId = newEntry._id
       @fire 'success', {text: "Entrée " + okTxt}
       @cancelEdit()
+      # updates route for new entry, no effect on edited entry
+      @fire 'redirect', {path: '/entry/' + @entryId}
       # TODO: add entry to local value. redirect cave?
     .catch (err) =>
       @fire 'error', {text: "Erreur de sauvegarde."}
