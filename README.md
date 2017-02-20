@@ -33,3 +33,11 @@ Then:
     npm install
     cd assets && bower install
     grunt # runs local server
+
+## SSL Setup
+
+Use let's encrypt, see https://certbot.eff.org/#ubuntuxenial-nginx
+
+### Renewal
+
+TBD: nginx rewrite rule on / location likely to cause issues.
