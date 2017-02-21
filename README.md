@@ -10,10 +10,10 @@ Create *config/config.yml* with the following:
     db: mongodb://[user@host:port/dbname]
 
     session: # redis session details
-      host: [rasteau]
+      host: [redis_host]
       port: 7396
       duration: 3600 # session duration, in seconds
-      appName: 'vinisync'
+      appName: vinisync
 
     auth:
       googleApiId: [googleapis's project id]
@@ -38,6 +38,12 @@ Then:
 
 Use let's encrypt, see https://certbot.eff.org/#ubuntuxenial-nginx
 
+    letsencrypt certonly --webroot -w /var/www/example -d example.com -d www.example.com -w /var/www/thing -d thing.is -d m.thing.is
+
+*nginx.conf* contains a location that points to an accessible path where challenges are stored.
+
 ### Renewal
 
-TBD: nginx rewrite rule on / location likely to cause issues.
+Set up cron job, twice a day:
+
+    letsencrypt renew
