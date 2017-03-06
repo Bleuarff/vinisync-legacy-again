@@ -39,9 +39,15 @@ Polymer({
         if self.page == tagPage
           resolve()
 
-  # ready: () ->
-  #   window.addEventListener 'location-changed', () ->
-  #     console.log('location-changed: ' + location.pathname)
+  ready: () ->
+    # register service worker
+    if navigator.serviceWorker
+      window.addEventListener 'load', () ->
+        navigator.serviceWorker.register '/service-worker.js'
+        .then (registration) ->
+          console.log 'registration ok with scope ' + registration.scope
+        .catch (err) ->
+          console.log 'registration failure: ' + err
 
   _routePageChanged: (page) ->
     return if page == this.page
