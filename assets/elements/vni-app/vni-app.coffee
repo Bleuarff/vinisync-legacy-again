@@ -43,11 +43,13 @@ Polymer({
     # register service worker
     if navigator.serviceWorker
       window.addEventListener 'load', () ->
-        navigator.serviceWorker.register '/service-worker.js'
-        .then (registration) ->
-          console.log 'registration ok with scope ' + registration.scope
-        .catch (err) ->
-          console.log 'registration failure: ' + err
+        setTimeout () ->
+          navigator.serviceWorker.register '/service-worker.js'
+          .then (registration) ->
+            console.log 'SW registered with scope ' + registration.scope
+          .catch (err) ->
+            console.log 'registration failure: ' + err
+        , 1000
 
   _routePageChanged: (page) ->
     return if page == this.page

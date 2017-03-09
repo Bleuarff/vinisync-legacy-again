@@ -1,4 +1,5 @@
-CACHE_NAME = 'v1.1'
+
+CACHE_NAME = 'v2017-03-07.3'
 urlsToCache = [
   '/',
   '/elements/vni-app/vni-app.html',
@@ -116,11 +117,19 @@ urlsToCache = [
 
 // install: set up cache
 this.addEventListener('install', (event) => {
-  event.waitUntil(
+  console.log('installing...')
+  return event.waitUntil(
     caches.open(CACHE_NAME)
     .then((cache) => {
       console.log('opened cache ' + CACHE_NAME)
       return cache.addAll(urlsToCache)
+    })
+    .then(() => {
+      console.log('cache updated')
+      return Promise.resolve()
+    })
+    .catch((err) => {
+      console.log('Install error: ' + err)
     })
   )
 })
@@ -132,11 +141,13 @@ this.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
+          if (cacheName !== CACHE_NAME)
+            return caches.delete(cacheName)
         })
       )
+    })
+    .catch((err) => {
+      console.log('Activate error: ' + err)
     })
   )
 })
