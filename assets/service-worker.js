@@ -1,5 +1,7 @@
 
-CACHE_NAME = 'v2017-03-07.3'
+ASSET_CACHE = 'assets-20170309'
+// DATA_CACHE = 'data-20170309'
+
 urlsToCache = [
   '/',
   '/elements/vni-app/vni-app.html',
@@ -116,16 +118,17 @@ urlsToCache = [
 ]
 
 // install: set up cache
-this.addEventListener('install', (event) => {
+self.addEventListener('install', (event) => {
   console.log('installing...')
   return event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(ASSET_CACHE)
     .then((cache) => {
-      console.log('opened cache ' + CACHE_NAME)
+      console.log('opened cache ' + ASSET_CACHE)
       return cache.addAll(urlsToCache)
     })
     .then(() => {
       console.log('cache updated')
+      // listCacheKeys()
       return Promise.resolve()
     })
     .catch((err) => {
@@ -134,14 +137,25 @@ this.addEventListener('install', (event) => {
   )
 })
 
+function listCacheKeys(){
+  caches.open(ASSET_CACHE).then((cache) => {
+    return cache.keys()
+  })
+  .then((keys) => {
+    for (k of keys){
+      console.log('key: ' + k.url)
+    }
+  })
+}
+
 // activate: remove all other caches except current one
-this.addEventListener('activate', (event) => {
+self.addEventListener('activate', (event) => {
   console.log('remove old caches')
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME)
+          if (cacheName !== ASSET_CACHE)
             return caches.delete(cacheName)
         })
       )
@@ -151,3 +165,59 @@ this.addEventListener('activate', (event) => {
     })
   )
 })
+
+// basic: if in cache, return from cache. else use network, with fallback on cache if timeout
+self.addEventListener('fetch', (e) =>{
+  e.respondWith(
+    caches.open(ASSET_CACHE).then((cache) => {
+      return cache.match(e.request)
+    })
+    .then((matching) => {
+      if (matching != null){
+        console.log(`${e.request.url} found`)
+        return matching
+      }
+
+      throw new Error('no match')
+    })
+    .catch(()=> {
+      console.log('no match')
+      return fromNetwork(e.request, 400)
+    })
+    .catch(() => {
+      return fromCache(e.request)
+    })
+  )
+})
+
+function fromNetwork(request, timeout){
+  return new Promise((resolve, reject) => {
+    let timeoutId = setTimeout(reject, timeout)
+    fetch(request).then((response) => {
+      clearTimeout(timeoutId)
+      console.log(`${request.url} retrieved`)
+      var rescopy = response.clone()
+      resolve(response)
+      updateCache(request, rescopy)
+    }, reject)
+  })
+}
+
+function updateCache(request, response) {
+  if (request.method === 'GET'){
+    caches.open(ASSET_CACHE).then((cache)=>{
+      cache.put(request, response)
+    })
+    .then(() => {
+      console.log(`${request.url} cached OK`)
+    })
+  }
+}
+
+function fromCache(request) {
+  return caches.open(ASSET_CACHE).then((cache) => {
+    return cache.match(request).then((matching) => {
+      return matching || Promise.reject('no match')
+    })
+  })
+}
