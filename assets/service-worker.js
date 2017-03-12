@@ -1,4 +1,4 @@
-ASSET_CACHE = 'assets-20170312'
+CACHE_NAME = 'assets-20170312'
 
 urlsToCache = [
   '/',
@@ -119,13 +119,12 @@ urlsToCache = [
 self.addEventListener('install', (event) => {
   console.log('installing...')
   return event.waitUntil(
-    caches.open(ASSET_CACHE)
+    caches.open(CACHE_NAME)
     .then((cache) => {
-      console.log('opened cache ' + ASSET_CACHE)
       return cache.addAll(urlsToCache)
     })
     .then(() => {
-      console.log('cache updated')
+      console.log(`update ${CACHE_NAME}`)
       return Promise.resolve()
     })
     .catch((err) => {
@@ -141,7 +140,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== ASSET_CACHE)
+          if (cacheName !== CACHE_NAME)
             return caches.delete(cacheName)
         })
       )
@@ -164,7 +163,7 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(getAsset(e.request))
 })
 
-// Retrieve data: send network request. After delay, query cache.
+// Retrieve data: send network request. After a delay, query the cache.
 // Resolves with the first that completes: network request or cache hit.
 // On cache miss, do not resolve and wait for network
 function getData(request){
@@ -172,36 +171,37 @@ function getData(request){
     // network request
     fetch(request).then((response) => {
       clearTimeout(timeoutId)
-      updateCache(request, response.clone())
+      updateCache(request, response)
       return resolve(response)
     })
 
     var timeoutId = setTimeout(() => {
       // cache query
-      caches.open(ASSET_CACHE).then((cache) => {
+      caches.open(CACHE_NAME).then((cache) => {
         return cache.match(request)
       })
       .then((cachedResponse) => {
         if (cachedResponse)
           return resolve(cachedResponse)
+        console.log(`MISS ${request.url}`)
       })
     }, 400)
   })
 }
 
-// Retrieve data, cache or network strategy
+// Retrieve an asset file, cache or network strategy
 function getAsset(request){
-  return caches.open(ASSET_CACHE).then((cache) => {
+  return caches.open(CACHE_NAME).then((cache) => {
     return cache.match(request)
   })
   .then((cachedResponse) => {
     if (cachedResponse){
-      console.log(`found ${request.url}`)
+      // console.log(`found ${request.url}`)
       return cachedResponse
     }
-    // return fromNetwork(e.request, 5000)
+    console.log(`MISS ${request.url}`)
     return fetch(request).then((response) => {
-      updateCache(request, response.clone())
+      updateCache(request, response)
       return response
     })
   })
@@ -209,12 +209,14 @@ function getAsset(request){
 
 // add response to cache
 function updateCache(request, response) {
-  if (request.method === 'GET'){
-    caches.open(ASSET_CACHE).then((cache)=>{
-      cache.put(request, response)
-    })
-    .then(() => {
-      console.log(`cached ${request.url}`)
-    })
-  }
+  if (request.method !== 'GET')
+    return
+
+  var resCopy = response.clone()
+  caches.open(CACHE_NAME).then((cache)=>{
+    cache.put(request, resCopy)
+  })
+  .then(() => {
+    console.log(`cached ${request.url}`)
+  })
 }
