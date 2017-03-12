@@ -1,6 +1,4 @@
-
-ASSET_CACHE = 'assets-20170309'
-// DATA_CACHE = 'data-20170309'
+ASSET_CACHE = 'assets-20170312'
 
 urlsToCache = [
   '/',
@@ -128,7 +126,6 @@ self.addEventListener('install', (event) => {
     })
     .then(() => {
       console.log('cache updated')
-      // listCacheKeys()
       return Promise.resolve()
     })
     .catch((err) => {
@@ -136,17 +133,6 @@ self.addEventListener('install', (event) => {
     })
   )
 })
-
-function listCacheKeys(){
-  caches.open(ASSET_CACHE).then((cache) => {
-    return cache.keys()
-  })
-  .then((keys) => {
-    for (k of keys){
-      console.log('key: ' + k.url)
-    }
-  })
-}
 
 // activate: remove all other caches except current one
 self.addEventListener('activate', (event) => {
@@ -166,52 +152,62 @@ self.addEventListener('activate', (event) => {
   )
 })
 
-self.addEventListener('fetch', (e) =>{
+// Handle all fetch requests
+self.addEventListener('fetch', (e) => {
 
-  // data requests: network or cache
-  if (isDataRequest(e.request.url)){
-    return e.respondWith(
-      fromNetwork(e.request, 400).catch(() => {
-        return fromCache(e.request)
-      })
-    )
+  // data requests: network or cache strategy
+  if (e.request.url.indexOf('/api/') >= 0){
+    return e.respondWith(getData(e.request))
   }
 
-  //  asset requests: cache or network
-  e.respondWith(
-    caches.open(ASSET_CACHE).then((cache) => {
-      return cache.match(e.request)
-    })
-    .then((matching) => {
-      if (matching != null){
-        console.log(`found ${e.request.url}`)
-        return matching
-      }
-
-      return fromNetwork(e.request, 5000)
-    })
-  )
+  //  asset requests: cache or network strategy
+  e.respondWith(getAsset(e.request))
 })
 
-function isDataRequest(url){
-  return url.indexOf('/api/') >= 0
-}
-
-// send request to server, with a timeout
-// response is automatically added to cache
-function fromNetwork(request, timeout){
+// Retrieve data: send network request. After delay, query cache.
+// Resolves with the first that completes: network request or cache hit.
+// On cache miss, do not resolve and wait for network
+function getData(request){
   return new Promise((resolve, reject) => {
-    let timeoutId = setTimeout(reject, timeout)
+    // network request
     fetch(request).then((response) => {
       clearTimeout(timeoutId)
-      console.log(`retrieved ${request.url}`)
-      var rescopy = response.clone()
-      resolve(response)
-      updateCache(request, rescopy)
-    }, reject)
+      updateCache(request, response.clone())
+      return resolve(response)
+    })
+
+    var timeoutId = setTimeout(() => {
+      // cache query
+      caches.open(ASSET_CACHE).then((cache) => {
+        return cache.match(request)
+      })
+      .then((cachedResponse) => {
+        if (cachedResponse)
+          return resolve(cachedResponse)
+      })
+    }, 400)
   })
 }
 
+// Retrieve data, cache or network strategy
+function getAsset(request){
+  return caches.open(ASSET_CACHE).then((cache) => {
+    return cache.match(request)
+  })
+  .then((cachedResponse) => {
+    if (cachedResponse){
+      console.log(`found ${request.url}`)
+      return cachedResponse
+    }
+    // return fromNetwork(e.request, 5000)
+    return fetch(request).then((response) => {
+      updateCache(request, response.clone())
+      return response
+    })
+  })
+}
+
+// add response to cache
 function updateCache(request, response) {
   if (request.method === 'GET'){
     caches.open(ASSET_CACHE).then((cache)=>{
@@ -221,12 +217,4 @@ function updateCache(request, response) {
       console.log(`cached ${request.url}`)
     })
   }
-}
-
-function fromCache(request) {
-  return caches.open(ASSET_CACHE).then((cache) => {
-    return cache.match(request).then((matching) => {
-      return matching || Promise.reject('no match')
-    })
-  })
 }
