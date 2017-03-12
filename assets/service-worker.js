@@ -166,36 +166,45 @@ self.addEventListener('activate', (event) => {
   )
 })
 
-// basic: if in cache, return from cache. else use network, with fallback on cache if timeout
 self.addEventListener('fetch', (e) =>{
+
+  // data requests: network or cache
+  if (isDataRequest(e.request.url)){
+    return e.respondWith(
+      fromNetwork(e.request, 400).catch(() => {
+        return fromCache(e.request)
+      })
+    )
+  }
+
+  //  asset requests: cache or network
   e.respondWith(
     caches.open(ASSET_CACHE).then((cache) => {
       return cache.match(e.request)
     })
     .then((matching) => {
       if (matching != null){
-        console.log(`${e.request.url} found`)
+        console.log(`found ${e.request.url}`)
         return matching
       }
 
-      throw new Error('no match')
-    })
-    .catch(()=> {
-      console.log('no match')
-      return fromNetwork(e.request, 400)
-    })
-    .catch(() => {
-      return fromCache(e.request)
+      return fromNetwork(e.request, 5000)
     })
   )
 })
 
+function isDataRequest(url){
+  return url.indexOf('/api/') >= 0
+}
+
+// send request to server, with a timeout
+// response is automatically added to cache
 function fromNetwork(request, timeout){
   return new Promise((resolve, reject) => {
     let timeoutId = setTimeout(reject, timeout)
     fetch(request).then((response) => {
       clearTimeout(timeoutId)
-      console.log(`${request.url} retrieved`)
+      console.log(`retrieved ${request.url}`)
       var rescopy = response.clone()
       resolve(response)
       updateCache(request, rescopy)
@@ -209,7 +218,7 @@ function updateCache(request, response) {
       cache.put(request, response)
     })
     .then(() => {
-      console.log(`${request.url} cached OK`)
+      console.log(`cached ${request.url}`)
     })
   }
 }
