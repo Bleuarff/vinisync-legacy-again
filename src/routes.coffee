@@ -48,6 +48,7 @@ registerRoutes = (server) ->
   server.use csrf.checkToken # CSRF verification
 
   # then register routes
+  server.get  '/api/init', user.init
   server.post '/api/user/signin', user.signin
   server.post '/api/user/signout', user.signout
   server.get '/api/user/:uid', user.get

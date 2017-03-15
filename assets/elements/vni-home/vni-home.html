@@ -1,4 +1,3 @@
-<link rel="import" href="../../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="vni-home">
@@ -15,8 +14,6 @@
 
     <template is='dom-if' if='[[!signedIn]]'>
       <p>Pour l'utiliser, veuillez vous authentifier avec un compte Google.</p>
-      <google-signin id='google-signin' client-id="822030501141-4dn7d2h8ueid9h7ot7m788vqokclodg5.apps.googleusercontent.com"
-      label-signin='Connexion' label-signout='Déconnexion' theme='dark'></google-signin>
     </template>
 
     <template is='dom-if' if='[[signedIn]]'>

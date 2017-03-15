@@ -41,15 +41,40 @@ Polymer({
 
   ready: () ->
     # register service worker
-    if navigator.serviceWorker
-      window.addEventListener 'load', () ->
-        setTimeout () ->
-          navigator.serviceWorker.register '/service-worker.js'
-          .then (registration) ->
-            console.log 'SW registered with scope ' + registration.scope
-          .catch (err) ->
-            console.log 'registration failure: ' + err
-        , 1000
+    # if navigator.serviceWorker
+    #   window.addEventListener 'load', () ->
+    #     setTimeout () ->
+    #       navigator.serviceWorker.register '/service-worker.js'
+    #       .then (registration) ->
+    #         console.log 'SW registered with scope ' + registration.scope
+    #       .catch (err) ->
+    #         console.log 'registration failure: ' + err
+    #     , 1000
+
+
+    # checks whether user is logged
+    app.send '/api/init'
+    .then (res) =>
+      app.user = res.user
+      app.csrfToken = res.csrfToken
+      @signedIn = true
+      if @route.path == '/'
+        @fire 'redirect', {path: '/cave'}
+      else
+        elem = @$.pages.querySelector "[name='#{@page}']"
+        if elem
+          if elem.fire
+            elem.fire 'show'
+          else
+            @pageLoadPromise.then () ->
+              elem.fire 'show'
+        else
+          @fire 'error', {text: "La page #{@page} est introuvable"}
+    .catch (err) =>
+      @signedIn = false
+      if err.status != 401
+        @fire 'error', {text: 'Erreur de connexion'}
+        console.log err
 
   _routePageChanged: (page) ->
     return if page == this.page
@@ -83,31 +108,6 @@ Polymer({
 
   hideError: () ->
     this.$.errorToast.hide()
-
-  signinSuccess: (evt) ->
-    currentUser = gapi.auth2.getAuthInstance().currentUser.get()
-    tokenId = currentUser.getAuthResponse().id_token
-    userProfileImage = currentUser.getBasicProfile().getImageUrl()
-    app.send '/api/user/signin', {token: tokenId}, 'POST'
-    .then (res) =>
-      app.user = res.user
-      app.csrfToken = res.csrfToken
-      if @route.path == '/'
-        @fire 'redirect', {path: '/cave'}
-      else
-        elem = @$.pages.querySelector "[name='#{@page}']"
-        if elem
-          if elem.fire
-            elem.fire 'show'
-          else
-            @pageLoadPromise.then () ->
-              elem.fire 'show'
-        else
-          @fire 'error', {text: "La page #{@page} est introuvable"}
-    .catch (err) =>
-      @fire 'error', {text: 'Erreur de connexion'}
-      console.log err
-
 
   signout: () ->
     @$['google-signin'].signOut()

@@ -95,4 +95,23 @@ class UserController
     res.send 204
     return next()
 
+  # Returns user/csrf token if logged, else 401
+  @init = (req, res, next) ->
+    p = if req.session.data.uid?
+      User.findById req.session.data.uid
+    else
+      Promise.resolve()
+
+    p.then (user) ->
+      if user?
+        res.send 200, {user: user, csrfToken: req.session.data.csrfToken}
+      else
+        res.send 401
+      next()
+    .catch (err) ->
+      logger.error new VError err, 'init err'
+      res.send 500, 'init error'
+      next()
+
+
 module.exports = exports = UserController
