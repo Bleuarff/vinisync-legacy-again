@@ -24,6 +24,7 @@ Polymer({
     error: '_error'
     success: '_success'
     debug: '_debug'
+    signin: '_signin'
 
   observers: [
     '_routePageChanged(routeData.page)'
@@ -78,7 +79,7 @@ Polymer({
 
   _routePageChanged: (page) ->
     return if page == this.page
-    if this.signedIn || !this.page? || page == 'home' || page == ''
+    if this.signedIn || !this.page? || page == 'home' || page == 'signin' || page == ''
       this.page = page || 'home'
     else
       this.from = page # store page initially requested, for redirection
@@ -96,6 +97,12 @@ Polymer({
     if e.detail && e.detail.path
       this.set 'route.path', e.detail.path
       this.set 'route.__queryParams', {} # redirect removes query parameters
+
+  _signin: (e) ->
+    app.user = e.detail.user
+    app.csrfToken = e.detail.csrfToken
+    this.signedIn = true
+    this.fire 'redirect', path: '/cave'
 
   # show error toast
   _error: (e) ->

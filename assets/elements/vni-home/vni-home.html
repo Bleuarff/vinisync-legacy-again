@@ -13,7 +13,7 @@
     <p>Vinisync est l'application de gestion de cave la plus simple qui soit.</p>
 
     <template is='dom-if' if='[[!signedIn]]'>
-      <p>Pour l'utiliser, veuillez vous authentifier avec un compte Google.</p>
+      <p>Vous n'êtes pas authentifié. <a href="/signin">Se connecter/créer un compte</a></p>
     </template>
 
     <template is='dom-if' if='[[signedIn]]'>

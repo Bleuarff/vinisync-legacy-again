@@ -36,7 +36,7 @@ class UserController
       throw new VError 'user {id: %s, email: %s} is disabled', user.id, user.email
 
     req.session.data.uid = user.id
-    req.session.data.firstName = user.firstName
+    req.session.data.name = user.name
     req.session.update()
 
     utils.generateUniqueToken(24) # generates unique token
@@ -86,6 +86,42 @@ class UserController
     .catch (err) ->
       logger.error new VError err, 'Signin error'
       res.send 400, 'invalid token'
+      next()
+
+  @signup = (req, res, next) ->
+    if !utils.hasParams req, res, ['email', 'pwd', 'name'], false
+      return next()
+
+    profile = req.params
+    validationErrors = userSrv.validate profile
+    if Object.keys(validationErrors).length > 0
+      res.send 400, {errors: validationErrors}
+      return next()
+
+
+    # Check email is not already registered
+    profile.email = profile.email.toLowerCase()
+    p = User.findOne { email: profile.email }
+    .then (result) ->
+      if result?
+        res.send 400, {errors: {usedEmail: true}}
+        return Promise.reject('email already registered')
+      return Promise.resolve()
+
+    p.then () ->
+      userSrv.create req.params
+    .then (user) ->
+      UserController._authenticate req, user
+    .then (user) ->
+      res.send 201, {user: user, csrfToken: req.session.data.csrfToken}
+      next()
+    .catch (err) ->
+      logger.error new VError err, 'signup error'
+
+      # if error is a string and not an error object, that means the rejection
+      # came from the used email verification and response has already been sent.
+      if typeof err != 'string'
+        res.send 500, 'signup error'
       next()
 
   # signout: destroy session, reset cookie

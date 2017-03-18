@@ -1,0 +1,70 @@
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="vni-signin">
+  <template>
+    <style include="shared-styles">
+      :host{
+        display: block;
+        padding: 0 .4em;
+      }
+
+      .default {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .errors {
+        /*display: none;*/
+        border: 1px solid red;
+        border-radius: 3px;
+        background: rgba(241, 0, 0, 0.16);
+        padding: 1em;
+        margin-top: 1em;
+        list-style-type: disc;
+      }
+
+      .err {
+        margin-left: 0.8em;
+      }
+
+      .show-, .show-false {
+        display: none;
+      }
+    </style>
+
+    <paper-tabs selected="{{selectedTab}}">
+      <paper-tab>Créer un compte</paper-tab>
+      <paper-tab>Se connecter</paper-tab>
+    </paper-tabs>
+
+    <iron-pages selected="[[selectedTab]]">
+      <div>
+        <paper-input id="signup-email" label="email" type="email" required error-message='champ obligatoire'>
+        </paper-input>
+        <paper-input id="signup-name" label="votre nom" type="text"></paper-input>
+        <paper-input id="signup-pwd1" label="mot de passe" type="password" required></paper-input>
+        <paper-input id="signup-pwd2" label="mot de passe (bis)" type="password" required></paper-input>
+        <paper-button class="default" on-tap="signup">Créer mon compte</paper-button>
+      </div>
+      <div>
+        <paper-input label="email" type="email"></paper-input>
+        <paper-input label="mot de passe" type="password"></paper-input>
+        <paper-button class="default" on-tap="signin">Se connecter</paper-button>
+      </div>
+    </iron-pages>
+    <ul class$="errors show-[[hasErrors]]">
+      <li class$="err show-[[errors.noEmail]]">Une adresse email est obligatoire.</li>
+      <li class$="err show-[[errors.invalidEmail]]">C'est vraiment votre adresse email ?</li>
+      <li class$="err show-[[errors.usedEmail]]">Cet email est déjà enregistré.</li>
+      <li class$="err show-[[errors.noName]]">Un nom ou pseudo est obligatoire.</li>
+      <li class$="err show-[[errors.noPwd1]]">Un mot de passe est obligatoire.</li>
+      <li class$="err show-[[errors.shortPwd]]">Le mot de passe doit faire au moins 8 caractères.</li>
+      <li class$="err show-[[errors.noRepeat]]">Le mot de passe doit être confirmé.</li>
+    </ul>
+  </template>
+  <script src="vni-signin.js"></script>
+</dom-module>

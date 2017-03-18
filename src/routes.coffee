@@ -49,6 +49,7 @@ registerRoutes = (server) ->
 
   # then register routes
   server.get  '/api/init', user.init
+  server.put '/api/user/signup', user.signup
   server.post '/api/user/signin', user.signin
   server.post '/api/user/signout', user.signout
   server.get '/api/user/:uid', user.get

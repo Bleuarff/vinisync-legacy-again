@@ -1,7 +1,9 @@
 moment = require 'moment'
 VError = require 'verror'
+bcrypt = require 'bcrypt'
 logger = require('../utils/logger.js').create 'userService'
 User = require '../models/user.js'
+utils = require '../utils/utils.js'
 
 class UserService
 
@@ -14,24 +16,35 @@ class UserService
     User.findById uid
     .then (user) ->
       if !user?
-        err = new VError "user #{uid} not found"
-        err.status = 404
-        throw err
+        throw utils.error "user #{uid} not found", 404
 
       logger.debug "user: #{user.name}"
       return Promise.resolve user
 
+  @validate: (profile) ->
+    errs = {}
+    if utils.isNullOrEmpty profile.email
+      errs.noEmail = true
+    else if !/.+@.+\..+/i.test(profile.email)
+      errs.invalidEmail = true
+    if utils.isNullOrEmpty(profile.name)
+      errs.noName = true
+    if utils.isNullOrEmpty(profile.pwd)
+      errs.noPwd1  = true
+    else if (profile.pwd.length < 8)
+      errs.shortPwd = true
+
+    return errs
+
+
   @create: (profile) ->
     logger.info 'create user'
-    profile.email = profile.email.toLowerCase()
-    # Check email is not already registered for that application
-    User.findOne { email: profile.email }
-    .then (result) ->
-      if result?
-        throw new VError 'email %s already exists', profile.email
-
+    bcrypt.hash profile.pwd, 12
+    .then (hash) ->
       # ready to create a new user
+      profile.pwd = hash
       profile.enabled = true
+      profile.confirmed = false
       profile.createDate = moment.utc()
       user = new User profile
       return user.save()

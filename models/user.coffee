@@ -7,15 +7,16 @@ userSchema = new mongoose.Schema
   createDate: Date
   updateDate: Date
   email: String
-  firstName: String
-  lastName: String
+  name: String
+  pwd: String
   enabled: Boolean
+  confirmed: Boolean
 
   # TODO: store last login
-  
+
 # Removes sensitive and uneeded fields on serialization
 userSchema.set 'toJSON', transform: (doc, ret, options) ->
-  # delete ret.password
+  delete ret.pwd
   delete ret.__v
   return ret
 

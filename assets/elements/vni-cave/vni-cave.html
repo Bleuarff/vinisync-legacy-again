@@ -189,12 +189,12 @@
       <p>
         Votre cave contient <span class='stat'>[[entryCount]]</span> références et <span class='stat'>[[bottleCount]]</span> bouteilles.
       </p>
-    </template>
 
-    <paper-button on-tap='toggleFilters'>Filtrer</paper-button>
-    <iron-collapse id='collapse-filters'>
-      <vni-filters></vni-filters>
-    </iron-collapse>
+      <paper-button on-tap='toggleFilters'>Filtrer</paper-button>
+      <iron-collapse id='collapse-filters'>
+        <vni-filters></vni-filters>
+      </iron-collapse>
+    </template>
 
     <template is="dom-if" if="[[_hasFilterResults(filteredCount)]]">
       <span class="has-results">[[filteredCount]] résultats:</span>
