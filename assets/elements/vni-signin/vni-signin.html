@@ -51,8 +51,8 @@
         <paper-button class="default" on-tap="signup">Créer mon compte</paper-button>
       </div>
       <div>
-        <paper-input label="email" type="email"></paper-input>
-        <paper-input label="mot de passe" type="password"></paper-input>
+        <paper-input id="signin-email" label="email" type="email"></paper-input>
+        <paper-input id="signin-pwd" label="mot de passe" type="password"></paper-input>
         <paper-button class="default" on-tap="signin">Se connecter</paper-button>
       </div>
     </iron-pages>
@@ -64,6 +64,7 @@
       <li class$="err show-[[errors.noPwd1]]">Un mot de passe est obligatoire.</li>
       <li class$="err show-[[errors.shortPwd]]">Le mot de passe doit faire au moins 8 caractères.</li>
       <li class$="err show-[[errors.noRepeat]]">Le mot de passe doit être confirmé.</li>
+      <li class$="err show-[[errors.wrongCreds]]">Identifiants incorrects.</li>
     </ul>
   </template>
   <script src="vni-signin.js"></script>

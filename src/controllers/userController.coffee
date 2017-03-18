@@ -1,15 +1,13 @@
 VError = require 'verror'
 moment = require 'moment'
-ObjectId = require('mongoose').Types.ObjectId
-restify = require 'restify'
+bcrypt = require 'bcrypt'
 logger = require('../utils/logger.js').create 'userController'
 config = require '../utils/config.js'
 cookies = require '../utils/cookies.js'
 utils = require '../utils/utils.js'
 User = require '../models/user.js'
 userSrv = require '../services/userService.js'
-wineSrv = require '../services/wineService.js'
-normalizer = require '../services/normalizer.js'
+
 
 class UserController
 
@@ -44,50 +42,36 @@ class UserController
       req.session.update('csrfToken', token) # add new token to session
       return user
 
-  ###
   # signin request
-  ###
   @signin = (req, res, next) ->
-    if !utils.hasParams req, res, 'token', false
+    if !utils.hasParams req, res, ['email', 'pwd'], false
       return next()
 
-    token = req.params.token
-    userProfile = null
+    user = null
+    p = User.findOne {email: req.params.email}
+    .then (_usr) ->
+      user = _usr
+      if (!user?)
+        res.send 400, {errors: {wrongCreds: true}}
+        return Promise.reject()
 
-    p = new Promise (resolve, reject) ->
-      client = restify.createJsonClient
-        url: 'https://www.googleapis.com'
-        version: '~1.0'
-        agent: false
+      bcrypt.compare(req.params.pwd, user.pwd)
+    p.then (isPwdOk) ->
+      if !isPwdOk
+        res.send 400, {errors: {wrongCreds: true}}
+        return Promise.reject()
 
-      client.get "/oauth2/v3/tokeninfo?id_token=#{token}", (error, req, res, obj) ->
-        if error
-          reject new VError 'can not retrieve tokeninfo via googleapis'
-        else if obj.error_description
-          reject new VError obj.error_description
-        else if obj.aud != config.auth.googleApiId
-          reject new VError 'invalid audience'
-        else
-          resolve { email: obj.email, firstName: obj.given_name, lastName: obj.family_name}
-
-    p.then (profile) ->
-      userProfile = profile
-      User.findOne { email: userProfile.email }, {bottles: 0}
-    .then (user) ->
-      if !user? && userProfile
-        return userSrv.create userProfile
-      else
-        return user
-    .then (user) ->
       UserController._authenticate req, user
     .then (user) ->
-      res.send 200, {user: user, csrfToken: req.session.data.csrfToken}
+      res.send 201, {user: user, csrfToken: req.session.data.csrfToken}
       next()
     .catch (err) ->
-      logger.error new VError err, 'Signin error'
-      res.send 400, 'invalid token'
+      logger.error new VError err, 'signin error'
+      if err?
+        res.send 500, 'signin error'
       next()
 
+  # account creation
   @signup = (req, res, next) ->
     if !utils.hasParams req, res, ['email', 'pwd', 'name'], false
       return next()
@@ -97,7 +81,6 @@ class UserController
     if Object.keys(validationErrors).length > 0
       res.send 400, {errors: validationErrors}
       return next()
-
 
     # Check email is not already registered
     profile.email = profile.email.toLowerCase()
