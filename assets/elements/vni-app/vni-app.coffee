@@ -117,10 +117,10 @@ Polymer({
     this.$.errorToast.hide()
 
   signout: () ->
-    @$['google-signin'].signOut()
     app.send '/api/user/signout', {}, 'POST'
     app.user = null
     app.csrfToken = null
+    @signedIn = false
     @fire 'redirect', {path: '/home'}
 
   # display message in log section

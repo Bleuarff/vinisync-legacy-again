@@ -13,7 +13,7 @@ Polymer({
     show: 'show'
 
   show: () ->
-    # if 'from' property is set, redirect to said page. Triggerw show because redirect
+    # if 'from' property is set, redirect to said page. Trigger show because redirect
     # will display the page without running show if page was already loaded (it sees no route change).
     # Triggering show forces content refresh
     if this.from?
@@ -21,9 +21,6 @@ Polymer({
       this.fire 'redirect', {path: "/#{this.from}"}
       elem = document.querySelector("[name='#{page}']")
       elem.fire 'show' if elem.fire?
-
-  signout: () ->
-    @fire 'signout'
 
   #  when page is requested with query params, stores the from parameter
   _fromChanged: (params) ->
