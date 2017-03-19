@@ -20,13 +20,19 @@ class Cookies
   # @value: cookie value
   # @expires: expiracy date as Date object
   # @httpOnly: whether the cookie is http-only. Defaults to true
-  @set = (res, name, value, expires, httpOnly = true) ->
+  # @secure: whether the cookie is secure (https-only). Defaults to true
+  # @sameSite: value to use for SameSite flag. Defaults to Lax
+  @set = (res, name, value, expires, httpOnly = true, secure = true, sameSite = 'Lax') ->
     cookie = "#{name}=#{value};"
     if expires?
       cookie += "expires=#{expires.toUTCString()};"
     cookie += "path=/;"
     if httpOnly
-      cookie += ' HttpOnly'
+      cookie += ' HttpOnly;'
+    if secure
+      cookie += ' Secure;'
+    if sameSite?
+      cookie += " SameSite=#{sameSite};"
     setCookieHeader = res.header "Set-Cookie"
     # pass array to Set-Cookie header if ptid cookie has already been set for the same response
     if Array.isArray setCookieHeader
