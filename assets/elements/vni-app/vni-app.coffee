@@ -121,6 +121,7 @@ Polymer({
     app.user = null
     app.csrfToken = null
     @signedIn = false
+    this.querySelector('.overlay').click() # hide overlay
     @fire 'redirect', {path: '/home'}
 
   # display message in log section
