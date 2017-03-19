@@ -48,3 +48,5 @@ app
 
 # compiled elements
 assets/elements/*/*.js
+# re-include elements explicitely written in js
+!assets/elements/vni-signin/vni-signin.js
