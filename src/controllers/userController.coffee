@@ -61,6 +61,11 @@ class UserController
         res.send 400, {errors: {wrongCreds: true}}
         return Promise.reject()
 
+      if req.params.remember
+        cookies.set res, 'rmr', user.id, moment.utc().add(1, 'year')
+      else
+        cookies.delete res, 'rmr'
+
       UserController._authenticate req, user
     .then (user) ->
       res.send 201, {user: user, csrfToken: req.session.data.csrfToken}
@@ -94,6 +99,10 @@ class UserController
     p.then () ->
       userSrv.create req.params
     .then (user) ->
+      if req.params.remember
+        cookies.set res, 'rmr', user.id, moment.utc().add(1, 'year')
+      else
+        cookies.delete res, 'rmr'
       UserController._authenticate req, user
     .then (user) ->
       res.send 201, {user: user, csrfToken: req.session.data.csrfToken}

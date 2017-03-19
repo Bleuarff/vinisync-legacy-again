@@ -7,7 +7,9 @@ Polymer({
     selectedTab: {type: Number, value: 0, observer: '_tabChanged'},
     errors: Object,
     hasErrors: {type: Boolean, value: false},
-    params: {type: Object, observer: '_paramsChanged'}
+    params: {type: Object, observer: '_paramsChanged'}, // query string parameters
+    email: String,
+    remember: {type: Boolean, value: true}
   },
 
   // check input is correct
@@ -44,21 +46,21 @@ Polymer({
   },
 
   signup: function(){
-    var email = this.$['email'].value,
-        name = this.$['signup-name'].value,
+    var name = this.$['signup-name'].value,
         pwd1 = this.$['signup-pwd1'].value,
         pwd2 = this.$['signup-pwd2'].value
 
     this.$['signup-pwd1'].value = this.$['signup-pwd2'].value = ''
 
-    if (!this.validate(email, name, pwd1, pwd2, true))
+    if (!this.validate(this.email, name, pwd1, pwd2, true))
       return
 
     let self = this
     app.send('/api/user/signup', {
-      email: email,
+      email: this.email,
       name: name,
-      pwd: pwd1
+      pwd: pwd1,
+      remember: this.remember
     }, 'PUT')
     .then((res)=>{
       self.fire('signin', res)
@@ -69,18 +71,18 @@ Polymer({
   },
 
   signin: function(){
-    var email = this.$['email'].value,
-        pwd = this.$['signin-pwd'].value
+    var pwd = this.$['signin-pwd'].value
 
     this.$['signin-pwd'].value = ''
 
-    if (!this.validate(email, null, pwd, null, false))
+    if (!this.validate(this.email, null, pwd, null, false))
       return
 
     let self = this
     app.send('/api/user/signin', {
-      email: email,
-      pwd: pwd
+      email: this.email,
+      pwd: pwd,
+      remember: this.remember
     }, 'POST')
     .then((res) => {
       self.fire('signin', res)

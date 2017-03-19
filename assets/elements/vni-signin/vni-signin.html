@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 
 <dom-module id="vni-signin">
   <template>
@@ -38,6 +39,11 @@
       .show-, .show-false {
         display: none;
       }
+
+      paper-checkbox {
+        display: block;
+        padding: 0.7em 0 1.6em;
+      }
     </style>
 
     <paper-tabs selected="{{selectedTab}}">
@@ -45,19 +51,23 @@
       <paper-tab>Se connecter</paper-tab>
     </paper-tabs>
 
-    <paper-input id="email" label="email" type="email"></paper-input>
+    <paper-input id="email" label="email" type="email" value="{{email}}"></paper-input>
     <iron-pages selected="[[selectedTab]]">
       <div>
         <paper-input id="signup-name" label="votre nom" type="text"></paper-input>
         <paper-input id="signup-pwd1" label="mot de passe" type="password" required></paper-input>
         <paper-input id="signup-pwd2" label="mot de passe (bis)" type="password" required></paper-input>
+        <paper-checkbox id="signup-remember" checked="{{remember}}">Se souvenir de moi</paper-checkbox>
         <paper-button class="default" on-tap="signup">Créer mon compte</paper-button>
       </div>
       <div>
         <paper-input id="signin-pwd" label="mot de passe" type="password"></paper-input>
+        <paper-checkbox id="signin-remember" checked="{{remember}}">Se souvenir de moi</paper-checkbox>
         <paper-button class="default" on-tap="signin">Se connecter</paper-button>
       </div>
     </iron-pages>
+
+
     <ul class$="errors show-[[hasErrors]]">
       <li class$="err show-[[errors.noEmail]]">Une adresse email est obligatoire.</li>
       <li class$="err show-[[errors.invalidEmail]]">C'est vraiment votre adresse email ?</li>

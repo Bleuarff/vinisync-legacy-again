@@ -1,3 +1,4 @@
+moment = require('moment')
 
 class Cookies
 
@@ -18,14 +19,14 @@ class Cookies
   # @res: response object
   # @name: cookie name
   # @value: cookie value
-  # @expires: expiracy date as Date object
+  # @expires: expiracy date as moment object
   # @httpOnly: whether the cookie is http-only. Defaults to true
   # @secure: whether the cookie is secure (https-only). Defaults to true
   # @sameSite: value to use for SameSite flag. Defaults to Lax
   @set = (res, name, value, expires, httpOnly = true, secure = true, sameSite = 'Lax') ->
     cookie = "#{name}=#{value};"
     if expires?
-      cookie += "expires=#{expires.toUTCString()};"
+      cookie += "expires=#{expires.format('ddd, DD MMM YYYY HH:mm:ss')};"
     cookie += "path=/;"
     if httpOnly
       cookie += ' HttpOnly;'
@@ -46,6 +47,6 @@ class Cookies
 
   # Deletes cookie with given name
   @delete = (res, name) ->
-    Cookies.set res, name, '', new Date('1970-01-01T00:00:00Z')
+    Cookies.set res, name, '', moment('1970-01-01T00:00:00Z')
 
 module.exports = exports = Cookies

@@ -134,19 +134,4 @@ class Session
 
     return promise
 
-  # Retrieves promotion Ids subscribed by non-authenticated user
-  getPromos: () ->
-    return if utils.isNullOrEmpty(@data.promoIds) then [] else @data.promoIds.split ','
-
-  # Persists subscribed promotion in session.
-  # /!\ Does not perform partial update, rewrites completely the subscribed promotions
-  # @subscribed: promotions id array
-  setPromos: (subscribed) ->
-    if utils.isNullOrEmpty subscribed
-      subscribed = []
-    else if typeof subscribed == 'string'
-      subscribed = [subscribed]
-
-    @update 'promoIds', subscribed.join(',')
-
 module.exports = exports = Session
