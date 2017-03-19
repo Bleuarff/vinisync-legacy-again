@@ -12,6 +12,10 @@
         padding: 0 .4em;
       }
 
+      paper-tabs{
+        --paper-tabs-selection-bar-color: var(--vni-blue-light);
+      }
+
       .default {
         left: 50%;
         transform: translateX(-50%);
@@ -41,17 +45,15 @@
       <paper-tab>Se connecter</paper-tab>
     </paper-tabs>
 
+    <paper-input id="email" label="email" type="email"></paper-input>
     <iron-pages selected="[[selectedTab]]">
       <div>
-        <paper-input id="signup-email" label="email" type="email" required error-message='champ obligatoire'>
-        </paper-input>
         <paper-input id="signup-name" label="votre nom" type="text"></paper-input>
         <paper-input id="signup-pwd1" label="mot de passe" type="password" required></paper-input>
         <paper-input id="signup-pwd2" label="mot de passe (bis)" type="password" required></paper-input>
         <paper-button class="default" on-tap="signup">Créer mon compte</paper-button>
       </div>
       <div>
-        <paper-input id="signin-email" label="email" type="email"></paper-input>
         <paper-input id="signin-pwd" label="mot de passe" type="password"></paper-input>
         <paper-button class="default" on-tap="signin">Se connecter</paper-button>
       </div>

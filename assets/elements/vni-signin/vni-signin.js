@@ -4,9 +4,10 @@ Polymer({
   is: 'vni-signin',
   properties: {
     signin: {type: Boolean, value: true},
-    selectedTab: {type: Number, value: 0},
+    selectedTab: {type: Number, value: 0, observer: '_tabChanged'},
     errors: Object,
-    hasErrors: {type: Boolean, value: false}
+    hasErrors: {type: Boolean, value: false},
+    params: {type: Object, observer: '_paramsChanged'}
   },
 
   // check input is correct
@@ -43,10 +44,12 @@ Polymer({
   },
 
   signup: function(){
-    var email = this.$['signup-email'].value,
+    var email = this.$['email'].value,
         name = this.$['signup-name'].value,
         pwd1 = this.$['signup-pwd1'].value,
         pwd2 = this.$['signup-pwd2'].value
+
+    this.$['signup-pwd1'].value = this.$['signup-pwd2'].value = ''
 
     if (!this.validate(email, name, pwd1, pwd2, true))
       return
@@ -66,8 +69,10 @@ Polymer({
   },
 
   signin: function(){
-    var email = this.$['signin-email'].value,
+    var email = this.$['email'].value,
         pwd = this.$['signin-pwd'].value
+
+    this.$['signin-pwd'].value = ''
 
     if (!this.validate(email, null, pwd, null, false))
       return
@@ -99,5 +104,18 @@ Polymer({
     catch (e){
       this.fire('error', {text: 'Erreur de connexion'})
     }
+  },
+
+  // observer on query string to know if signup or signin
+  _paramsChanged: function(params){
+    if (params.action != null)
+      this.selectedTab = parseInt(params.action, 10)
+  },
+
+  // observer on selected tab index, to set focus on email input
+  _tabChanged: function(value){
+    this.async(() => {
+      this.$['email'].focus()
+    })
   }
 })

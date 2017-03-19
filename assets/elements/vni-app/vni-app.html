@@ -78,7 +78,7 @@
     <app-route route="[[route]]" pattern="/cave" tail="{{caveRoute}}"></app-route>
     <app-route route="[[route]]" pattern="/entry" tail="{{entryRoute}}"></app-route>
     <app-route route="[[route]]" pattern="/home" tail="{{homeRoute}}"></app-route>
-    <app-route route="[[route]]" pattern="/signin"></app-route>
+    <app-route route="[[route]]" pattern="/signin" query-params="{{signinParams}}"></app-route>
 
     <paper-scroll-header-panel class="flex">
       <paper-toolbar>
@@ -97,7 +97,7 @@
           fallback-selection="z404"
           role="main">
         <vni-home name="home" route='[[homeRoute]]' signed-in='[[signedIn]]'></vni-home>
-        <vni-signin name="signin"></vni-signin>
+        <vni-signin name="signin" params="[[signinParams]]"></vni-signin>
         <vni-cave name="cave" route='[[caveRoute]]' page='[[page]]' signed-in='[[signedIn]]'></vni-cave>
         <vni-entry name='entry' route='[[entryRoute]]'></vni-entry>
         <vni-z401 name="z401" from='[[from]]'></vni-z401>
