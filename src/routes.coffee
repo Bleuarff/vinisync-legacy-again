@@ -15,9 +15,9 @@ producer = require './controllers/producerController.js'
 image = require './controllers/imageController.js'
 
 registerRoutes = (server) ->
-  logger.debug 'registering handlers & routes'
-  csrf.cookies = ['rmrid', 'sessid']
-  csrf.publicUrls = ['/api/user/signin']
+
+  csrf.cookies = ['rmr', 'sessid']
+  csrf.publicUrls = ['/api/user/signin', '/api/user/signup']
 
   # First register handlers
   server.pre restify.pre.sanitizePath() # normalize urls
@@ -45,6 +45,7 @@ registerRoutes = (server) ->
 
   server.use restify.bodyParser({mapParams: true})
   server.use session.handle # creates or retrieves session and attach it to request object
+  server.use user.rememberMe # check rememberme cookie
   server.use csrf.checkToken # CSRF verification
 
   # then register routes
@@ -71,5 +72,7 @@ registerRoutes = (server) ->
   server.get '/api/cepage', cepage.index
   server.get '/api/appellation', appellation.index
   server.get '/api/producer', producer.index
+
+  logger.debug 'handlers & routes OK'
 
 module.exports.register = exports.register = registerRoutes

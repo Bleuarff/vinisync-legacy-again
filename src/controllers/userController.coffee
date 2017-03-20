@@ -119,6 +119,7 @@ class UserController
   # signout: destroy session, reset cookie
   @signout = (req, res, next) ->
     cookies.delete res, 'sessid'
+    cookies.delete res, 'rmr'
     req.session.destroy()
     res.send 204
     return next()
@@ -141,5 +142,26 @@ class UserController
       res.send 500, 'init error'
       next()
 
+  # remember handler: if rmr cookie exists & session is not authenticated,
+  # log user in automatically
+  @rememberMe = (req, res, next) ->
+    if req.session.data.uid?
+      return next()
+
+    uid = cookies.parse(req.headers.cookie).rmr
+    if !uid?
+      return next()
+
+    p = User.findById uid
+    .then (user) ->
+      if user?
+        UserController._authenticate req, user
+      return Promise.resolve()
+
+    p.then () ->
+      return next()
+    p.catch (err) ->
+      logger.error new VError err, 'Remember me error'
+      return next()
 
 module.exports = exports = UserController
