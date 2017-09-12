@@ -1,0 +1,26 @@
+
+dbConnections:
+  - connectionString: mongodb://localhost:27017/vinisync
+
+server:
+  port: 3001
+  cluster: false
+
+db: mongodb://localhost:27017/vinisync
+
+session: # redis session details
+  host: localhost
+  port: 7396
+  duration: 3600 # session duration, in seconds
+  appName: 'vinisync'
+
+log:
+  level: debug
+  targets:
+    -
+      type: stdout
+    -
+      type: file
+      path: trace.log
+
+imageDirectory: /home/bleuarff/dev/vni_uploads

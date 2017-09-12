@@ -1,0 +1,35 @@
+{
+  "name": "vinisync",
+  "version": "0.0.1",
+  "description": "plain simple cellar management",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bleuarff/vinisync.git"
+  },
+  "keywords": [
+    "wine",
+    "vin",
+    "cave",
+    "cellar"
+  ],
+  "author": "bleuarff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bleuarff/vinisync/issues"
+  },
+  "homepage": "https://github.com/Bleuarff/vinisync#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1"
+  },
+  "dependencies": {
+    "js-yaml": "^3.10.0",
+    "node-db-connector": "^1.1.0",
+    "restify": "^5.2.0",
+    "swn-logger": "^1.0.0",
+    "verror": "^1.10.0"
+  }
+}
