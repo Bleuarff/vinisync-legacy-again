@@ -42,7 +42,7 @@ async function main(){
 
     try{
       await db.init(config.dbConnections, {logger: logger})
-      // routes.register(server)
+      routes.register(server)
       server.listen(port, '127.0.0.1')
       logger.info('start listening')
     }
