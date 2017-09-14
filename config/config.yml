@@ -1,12 +1,11 @@
 
 dbConnections:
   - connectionString: mongodb://localhost:27017/vinisync
+    name: vni
 
 server:
   port: 3001
   cluster: false
-
-db: mongodb://localhost:27017/vinisync
 
 session: # redis session details
   host: localhost

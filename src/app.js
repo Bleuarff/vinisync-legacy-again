@@ -44,7 +44,7 @@ async function main(){
       await db.init(config.dbConnections, {logger: logger})
       routes.register(server)
       server.listen(port, '127.0.0.1')
-      logger.info('start listening')
+      logger.info('listening...')
     }
     catch(err){
       logger.error(err)

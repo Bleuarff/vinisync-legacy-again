@@ -4,6 +4,8 @@ const restify = require('restify'),
       // config = require('.//utils/config.js'),
       logger = require('swn-logger').create('routes')
 
+const auth = require('./controllers/authController.js')
+
 module.exports.register = exports.register = function registerRoutes(server){
   /* First register handlers */
 
@@ -28,4 +30,5 @@ module.exports.register = exports.register = function registerRoutes(server){
 
   /* routes defined below*/
 
+  server.put('/api/user/signup', auth.signup)
 }
