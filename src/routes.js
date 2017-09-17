@@ -44,6 +44,8 @@ module.exports.register = exports.register = function registerRoutes(server){
   server.use(restify.plugins.queryParser({mapParams: true}))
   server.use(restify.plugins.bodyParser({mapParams: true}))
 
+  // TODO: check authentication
+
   /* routes defined below*/
 
   server.put('/api/user/signup', auth.signup)
