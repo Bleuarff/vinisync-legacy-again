@@ -3,11 +3,12 @@
 const VError = require('verror'),
       logger = require('swn-logger').create('authController'),
       db = require('node-db-connector'),
-      utils = require('../../utils/utils.js'),
       bcrypt = require('bcrypt'),
       moment = require('moment'),
       uuidv4 = require('uuid/v4'),
-      ObjectId = require('bson-objectid')
+      ObjectId = require('bson-objectid'),
+      utils = require('../../utils/utils.js'),
+      cookies = require('../../utils/cookies.js')
 
 
 class AuthController {
@@ -77,6 +78,13 @@ class AuthController {
       }
       return next(false)
     }
+  }
+
+  // kill session & delete cookie
+  static signout(req, res, next){
+    cookies.delete(res, 'sessid')
+    req.session.destroy()
+    res.send(200, 'session destroyed')
   }
 }
 

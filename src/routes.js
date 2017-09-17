@@ -2,9 +2,12 @@
 
 const restify = require('restify'),
       // config = require('.//utils/config.js'),
-      logger = require('swn-logger').create('routes')
+      logger = require('swn-logger').create('routes'),
+      session = require('../utils/session.js'),
+      requestIp = require('request-ip')
 
-const auth = require('./controllers/authController.js')
+const auth = require('./controllers/authController.js'),
+      entry = require('./controllers/entryController.js')
 
 module.exports.register = exports.register = function registerRoutes(server){
   /* First register handlers */
@@ -25,10 +28,26 @@ module.exports.register = exports.register = function registerRoutes(server){
     return next()
   })
 
+  //  Init client IP (X-Client-IP/X-Forwarded-For/X-Real-IP...)
+  server.use((req, res, next) => {
+    req.clientIp = requestIp.getClientIp(req)
+    return next()
+  })
+
+  server.get('/api/ping', (req, res, next) => {
+    res.send(200)
+    return next()
+  })
+
+  server.use(session.handle)
+
   server.use(restify.plugins.queryParser({mapParams: true}))
   server.use(restify.plugins.bodyParser({mapParams: true}))
 
   /* routes defined below*/
 
   server.put('/api/user/signup', auth.signup)
+  server.get('/api/user/signout', auth.signout)
+
+  server.get('/api/entry/:id', entry.get)
 }

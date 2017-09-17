@@ -1,6 +1,9 @@
 'use strict'
 
-const VError = require('verror')
+const VError = require('verror'),
+      util = require('util'),
+      crypto = require('crypto'),
+      randomBytes = util.promisify(crypto.randomBytes)
 
 class Utils {
   // checks the required parameters are in the request. Otherwise returns a 400 status
@@ -46,6 +49,19 @@ class Utils {
 
     err.status = status
     return err
+  }
+
+  // Generates a random binary buffer and serializes it in base64
+  // @length: length of the buffer to create. Resulting string is longer due to base64 encoding.
+  static async generateUniqueToken(length = 24){
+    try{
+      let buf = await randomBytes(length),
+          token = buf.toString('base64')
+      return Promise.resolve(token)
+    }
+    catch(err){
+      throw new VError(err, 'Error generating random token')
+    }
   }
 }
 module.exports = exports = Utils

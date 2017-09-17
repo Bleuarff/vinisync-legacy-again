@@ -8,8 +8,7 @@ server:
   cluster: false
 
 session: # redis session details
-  host: localhost
-  port: 7396
+  host: localhost:7396
   duration: 3600 # session duration, in seconds
   appName: 'vinisync'
 
