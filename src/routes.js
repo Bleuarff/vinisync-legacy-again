@@ -47,6 +47,7 @@ module.exports.register = exports.register = function registerRoutes(server){
   /* routes defined below*/
 
   server.put('/api/user/signup', auth.signup)
+  server.post('/api/user/signin', auth.signin)
   server.get('/api/user/signout', auth.signout)
 
   server.get('/api/entry/:id', entry.get)

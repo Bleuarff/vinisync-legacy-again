@@ -39,8 +39,7 @@ class Utils {
     return ok
   }
 
-  static error(message, status, innerErr){
-    status = status || 500
+  static error(message, status = 500, innerErr){
     var err
     if (innerErr)
       err = new VError(innerErr, message)

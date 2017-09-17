@@ -63,7 +63,7 @@ class Session {
       })
     }
     catch(err){
-      logger.error(new VError(err, 'Error updating'))
+      throw new VError(err, 'Error updating session')
     }
   }
 
