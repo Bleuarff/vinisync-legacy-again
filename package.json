@@ -37,6 +37,8 @@
     "js-yaml": "^3.10.0",
     "moment": "^2.18.1",
     "node-db-connector": "^1.1.0",
+    "redis-sessions": "^1.2.0",
+    "request-ip": "^2.0.2",
     "restify": "^5.2.0",
     "swn-logger": "^1.0.0",
     "verror": "^1.10.0"
