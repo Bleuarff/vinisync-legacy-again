@@ -49,7 +49,7 @@ class AuthController {
 
   // create user account
   static async signup(req, res, next){
-    if (!utils.hasParams(req, res, ['email', 'pwd', 'name'], false))
+    if (!utils.hasParams(res, res.params, ['email', 'pwd', 'name']))
       return next(false)
 
     var profile = req.params,
@@ -101,7 +101,7 @@ class AuthController {
 
   // user log in
   static async signin(req, res, next){
-    if (!utils.hasParams(req, res, ['email', 'pwd'], false)){
+    if (!utils.hasParams(res, req.params, ['email', 'pwd'])){
       return next()
     }
 
@@ -137,6 +137,40 @@ class AuthController {
     cookies.delete(res, 'sessid')
     req.session.destroy()
     res.send(200, 'session destroyed')
+  }
+
+  // some auth checks:
+  // if no uid param, path must be public
+  // if uid, must be present in session
+  static isLogged(req, res, next){
+    const uid = req.params.uid
+
+    if (!uid && AuthController.isPublic(req.getPath())){
+      // logger.debug('no uid, public url')
+      return next()
+    }
+
+    if (uid === req.session.data.uid){
+      // logger.debug('uid not equal session')
+      return next()
+    }
+
+    res.send(401)
+    return next(false)
+  }
+
+  // whether a given path is defined in list of public paths
+  static isPublic(path){
+    var isPublicPath = AuthController.publicUrls.some(pattern => {
+      if (pattern instanceof RegExp)
+        return pattern.test(path)
+      else if (typeof pattern === 'string')
+        return pattern === path
+      else
+        return false
+    })
+
+    return isPublicPath
   }
 }
 

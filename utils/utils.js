@@ -8,35 +8,26 @@ const VError = require('verror'),
 class Utils {
   // checks the required parameters are in the request. Otherwise returns a 400 status
   // Also performs horizontal privilege escalation check
-  // @params: param name or array of param names to check
-  // @includeUid (default: true): whether to check for the uid parameter
-  static hasParams(req, res, params, includeUid){
-    var includeUid = includeUid != null ? includeUid : true,
-        pList = includeUid ? ['uid'] : [], // mandatory parameter (in most cases)
-        ok = true
-
-    if (typeof params === 'string'){
-      pList.push(params)
-    }
-    else if (Array.isArray(params)){
-      pList = pList.concat(params)
+  // @params: param object from request
+  // @expected: string or array of expected args
+  static hasParams(res, params, expected){
+    if (typeof expected === 'string' && expected.length > 0){
+      return params[expected] != null
     }
 
-    for (let i = 0; i < pList.length; i++){
-      if (req.params[pList[i]] == null){
-        res.send(400, 'missing parameters')
-        ok = false
-        break
-      }
+    if (!Array.isArray(expected))
+      throw new VError('invalid `expected` args')
+
+    var allExist = expected.every(value => {
+      return params[value] != null
+    })
+
+    if (!allExist){
+      res.send(400, 'missing parameters')
+      return false
     }
 
-    // horizontal privilege escalation check
-    if (ok && (includeUid || req.params.uid) && req.params.uid !== req.session.data.uid){
-      res.send(403, 'forbidden')
-      ok = false
-    }
-
-    return ok
+    return true
   }
 
   static error(message, status = 500, innerErr){
