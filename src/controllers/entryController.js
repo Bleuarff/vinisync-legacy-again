@@ -11,6 +11,29 @@ const VError = require('verror'),
 
 class EntryController {
 
+  static async index(req, res, next){
+    if (!ObjectId.isValid(req.params.uid)){
+      res.send(400, 'invalid id')
+      return next(false)
+    }
+
+    // TODO: filters
+    var filters = {userId: new ObjectId(req.params.uid)}
+
+    try {
+      var entries = await db.vni.collection(collName).find(filters).toArray()
+      res.send(200, entries)
+      return next()
+    }
+    catch(err){
+      if (!err.status)
+        logger.error(new VError(err, 'Error getting entries'))
+
+      res.send(err.status || 500, 'Error getting entries')
+      return next(false)
+    }
+  }
+
   static async get(req, res, next){
     // no need for hasParams check - id is mandatory in url
     //  or checking uid is valid, it's already checked by a previous restify handler
@@ -41,6 +64,11 @@ class EntryController {
       res.send(err.status || 500, 'Error getting entry')
       return next(false)
     }
+  }
+
+  // creates an entry
+  static async create(req, res, next){
+    res.send(201)
   }
 }
 
