@@ -7,22 +7,24 @@ describe('WineService', () => {
     let srv = require('../services/wineService.js')
 
     it('pass', () => {
-      let res = srv.validate({
+      let input = {
         appellation: 'St Emiliion',
         producer: 'Chateau Ausone',
         year: 1998,
         apogeeStart: 2018,
         apogeeEnd: 2025
-      })
-      assert.isTrue(res)
+      }
+      let out = srv.validate(input)
+      assert.deepEqual(out, input)
     })
 
     it('pass minimum', () => {
-      let res = srv.validate({
+      let input = {
         appellation: 'St Emiliion',
         producer: 'Chateau Ausone'
-      })
-      assert.isTrue(res)
+      }
+      let out = srv.validate(input)
+      assert.deepEqual(out, input)
     })
 
     it('no appellation', () => {

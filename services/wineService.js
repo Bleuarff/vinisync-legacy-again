@@ -27,7 +27,7 @@ class WineService {
       throw utils.error('invalid param', 400, err)
     }
 
-    return true
+    return wine
   }
 
   // checks that if provided, the value must be a number in valid range

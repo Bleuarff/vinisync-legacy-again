@@ -47,4 +47,31 @@ describe('Normalizer', () => {
       })
     })
   })
+
+  describe('Normalize wine object', () => {
+    it('empty key deletion', () => {
+      var out = sut.normalize({
+        appellation: '',
+        producer: null
+      })
+      assert.deepEqual(out, {cepages: []})
+    })
+
+    it('color', () => {
+      var out = sut.normalize({color: 'RED'})
+      assert.deepEqual(out, {color: 'red', cepages: []})
+    })
+
+    it('empty cepages', () => {
+      var out = sut.normalize({cepages: null})
+      assert.deepEqual(out, {cepages: []})
+    })
+
+    it('cepages', () => {
+      var out = sut.normalize({cepages: ['SYRAH', 'SAUVIGNON']})
+      assert.deepEqual(out, {
+        cepages: ['syrah', 'sauvignon']
+      })
+    })
+  })
 })

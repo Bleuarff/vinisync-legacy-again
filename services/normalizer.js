@@ -15,6 +15,35 @@ const stopWords = 'a|à|c|d|j|l|m|n|s|t|y|au|aux|ça|ce|ces|ci|de|des|du|dos|en|
       wordsRx = /\b[\wàäâéèêëìïîôöòüûùç]+\b/gi // TODO: handle more accented chars
 
 class Normalizer{
+
+  // fix object's properties
+  static normalize(wine){
+    var keys = Object.keys(wine)
+    keys.forEach(key => {
+
+      if (wine[key] == null || wine[key] === ''){
+        delete wine[key]
+        return
+      }
+
+      if (typeof wine[key] === 'string'){
+        if (key === 'color'){
+          wine.color = wine.color.toLowerCase()
+          return
+        }
+
+        let value = Normalizer._toTitleCase(wine[key])
+        value = Normalizer._replacePatterns(value)
+        wine[key] = value
+      }
+      else if (key === 'cepages'){
+        wine.cepages = wine.cepages.map(x => {return x.toLowerCase()})
+      }
+    })
+    wine.cepages = wine.cepages || []
+    return wine
+  }
+
   // get standard, lowercase, non-accented string, with non-alphanumeric chars converted to space
   static getStandardForm(input){
     var value = input.toLowerCase()
