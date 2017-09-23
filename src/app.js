@@ -49,5 +49,13 @@ async function main(){
 main()
 
 // listen to signals, close server
-process.on('SIGINT', () => {logger.debug('sigint'); Server.stop('SIGINT')})
-process.on('SIGTERM', () => {logger.debug('sigterm'); Server.stop('SIGTERM')})
+// kill -2 works but keyboard interrupt does not. wtf.
+process.on('SIGINT', () => {logger.debug('sigint'); server.stop('SIGINT')})
+process.on('SIGTERM', () => {logger.debug('sigterm'); server.stop('SIGTERM')})
+process.on('exit', (code) => {
+  logger.debug(`exit: ${code}`)
+  server.stop('exit')
+})
+process.on('beforeExit', (code) => {
+  logger.debug('beforeExit')
+})

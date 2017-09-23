@@ -33,8 +33,8 @@ class Server{
     // close restify server
     static async stop(signal){
       logger.debug(signal + ': clean & exit')
-      await db.close()
       server.close()
+      db.close()
       logger.debug('DBs closed')
       process.exit(0)
     }
