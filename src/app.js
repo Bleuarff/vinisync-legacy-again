@@ -5,8 +5,7 @@ var restify = require('restify'),
     cluster = require('cluster'),
     config = require('../utils/config.js'),
     logger = require('swn-logger').create('vinisync', config.log),
-    db = require('node-db-connector', {logger: logger}),
-    routes = require('./routes.js')
+    server = require('./server.js')
 
 var port = config.server.port
 
@@ -35,20 +34,12 @@ async function main(){
     runMaster()
   }
   else {
-    let server = restify.createServer({
-      name: 'Vinsync',
-      version: '1.0.0' // defaut version for routes
-    })
-
     try{
-      await db.init(config.dbConnections, {logger: logger})
-      routes.register(server)
-      server.listen(port, '127.0.0.1')
-      logger.info('listening...')
+      await server.start(config.dbConnections, port)
     }
     catch(err){
       logger.error(err)
-      setTimeout(()=>{
+      setTimeout(() => {
         process.exit(1)
       }, 10000)
     }
@@ -57,14 +48,6 @@ async function main(){
 
 main()
 
-
-process.on('SIGINT', () => {clean('SIGINT')})
-process.on('SIGTERM', () => {clean('SIGTERM')})
-
-function clean(signal) {
-  logger.debug(signal + ': clean & exit')
-  db.close().then(() => {
-    logger.debug('DBs closed')
-    process.exit(0)
-  })
-}
+// listen to signals, close server
+process.on('SIGINT', () => {logger.debug('sigint'); Server.stop('SIGINT')})
+process.on('SIGTERM', () => {logger.debug('sigterm'); Server.stop('SIGTERM')})

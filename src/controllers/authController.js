@@ -49,7 +49,7 @@ class AuthController {
 
   // create user account
   static async signup(req, res, next){
-    if (!utils.hasParams(res, res.params, ['email', 'pwd', 'name']))
+    if (!utils.hasParams(res, req.params, ['email', 'pwd', 'name']))
       return next(false)
 
     var profile = req.params,
