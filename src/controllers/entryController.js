@@ -6,16 +6,14 @@ const VError = require('verror'),
       moment = require('moment'),
       ObjectId = require('bson-objectid'),
       utils = require('../../utils/utils.js'),
+      wineSrv = require('../../services/wineService.js'),
+      normalizer = require('../../services/normalizer.js'),
 
       collName = 'entries'
 
 class EntryController {
 
   static async index(req, res, next){
-    if (!ObjectId.isValid(req.params.uid)){
-      res.send(400, 'invalid id')
-      return next(false)
-    }
 
     // TODO: filters
     var filters = {userId: new ObjectId(req.params.uid)}
@@ -68,7 +66,68 @@ class EntryController {
 
   // creates an entry
   static async create(req, res, next){
-    res.send(201)
+    if (!utils.hasParams(res, req.params, ['wine', 'count']))
+      return next(false)
+
+    var count = parseInt(req.params.count, 10)
+    if (isNaN(count)){
+      res.send(400)
+      return next(false)
+    }
+
+    try{
+      wineSrv.validate(req.params.wine)
+      let wine = normalizer.normalize(req.params.wine),
+          userId = new ObjectId(req.params.uid),
+          query = {
+            userId: userId,
+            'wine.appellation': wine.appellation,
+            'wine.producer': wine.producer,
+            'wine.name': wine.name
+          },
+          status = 200,
+          entry = await db.vni.collection('entries').findOne(query)
+
+      if (entry){
+        // update entry if found
+        let confirm = await db.vni.collection('entries').findOneAndUpdate({_id: entry._id}, {
+          $inc: {count: count},
+          $set: {
+            updateDate: moment.utc().toDate()
+          }
+        },{
+          returnOriginal: false
+        })
+
+        entry = confirm.value
+        logger.debug('entry updated')
+      }
+      else{
+        // otherwise create new entry
+        let now = moment.utc().toDate()
+        entry = {
+          _id: new ObjectId(),
+          wine: wine,
+          userId: userId,
+          count: req.params.count,
+          offeredBy: req.params.offeredBy,
+          createDate: now,
+          updateDate: now
+        }
+        await db.vni.collection('entries').insertOne(entry)
+        status = 201
+        logger.debug('entry created')
+      }
+
+      res.send(status, entry)
+      return next()
+    }
+    catch(err){
+      if (!err.status)
+        logger.error(new VError(err, 'Error creating entry'))
+      res.send(err.status || 500, err.status ? err.message : 'Error creating entry')
+      return next(false)
+    }
   }
 }
 
