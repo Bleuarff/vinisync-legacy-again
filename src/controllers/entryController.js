@@ -85,7 +85,7 @@ class EntryController {
             'wine.producer': wine.producer,
             'wine.name': wine.name
           },
-          status = 200,
+          status = 200, // default status
           entry = await db.vni.collection('entries').findOne(query)
 
       if (entry){
