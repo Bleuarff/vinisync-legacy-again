@@ -14,7 +14,7 @@ module.exports = function(grunt){
       dev: {
         script: 'src/app.js',
         options: {
-          watch: ['src/', 'config/', 'utils/'],
+          watch: ['src/', 'config/', 'utils/', 'services/'],
           ext: 'js,yml',
           delay: 1000,
         }

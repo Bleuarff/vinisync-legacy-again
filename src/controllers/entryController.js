@@ -129,6 +129,53 @@ class EntryController {
       return next(false)
     }
   }
+
+  // updates bottle count
+  static async increment(req, res, next){
+    if (!utils.hasParams(res, req.params, 'step')){
+      return next(false)
+    }
+
+    var step = parseInt(req.params.step, 10)
+    if (isNaN(step)){
+      res.send(400, 'invalid step')
+      return next(false)
+    }
+
+    if (!ObjectId.isValid(req.params.id)){
+      res.send(400, 'invalid entry id')
+      return next(false)
+    }
+
+    try{
+      // negative step: dedicated method to ensure bottle count does not go below 0
+      let entry, id = ObjectId(req.params.id)
+      if (step < 0)
+        entry = await wineSrv.decrementEntry(id, step)
+      else {
+        let confirm = await db.vni.collection('entries').findOneAndUpdate({_id: id}, {
+          $inc: {count: step},
+          $set: {update: moment.utc().toDate()}
+        }, {returnOriginal: false})
+
+        if (confirm.value == null){
+          res.send(404, 'entry not found')
+          return next(false)
+        }
+        entry = confirm.value
+      }
+
+      res.send(200, entry)
+      return next()
+    }
+    catch(err){
+      if (!err.status)
+        logger.error(new VError(err, 'error increment entry %s', req.params.id))
+
+      res.send(err.status || 500, "error incrementing entry count")
+      return next(false)
+    }
+  }
 }
 
 module.exports = exports = EntryController

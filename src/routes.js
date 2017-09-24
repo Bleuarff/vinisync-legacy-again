@@ -58,4 +58,5 @@ module.exports.register = exports.register = function registerRoutes(server){
 
   server.put('/api/entry', entry.create)
   server.get('/api/entry/:id', entry.get)
+  server.post('/api/entry/:id/increment', entry.increment)
 }
