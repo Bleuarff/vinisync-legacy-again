@@ -3,7 +3,7 @@
 const VError = require('verror'),
       restify = require('restify'),
       logger = require('swn-logger').create('server'),
-      db = require('node-db-connector'),
+      db = require('node-db-connector', {logger: logger}),
       routes = require('./routes.js')
 
 var server // restify server

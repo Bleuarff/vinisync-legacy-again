@@ -7,8 +7,6 @@ var restify = require('restify'),
     logger = require('swn-logger').create('vinisync', config.log),
     server = require('./server.js')
 
-var port = config.server.port
-
 function runMaster(){
   let numCpus = require('os').cpus().length
   for (let i = 0; i < numCpus; i++){
@@ -35,7 +33,7 @@ async function main(){
   }
   else {
     try{
-      await server.start(config.dbConnections, port)
+      await server.start(config.dbConnections, config.server.port)
     }
     catch(err){
       logger.error(err)
