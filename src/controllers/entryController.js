@@ -7,6 +7,7 @@ const VError = require('verror'),
       ObjectId = require('bson-objectid'),
       utils = require('../../utils/utils.js'),
       wineSrv = require('../../services/wineService.js'),
+      entrySrv = require('../../services/entryService.js'),
       normalizer = require('../../services/normalizer.js'),
 
       collName = 'entries'
@@ -15,8 +16,8 @@ class EntryController {
 
   static async index(req, res, next){
 
-    // TODO: filters
-    var filters = {userId: new ObjectId(req.params.uid)}
+    // build filters object
+    var filters = entrySrv.buildFilters(req.params)
 
     try {
       var entries = await db.vni.collection(collName).find(filters).toArray()
@@ -86,11 +87,11 @@ class EntryController {
             'wine.name': wine.name
           },
           status = 200, // default status
-          entry = await db.vni.collection('entries').findOne(query)
+          entry = await db.vni.collection(collName).findOne(query)
 
       if (entry){
         // update entry if found
-        let confirm = await db.vni.collection('entries').findOneAndUpdate({_id: entry._id}, {
+        let confirm = await db.vni.collection(collName).findOneAndUpdate({_id: entry._id}, {
           $inc: {count: count},
           $set: {
             updateDate: moment.utc().toDate()
@@ -114,7 +115,7 @@ class EntryController {
           createDate: now,
           updateDate: now
         }
-        await db.vni.collection('entries').insertOne(entry)
+        await db.vni.collection(collName).insertOne(entry)
         status = 201
         logger.debug('entry created')
       }
@@ -151,9 +152,9 @@ class EntryController {
       // negative step: dedicated method to ensure bottle count does not go below 0
       let entry, id = ObjectId(req.params.id)
       if (step < 0)
-        entry = await wineSrv.decrementEntry(id, step)
+        entry = await entrySrv.decrementEntry(id, step)
       else {
-        let confirm = await db.vni.collection('entries').findOneAndUpdate({_id: id}, {
+        let confirm = await db.vni.collection(collName).findOneAndUpdate({_id: id}, {
           $inc: {count: step},
           $set: {update: moment.utc().toDate()}
         }, {returnOriginal: false})

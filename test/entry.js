@@ -133,4 +133,5 @@ describe('entry controller', () => {
       return p.should.eventually.be.rejectedWith('Not Found')
     })
   })
+
 })
