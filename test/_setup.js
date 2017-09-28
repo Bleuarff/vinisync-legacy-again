@@ -5,6 +5,12 @@ before('DB connection', () => {
   return db.init([{connectionString: 'mongodb://localhost:27017/vni-test', name: 'vni'}])
 })
 
-after('close DB', () => {
+// empty test collections
+after('close DB', async () => {
+  var colls = ['wines', 'appellations', 'producers', 'cepages'],
+      proms = []
+
+  colls.forEach(coll => proms.push(db.vni.collection(coll).deleteMany()))
+  await Promise.all(proms)
   return db.close()
 })
