@@ -51,9 +51,4 @@ describe('Wine Service DB', () => {
       assert.equal(res.value.createDate.toISOString(), createDate)
     })
   })
-
-  describe('propagate', () => {
-    it('create all')
-    it('all found')
-  })
 })
