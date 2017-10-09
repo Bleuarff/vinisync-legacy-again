@@ -1,20 +1,43 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/elements/shared-styles.html">
 
 <dom-module id="vni-app">
   <template>
     <style include="shared-styles">
-      :host {
-        display: block;
-      }
-      #filler {
-        width: 50%;
-        height: 2000px;
-        background: green;
+      :host {display: block;}
+
+      app-header {
+        background-color: var(--primary-color);
+        color: white;
+        border-bottom: var(--drawer-toolbar-border-color);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.26);
       }
     </style>
 
-    <h1>COIN</h1>
-    <div id="filler"></div>
+    <app-drawer-layout force-narrow>
+      <app-drawer id="drawer" swipe-open slot="drawer">
+        <!-- <swn-menu drawer-toggle></swn-menu> -->
+        <div>MENU</div>
+      </app-drawer>
+
+      <app-header-layout>
+        <app-header reveals slot="header">
+          <h1>Vinisync</h1>
+        </app-header>
+
+        <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" fallback-selection="z404" role="main">
+          <vni-home name="home"></vni-home>
+          <vni-z404 name="z404"></vni-z404>
+        </iron-pages>
+
+      </app-header-layout>
+    </app-drawer-layout>
+
   </template>
   <script src="./vni-app.js"></script>
 </dom-module>

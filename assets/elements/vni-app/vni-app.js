@@ -6,6 +6,7 @@ class App extends Polymer.Element {
     return {
       page: {
         type: String,
+        value: 'home',
         observer: '_pageChanged'
       }
     }

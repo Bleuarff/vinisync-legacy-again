@@ -1,0 +1,30 @@
+{
+  "name": "vinisync",
+  "description": "plain simple cellar management",
+  "main": "src/app.js",
+  "authors": [
+    "bleuarff"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "wine",
+    "vin",
+    "cave",
+    "cellar"
+  ],
+  "homepage": "https://github.com/bleuarff/vinisync",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "app-layout": "PolymerElements/app-layout#^2.0.2",
+    "iron-pages": "PolymerElements/iron-pages#^2.0.0",
+    "polymer": "Polymer/polymer#^2.0.0"
+  }
+}
