@@ -1,10 +1,11 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="/elements/shared-styles.html">
+<link rel="import" href="/elements/vni-menu/vni-menu.html">
 
 <dom-module id="vni-app">
   <template>
@@ -17,12 +18,15 @@
         border-bottom: var(--drawer-toolbar-border-color);
         box-shadow: 0 2px 5px rgba(0,0,0,0.26);
       }
+
+      iron-pages {
+        margin: 0 1em;
+      }
     </style>
 
     <app-drawer-layout force-narrow>
       <app-drawer id="drawer" swipe-open slot="drawer">
-        <!-- <swn-menu drawer-toggle></swn-menu> -->
-        <div>MENU</div>
+        <vni-menu drawer-toggle></vni-menu>
       </app-drawer>
 
       <app-header-layout>
