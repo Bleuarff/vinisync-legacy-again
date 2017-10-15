@@ -20,7 +20,8 @@ class App extends Polymer.Element {
 
   ready(){
     super.ready()
-    console.log('hello app')
+    this.addEventListener('error', e => this.showError(e))
+    this.addEventListener('success', e => this.showSuccess(e))
   }
 
   _routePageChanged(page){
@@ -35,6 +36,20 @@ class App extends Polymer.Element {
     Polymer.importHref(resolvedPageUrl, null, () => {
       this.page = 'z404'
     }, true)
+  }
+
+  showError(e){
+    this.notif = e.detail
+    this.$.errToast.open()
+  }
+
+  showSuccess(e){
+    this.notif = e.detail
+    this.$.okToast.open()
+  }
+
+  closeToast(){
+    this.$.errToast.close()
   }
 }
 

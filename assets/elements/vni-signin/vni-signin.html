@@ -1,0 +1,40 @@
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/elements/vni-ajax/vni-ajax.html">
+
+<dom-module id="vni-signin">
+  <template>
+    <style include="shared-styles">
+      :host{display: block;}
+
+      #submit{
+        margin-top: 1em;
+      }
+    </style>
+
+    <paper-tabs attr-for-selected="name" selected="{{mode}}">
+      <paper-tab name="signin">Connexion</paper-tab>
+      <paper-tab name="signup">Créer un compte</paper-tab>
+    </paper-tabs>
+
+    <paper-input label="Email" value="{{email}}" type="email">
+    </paper-input>
+
+    <paper-input label="Nom" value="{{name}}" class$="hidden-[[isSignin(mode)]]">
+    </paper-input>
+
+    <paper-input label="Mot de passe" value="{{pwd}}" type="password">
+    </paper-input>
+
+    <paper-input label="Répéter le mot de passe" value="{{pwd2}}" type="password" class$="hidden-[[isSignin(mode)]]">
+    </paper-input>
+
+    <paper-button id="submit" on-tap="submit">[[buttonLabel(mode)]]</paper-button>
+
+    <vni-ajax id="ajax"></vni-ajax>
+
+  </template>
+  <script src="./vni-signin.js"></script>
+</dom-module>

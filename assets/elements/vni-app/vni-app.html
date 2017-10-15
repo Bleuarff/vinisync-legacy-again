@@ -4,6 +4,10 @@
 <link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+
 <link rel="import" href="/elements/shared-styles.html">
 <link rel="import" href="/elements/vni-menu/vni-menu.html">
 
@@ -20,9 +24,20 @@
       }
 
       iron-pages {
-        margin: 0 1em;
+        margin: 0 1em 3em;
+      }
+
+      #okToast{
+        background: var(--primary-color);
+      }
+
+      .close-toast{
+        float: right;
       }
     </style>
+
+    <app-location route="{{route}}" query-params="{{queryParams}}"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
 
     <app-drawer-layout force-narrow>
       <app-drawer id="drawer" swipe-open slot="drawer">
@@ -36,11 +51,18 @@
 
         <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" fallback-selection="z404" role="main">
           <vni-home name="home"></vni-home>
+          <vni-signin name="signin"></vni-home>
           <vni-z404 name="z404"></vni-z404>
         </iron-pages>
 
       </app-header-layout>
     </app-drawer-layout>
+
+    <paper-toast id="errToast" text="[[notif]]" duration="0">
+      <span on-tap="closeToast" role="button" class="close-toast">OK</span>
+    </paper-toast>
+    <paper-toast id="okToast" text="[[notif]]">
+    </paper-toast>
 
   </template>
   <script src="./vni-app.js"></script>

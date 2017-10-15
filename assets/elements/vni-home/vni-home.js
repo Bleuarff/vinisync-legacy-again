@@ -4,7 +4,6 @@ class Home extends Polymer.Element{
   static get is(){ return 'vni-home'}
   ready(){
     super.ready()
-    console.log('home')
   }
 }
 

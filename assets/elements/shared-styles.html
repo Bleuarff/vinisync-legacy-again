@@ -1,17 +1,21 @@
 <dom-module id="shared-styles">
   <template>
     <style>
-    :host {
-      --primary-color: #8b0000;
-      --text-color: var(--paper-grey-900);
-      --horizontal-margin: 2rem; /* horizontal margin for main iron-pages content container */
-    }
-
-    a {
-        text-decoration: none;
-        color: var(--text-color);
+      :host {
+        --primary-color: #8b0000;
+        --text-color: var(--paper-grey-900);
+        --horizontal-margin: 2rem; /* horizontal margin for main iron-pages content container */
       }
-      
+
+      a {
+          text-decoration: none;
+          color: var(--text-color);
+        }
+
+      .hidden, .hidden-true {
+        display: none !important;
+      }
+
     </style>
   </template>
 </dom-module>

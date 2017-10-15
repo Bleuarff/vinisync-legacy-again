@@ -64,7 +64,7 @@ class AuthController {
     try{
       var emailUser = await db.vni.collection('users').findOne({email: profile.email})
       if (emailUser){
-        res.send(400, {errors: {usedEmail: true}})
+        res.send(400, 'email déjà utilisé.')
         throw null
       }
       var hash = await bcrypt.hash(profile.pwd, BCRYPT_ITERATIONS),
@@ -84,8 +84,9 @@ class AuthController {
       })
 
       var user = await db.vni.collection('users').findOne({_id: id}, {email: 1, name: 1})
+      await AuthController._authenticate(req, user)
 
-      res.send(201, user)
+      res.send(201, {user: user, csrfToken: req.session.data.csrfToken})
       return next()
     }
     catch(err){
@@ -110,12 +111,12 @@ class AuthController {
     try{
       var user = await db.vni.collection('users').findOne({email: email}, {email: 1, name: 1, pwd: 1})
       if (!user)
-        throw utils.error('Signin error', 400)
+        throw utils.error('email ou mot de passe incorrect.', 400)
 
       // compare hash and provided password
       let cmpOk = await bcrypt.compare(req.params.pwd, user.pwd)
       if (!cmpOk)
-        throw utils.error('Signin error', 400)
+        throw utils.error('email ou mot de passe incorrect.', 400)
 
       await AuthController._authenticate(req, user)
 
@@ -127,7 +128,7 @@ class AuthController {
       if (!err.status)
         logger.error(new VError(err, 'Signin error'))
 
-      res.send(err.status ||500, 'Signin error')
+      res.send(err.status || 500, err.status ? err.message : 'Erreur d\'authentication.')
       return next(false)
     }
   }

@@ -38,7 +38,7 @@ describe('auth tests', () => {
 
       expect(res).to.have.status(201)
       expect(res).to.be.json
-      expect(res.body.email).to.equal(email.toLowerCase())
+      expect(res.body.user.email).to.equal(email.toLowerCase())
     })
 
     it('email exists', () => {
