@@ -10,6 +10,7 @@
 
 <link rel="import" href="/elements/shared-styles.html">
 <link rel="import" href="/elements/vni-menu/vni-menu.html">
+<script src="/elements/baseElement.js"></script>
 
 <dom-module id="vni-app">
   <template>
@@ -51,7 +52,8 @@
 
         <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" fallback-selection="z404" role="main">
           <vni-home name="home"></vni-home>
-          <vni-signin name="signin"></vni-home>
+          <vni-signin name="signin"></vni-signin>
+          <vni-cave name="cave"></vni-cave>
           <vni-z404 name="z404"></vni-z404>
         </iron-pages>
 

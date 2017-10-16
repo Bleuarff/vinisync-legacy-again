@@ -1,6 +1,6 @@
 'use strict'
 
-class App extends Polymer.Element {
+class App extends BaseElement {
   static get is(){return 'vni-app'}
   static get properties(){
     return {
@@ -22,6 +22,24 @@ class App extends Polymer.Element {
     super.ready()
     this.addEventListener('error', e => this.showError(e))
     this.addEventListener('success', e => this.showSuccess(e))
+
+    this.init()
+  }
+
+  async init(){
+    try{
+      let res = await this.send('/api/user/init')
+      window.user = res.user
+      window.user.csrfToken = res.csrfToken
+
+      if (this.page === 'home' || this.page === 'signin')
+        this.set('route.path', '/cave')
+      else
+        console.log('wait & go')
+    }
+    catch(err){
+      console.log('not logged')
+    }
   }
 
   _routePageChanged(page){

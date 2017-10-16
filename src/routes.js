@@ -52,6 +52,7 @@ module.exports.register = exports.register = function registerRoutes(server){
 
   server.put('/api/user/signup', auth.signup)
   server.post('/api/user/signin', auth.signin)
+  server.get('/api/user/init', auth.init)
   server.get('/api/user/signout', auth.signout)
 
   server.get('/api/cave/:uid', entry.index)

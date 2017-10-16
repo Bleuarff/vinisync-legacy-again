@@ -10,7 +10,8 @@ class BaseElement extends Polymer.Element{
   async send(url, payload = {}, verb = 'GET'){
     var opts = {
       method: verb,
-      headers: new Headers()
+      headers: new Headers(),
+      credentials: 'same-origin' // to set & use cookies
     }
 
     if (window.user)

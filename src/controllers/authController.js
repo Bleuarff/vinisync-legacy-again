@@ -133,6 +133,33 @@ class AuthController {
     }
   }
 
+  static async init(req, res, next){
+    // if auth info in session, consider signed in
+    // but generate new csrf token, just to be safe
+    if (req.session.data.uid && req.session.data.csrfToken){
+      req.session.data.csrfToken = await utils.generateUniqueToken()
+      req.session.update()
+      try{
+        let user = await db.vni.collection('users').findOne({_id: ObjectId(req.session.data.uid)}, {
+          name: 1, email: 1
+        })
+        if (!user)
+          res.send(401, 'not in db: ' + req.session.data.uid)
+        else
+          res.send(200, {user: user, csrfToken: req.session.data.csrfToken})
+        return next()
+      }
+      catch(err){
+        res.send(401, err)
+        return next()
+      }
+    }
+    else{
+      res.send(401, 'no data in session')
+      return next()
+    }
+  }
+
   // kill session & delete cookie
   static signout(req, res, next){
     cookies.delete(res, 'sessid')
