@@ -1,13 +1,13 @@
 'use strict'
 
-class Signin extends Polymer.Element{
+class Signin extends BaseElement{
   static get is(){return 'vni-signin'}
   static get properties(){
     return {
-      email: {type: String, value: 'alonzo@bistro.com'},
-      pwd: {type: String, value: 'coincoincoin'},
-      pwd2: {type: String, value: 'coincoincoin'},
-      name: {type: String, value: 'alonzo'},
+      email: {type: String},
+      pwd: {type: String},
+      pwd2: {type: String},
+      name: {type: String},
       mode: {
         type: String,
         value: 'signin'
@@ -36,7 +36,7 @@ class Signin extends Polymer.Element{
         method = this.mode === 'signup' ? 'PUT' : 'POST'
 
     try{
-      var res = await this.$.ajax.send(endpoint, data, method)
+      var res = await this.send(endpoint, data, method)
       this.dispatchEvent(new CustomEvent('success', {detail: 'login/creation OK', bubbles: true, composed: true}))
       window.user = res.user
       window.user.csrfToken = res.csrfToken

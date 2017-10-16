@@ -2,7 +2,8 @@
 <link rel="import" href="/bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
-<link rel="import" href="/elements/vni-ajax/vni-ajax.html">
+
+<script src="/elements/baseElement.js"></script>
 
 <dom-module id="vni-signin">
   <template>
@@ -32,8 +33,6 @@
     </paper-input>
 
     <paper-button id="submit" on-tap="submit">[[buttonLabel(mode)]]</paper-button>
-
-    <vni-ajax id="ajax"></vni-ajax>
 
   </template>
   <script src="./vni-signin.js"></script>
