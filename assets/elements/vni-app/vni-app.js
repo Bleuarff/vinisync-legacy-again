@@ -22,6 +22,8 @@ class App extends BaseElement {
     super.ready()
     this.addEventListener('error', e => this.showError(e))
     this.addEventListener('success', e => this.showSuccess(e))
+    this.addEventListener('redirect', e => this.redirect(e))
+    this.addEventListener('redirect', e => this.$.drawer.close())
 
     this.init()
   }
@@ -29,6 +31,7 @@ class App extends BaseElement {
   async init(){
     try{
       let res = await this.send('/api/user/init')
+      this.dispatchEvent(new CustomEvent('signin', {detail: window.user, bubbles: true, composed: true}))
       window.user = res.user
       window.user.csrfToken = res.csrfToken
 
@@ -68,6 +71,10 @@ class App extends BaseElement {
 
   closeToast(){
     this.$.errToast.close()
+  }
+
+  redirect(e){
+    this.set('route.path', e.detail)
   }
 }
 

@@ -40,6 +40,7 @@ class Signin extends BaseElement{
       this.dispatchEvent(new CustomEvent('success', {detail: 'login/creation OK', bubbles: true, composed: true}))
       window.user = res.user
       window.user.csrfToken = res.csrfToken
+      this.dispatchEvent(new CustomEvent('signin', {detail: window.user, bubbles: true, composed: true}))
 
       // TODO: redirect to /cave ?
     }

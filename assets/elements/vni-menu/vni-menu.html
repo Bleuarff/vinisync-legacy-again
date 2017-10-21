@@ -32,6 +32,10 @@
       .vertical-mirror{
         transform: scale(1, -1);
       }
+
+      a[href="/signin"]{
+        margin-top: 4em;
+      }
     </style>
 
       <a href="/">
@@ -41,6 +45,10 @@
       <a href="/cave">
         <iron-icon class="vertical-mirror" icon="communication:dialpad"></iron-icon>
         <span>Cave</span>
+      </a>
+      <a href="/signin" on-tap="switchAuth">
+        <iron-icon icon="power-settings-new"></iron-icon>
+        <span>[[authWording]]</span>
       </a>
   </template>
   <script src="./vni-menu.js"></script>
