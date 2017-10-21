@@ -6,7 +6,6 @@ class App extends BaseElement {
     return {
       page: {
         type: String,
-        value: 'home',
         observer: '_pageChanged'
       }
     }
@@ -23,7 +22,7 @@ class App extends BaseElement {
     this.addEventListener('error', e => this.showError(e))
     this.addEventListener('success', e => this.showSuccess(e))
     this.addEventListener('redirect', e => this.redirect(e))
-    this.addEventListener('redirect', e => this.$.drawer.close())
+    this.addEventListener('close-menu', e => this.$.drawer.close())
 
     this.init()
   }
@@ -37,8 +36,10 @@ class App extends BaseElement {
 
       if (this.page === 'home' || this.page === 'signin')
         this.set('route.path', '/cave')
-      else
+      else{
+        // TODO: wait for current component to load and then trigger its show
         console.log('wait & go')
+      }
     }
     catch(err){
       console.log('not logged')
@@ -54,7 +55,9 @@ class App extends BaseElement {
 
   _pageChanged(page){
     var resolvedPageUrl = this.resolveUrl(`../vni-${page}/vni-${page}.html`)
-    Polymer.importHref(resolvedPageUrl, null, () => {
+    Polymer.importHref(resolvedPageUrl, (e) => {
+      this.root.querySelector(`[name=${page}]`).dispatchEvent(new CustomEvent('show'))
+    }, () => {
       this.page = 'z404'
     }, true)
   }

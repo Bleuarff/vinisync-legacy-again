@@ -8,7 +8,25 @@ class Cave extends BaseElement{
 
   ready(){
     super.ready()
-    console.log('cave ready')
+    this.addEventListener('show', e => this.show(e))
+  }
+
+  show(e){
+    console.log('cave: show')
+    if (!window.user) // must be signed-in
+      return
+
+    this.getData()
+  }
+
+  async getData(){
+    try{
+      let chunk = await this.send('/api/cave')
+    }
+    catch(err){
+      console.error(err)
+      this.dispatchEvent(new CustomEvent('error', {detail: 'Echec', bubbles: true, composed: true}))
+    }
   }
 }
 

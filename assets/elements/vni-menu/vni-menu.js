@@ -20,16 +20,17 @@ class Menu extends BaseElement{
     if (!window.user)
       return
 
-    // signout if connected
     e.preventDefault()
+
     try{
+      // signed-in => signout
       await this.send('/api/user/signout')
       delete window.user
       this.authWording = 'Connexion'
-      this.dispatchEvent(new CustomEvent('redirect', {detail: '/home', bubble: true, composed: true}))
 
        // neded as preventDefault does not close the drawer
-      this.dispatchEvent(new CustomEvent('closeMenu', {bubble: true, composed: true}))
+      this.dispatchEvent(new CustomEvent('close-menu', {bubble: true, composed: true}))
+      this.dispatchEvent(new CustomEvent('redirect', {detail: '/home', bubble: true, composed: true}))
     }
     catch(err){
       console.log(err)
