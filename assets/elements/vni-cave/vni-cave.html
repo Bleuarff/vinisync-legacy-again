@@ -3,6 +3,127 @@
   <template>
     <style include="shared-styles">
       :host{display: block;}
+
+      .line {
+        width: 100%;
+        border-top: 1px solid #5f5f5f;
+        font-size: 0.95em;
+        padding: 0.2em 0.3em;
+        text-decoration: none;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        color: black;
+      }
+
+      .line:hover {
+        background:darkgrey;
+        color: white;
+      }
+
+      .line:last-of-type {
+        border-bottom: 1px solid #5f5f5f;
+      }
+
+      .red {background: var(--vni-red-wine);}
+      .white {background: var(--vni-white-wine);}
+      .rose {background: var(--vni-rose-wine);}
+
+      @media (max-width: 700px) {
+        .details {
+          display: flex;
+          flex-flow: column nowrap;
+          flex-grow: 1;
+        }
+
+        .name::after {
+          content: '–';
+          margin: 0 0.3em;
+        }
+
+        .year-count {
+          display: flex;
+          flex-flow: column-reverse; nowrap;
+          margin: 0 .5em;
+          min-width: 2em;
+        }
+        .year, .count {
+          text-align: center;
+        }
+
+        .color-ctnr {
+          width: 2em;
+          position:relative;
+          margin-right: .4em;
+        }
+
+        .color {
+          border-radius: 4px;
+          width: 100%;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+        }
+      }
+
+      @media (min-width: 701px) {
+        .line {
+          padding: .5em;
+        }
+
+        .details {
+          flex-grow: 1;
+          display: flex;
+          flex-flow: row nowrap;
+          margin: 0 1em 0 0.5em;
+          justify-content: space-between;
+          order: 1;
+        }
+
+        .name-prod {
+          flex-basis: 66%;
+          display: flex;
+          flex-flow: row nowrap;
+        }
+
+        .name, .producer {
+          flex-basis: 50%;
+        }
+
+        .producer:first-of-type {
+          margin-left: 50%;
+        }
+
+        .appellation {
+          flex-basis: 33%;
+        }
+
+        .year-count {
+          display: flex;
+          flex-flow: row-reverse nowrap;
+          margin: 0 .5em;
+          order: 3;
+        }
+        .year, .count {
+          margin-left: 1em;
+          min-width: 1.8em;
+          text-align: right;
+        }
+
+        .color-ctnr {
+          width: 2.1em;
+          position:relative;
+          order: 2;
+        }
+
+        .color {
+          border-radius: 4px;
+          width: 100%;
+          position: absolute;
+          top:-.3em;
+          bottom: -.3em;
+        }
+      }
     </style>
 
     <h1>Cave</h1>
@@ -14,6 +135,41 @@
 
     <template is="dom-if" if="[[count]]">
       Dans votre cave: [[count]] entrées et [[bottleCount]] bouteilles.
+
+      <div id="grid">
+        <template is="dom-repeat" items="[[entries]]" as="entry">
+          <a class='line' href$='/entry/[[entry._id]]'>
+            <div class='color-ctnr'>
+              <template is='dom-if' if='[[entry.wine.color]]'>
+                <div class$='color [[entry.wine.color]]'>&nbsp;</div>
+              </template>
+            </div>
+
+            <div class='details'>
+              <div class='name-prod'>
+                <template is='dom-if' if='[[entry.wine.name]]'>
+                  <span class='name'>
+                    [[entry.wine.name]]
+                  </span>
+                </template>
+                <span class='producer'>
+                  [[entry.wine.producer]]
+                </span>
+              </div>
+              <div class='appellation'>[[entry.wine.appellation]]</div>
+            </div>
+
+            <div class='year-count'>
+              <div class='count'>
+                [[entry.count]]
+              </div>
+              <div class='year'>
+                [[entry.wine.year]]
+              </div>
+            </div>
+          </a>
+        </template>
+      </div>
     </template>
 
   </template>
