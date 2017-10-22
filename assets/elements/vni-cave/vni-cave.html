@@ -6,6 +6,16 @@
     </style>
 
     <h1>Cave</h1>
+
+    <template is='dom-if' if='[[!count]]'>
+      <p>Votre cave est vide :(. <a href="/entry">Ajouter une bouteille</a>
+      </p>
+    </template>
+
+    <template is="dom-if" if="[[count]]">
+      [[count]] entrées dans votre cave.
+    </template>
+
   </template>
   <script src="./vni-cave.js"></script>
 </dom-module>

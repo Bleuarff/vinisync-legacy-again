@@ -17,11 +17,14 @@ class EntryController {
   static async index(req, res, next){
 
     // build filters object
-    var filters = entrySrv.buildFilters(req.params)
+    var filters = entrySrv.buildFilters(req.params),
+        offset = parseInt(req.params.offset, 10) || 0,
+        pageSize = parseInt(req.params.pageSize, 10) || 20
 
     try {
-      var entries = await db.vni.collection(collName).find(filters).toArray()
-      res.send(200, entries)
+      let count = await db.vni.collection(collName).count(filters)
+      let entries = await db.vni.collection(collName).find(filters).skip(offset).limit(pageSize).toArray()
+      res.send(200, {entries: entries, count: count})
       return next()
     }
     catch(err){
