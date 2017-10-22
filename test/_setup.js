@@ -1,16 +1,22 @@
 const db = require('node-db-connector')
 
-before('DB connection', () => {
+before('DB connection', async () => {
   // use test db with alias name
-  return db.init([{connectionString: 'mongodb://localhost:27017/vni-test', name: 'vni'}])
+  await db.init([{connectionString: 'mongodb://localhost:27017/vni-test', name: 'vni'}])
+  return cleanAll()
 })
 
 // empty test collections
 after('close DB', async () => {
-  var colls = ['wines', 'appellations', 'producers', 'cepages'],
+  await cleanAll()
+  return db.close()
+})
+
+// clean all documents from listed collections
+function cleanAll(){
+  var colls = ['wines', 'appellations', 'producers', 'cepages', 'entries', 'users'],
       proms = []
 
   colls.forEach(coll => proms.push(db.vni.collection(coll).deleteMany()))
-  await Promise.all(proms)
-  return db.close()
-})
+  return Promise.all(proms)
+}

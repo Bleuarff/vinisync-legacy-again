@@ -36,6 +36,33 @@ class EntryController {
     }
   }
 
+  // use aggregation pipeline to count total number of bottles in all entries for user
+  static async getBottleCount(req, res, next){
+    if (!ObjectId.isValid(req.params.uid)){
+      res.send(400, 'invalid uid')
+      return next(false)
+    }
+
+    try{
+      let results = await db.vni.collection(collName).aggregate([
+        {$match: {userId: ObjectId(req.params.uid)}},
+        {$group: {_id: '$userId', total: {$sum: '$count'}}}
+      ]).toArray()
+
+      let count = 0
+      if (results.length)
+        count = results[0].total
+
+      res.send(200, {count: count})
+      return next()
+    }
+    catch(err){
+      logger.error(new VError(err, 'Error retrieving bottle count'))
+      res.send(500, 'Error retrieving bottle count')
+      return next(false)
+    }
+  }
+
   static async get(req, res, next){
     // no need for hasParams check - id is mandatory in url
     //  or checking uid is valid, it's already checked by a previous restify handler

@@ -9,7 +9,8 @@ class Cave extends BaseElement{
       },
       count: {type: Number},
       offset: Number,
-      pageSize: {Number, value: 5}
+      pageSize: {Number, value: 5},
+      bottleCount: Number
     }
   }
 
@@ -18,7 +19,7 @@ class Cave extends BaseElement{
     this.addEventListener('show', e => this.show(e))
   }
 
-  show(e){
+  async show(e){
     console.log('cave: show')
     if (!window.user) // must be signed-in
       return
@@ -26,7 +27,13 @@ class Cave extends BaseElement{
     this.offset = 0
     this._getData()
 
-    // TODO: get bottle count
+    try{
+      let res = await this.send(`/api/cave/${user._id}/count`)
+      this.bottleCount = res.count
+    }
+    catch(err){
+      console.error(err)
+    }
   }
 
   async _getData(){
@@ -44,7 +51,7 @@ class Cave extends BaseElement{
       // basic strategy, just fetch if more available
       // TODO: fetch more only if available & scroll event or no scroll (space left at the bottom)
       if (this.offset < this.count)
-        await this._getData()
+        this._getData()
       return
     }
     catch(err){

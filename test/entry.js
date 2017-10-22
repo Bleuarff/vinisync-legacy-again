@@ -16,13 +16,13 @@ describe('entry controller', () => {
 
   before('start server', async () => {
     let server = require('../src/server.js')
-    app = await server.start(config.dbConnections, 3005)
+    app = await server.start([{connectionString: 'mongodb://localhost:27017/vni-test', name: 'vni'}], 3005)
 
     agent = chai.request.agent(app)
     let res = await agent
-      .post('/api/user/signin')
+      .put('/api/user/signup')
       .set('Content-Type', 'application/json')
-      .send({email: 'alonzo@bistro.com', pwd: 'coincoin'})
+      .send({email: 'alonzo@bistro.com', pwd: 'coincoincoin', name: 'coincoin'})
     expect(res).to.have.cookie('sessid')
     uid = res.body.user._id
   })
@@ -134,4 +134,48 @@ describe('entry controller', () => {
     })
   })
 
+  describe('bottle count', () => {
+    before('insert bottle', async () => {
+      await agent.put('/api/entry?uid=' + uid)
+      .set('Content-Type', 'application/json')
+      .send({
+        count: 1,
+        wine: {
+          appellation: 'Sancerre',
+          producer: 'Mellot',
+          year: 2012
+        }
+      })
+      await agent.put('/api/entry?uid=' + uid)
+      .set('Content-Type', 'application/json')
+      .send({
+        count: 2,
+        wine: {
+          appellation: 'St Emilion',
+          producer: 'Ausone',
+          year: 2012
+        }
+      })
+    })
+
+    it('pass', async () => {
+      let res = await agent.get(`/api/cave/${uid}/count`).send()
+      expect(res).to.have.status(200)
+      expect(res).to.be.json
+      expect(res.body.count).to.be.equal(3)
+    })
+
+    it('empty', async () => {
+      let signup = await agent
+        .put('/api/user/signup')
+        .set('Content-Type', 'application/json')
+        .send({email: 'bouaargh@example.com', pwd: 'coincoincoin', name: 'coincoin'})
+
+      let uid = signup.body.user._id
+      let res = await agent.get(`/api/cave/${uid}/count`).send()
+      expect(res).to.have.status(200)
+      expect(res).to.be.json
+      expect(res.body.count).to.be.equal(0)
+    })
+  })
 })
