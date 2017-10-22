@@ -25,6 +25,7 @@ class Cave extends BaseElement{
       return
 
     this.offset = 0
+    this.entries = null
     this._getData()
 
     try{
@@ -58,6 +59,10 @@ class Cave extends BaseElement{
       console.error(err)
       this.dispatchEvent(new CustomEvent('error', {detail: 'Echec', bubbles: true, composed: true}))
     }
+  }
+
+  addEntry(e){
+    this.dispatchEvent(new CustomEvent('redirect', {detail: '/entry', bubbles: true, composed: true}))
   }
 }
 

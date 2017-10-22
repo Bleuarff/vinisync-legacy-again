@@ -1,12 +1,15 @@
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 
 <dom-module id="vni-cave">
   <template>
     <style include="shared-styles">
-      :host{display: block;}
+      :host{
+        display: block;
+        --grid-delimiter: #5f5f5f;
+      }
 
       .line {
-        width: 100%;
-        border-top: 1px solid #5f5f5f;
+        border-top: 1px solid var(--grid-delimiter);
         font-size: 0.95em;
         padding: 0.2em 0.3em;
         text-decoration: none;
@@ -22,7 +25,7 @@
       }
 
       .line:last-of-type {
-        border-bottom: 1px solid #5f5f5f;
+        border-bottom: 1px solid var(--grid-delimiter);
       }
 
       .red {background: var(--vni-red-wine);}
@@ -124,6 +127,13 @@
           bottom: -.3em;
         }
       }
+
+      paper-fab{
+        --paper-fab-background: var(--primary-color);
+        position: fixed;
+        bottom: 1em;
+        right: 1em;
+      }
     </style>
 
     <h1>Cave</h1>
@@ -170,6 +180,8 @@
           </a>
         </template>
       </div>
+
+      <paper-fab icon="add"on-tap="addEntry"></paper-fab>
     </template>
 
   </template>
