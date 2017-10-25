@@ -1,10 +1,47 @@
+<link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+
 <dom-module id="vni-entry">
   <template>
     <style include="shared-styles">
       :host{display: block;}
     </style>
 
+    <app-route route="[[route]]" pattern="/:id" data="{{routeData}}"></app-route>
+
     <h1>Entrée</h1>
+
+    <vaadin-combo-box label="Appellation" value="{{entry.wine.appellation}}" allow-custom-value
+      on-input="appellationChanged" readonly="[[!isEdit]]">
+    </vaadin-combo-box>
+
+    <vaadin-combo-box label="Producteur" value="{{entry.wine.producer}}" allow-custom-value
+      on-input="producerChanged" readonly="[[!isEdit]]">
+    </vaadin-combo-box>
+
+    <paper-input id='name' label='Cuvée' value='{{entry.wine.name}}' readonly='[[!edit]]'>
+    </paper-input>
+
+    <paper-input id='year' label='Millésime' value='{{entry.wine.year}}' type='number' min='1700' max='[[currentYear]]'
+      readonly='[[!edit]]'>
+    </paper-input>
+
+    <vaadin-combo-box label='Pays' value='{{entry.wine.country}}' items='[[countries]]' readonly='[[!edit]]'>
+    </vaadin-combo-box>
+
+    <!-- <div class='apogee'>
+      <template is='dom-if' if="[[_showProp(entry.wine.*, 'apogeeStart', edit)]]">
+        <paper-input label='Apogée' value='{{entry.wine.apogeeStart}}' type='number' min='1700' readonly='[[!edit]]'>
+        </paper-input>
+      </template>
+      <template is='dom-if' if="[[_showApogeeSeparator(entry.wine.*, edit)]]"><span class='separator'>–</span></template>
+      <template is='dom-if' if="[[_showProp(entry.wine.*, 'apogeeEnd', edit)]]">
+        <paper-input label="Jusqu'à" value='{{entry.wine.apogeeEnd}}' type='number' min='[[entry.wine.apogeeStart]]'
+          readonly='[[!edit]]'>
+        </paper-input>
+      </template>
+    </div> -->
   </template>
   <script src="./vni-entry.js"></script>
 </dom-module>
