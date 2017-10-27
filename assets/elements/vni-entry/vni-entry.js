@@ -5,7 +5,7 @@ class Entry extends BaseElement{
   static get properties(){
     return {
       entry: Object,
-      edit: Boolean,
+      isEdit: {type: Boolean, value: false},
       countries: {
         type: Array,
         value: ['Afrique du sud', 'Allemagne', 'Argentine', 'Australie',
@@ -40,8 +40,26 @@ class Entry extends BaseElement{
 
     if (this.route.path)
       this._getEntry(this.routeData.id)
-    else
-      console.log('new entry')
+    else{
+      // create new entry. Non-mandatory fields or fields without default value are ommitted
+      this.entry = {
+        wine: {
+          appellation: null,
+          producer: null,
+          // name: null,
+          // year: null,
+          country: 'France',
+          // apogeeStart: null,
+          // apogeeEnd: null,
+          cepages: [],
+          containing: '75cl',
+          color: null,
+          sweet: false,
+          sparkling: false,
+        },
+        count: 1
+      }
+    }
   }
 
   async _getEntry(id){
@@ -54,6 +72,24 @@ class Entry extends BaseElement{
       console.error(err)
       this.dispatchEvent(new CustomEvent('error', {detail: 'Echec récup entrée', bubbles: true, composed: true}))
     }
+  }
+
+  makeEditable(){
+    this.isEdit = true
+  }
+
+  save(){
+    // TODO save
+
+    this.isEdit = false
+  }
+
+  hideProp(value, isEdit){
+    return !value && !isEdit
+  }
+
+  hideApogeeSeparator(apogeeStart, apogeeEnd){
+    return !apogeeStart || !apogeeEnd
   }
 }
 
