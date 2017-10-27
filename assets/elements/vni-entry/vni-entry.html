@@ -43,7 +43,10 @@
 
     <app-route route="[[route]]" pattern="/:id" data="{{routeData}}"></app-route>
 
-    <h1>Entrée</h1>
+    <!-- <h1>Entrée</h1> -->
+    <a href="/cave" class="back">
+      <iron-icon icon="arrow-back"></iron-icon>Cave
+    </a>
 
     <vaadin-combo-box label="Appellation" value="{{entry.wine.appellation}}" allow-custom-value
       on-input="appellationChanged" readonly="[[!isEdit]]" class$="edit-[[isEdit]]">
