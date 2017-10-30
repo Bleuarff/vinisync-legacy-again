@@ -1,0 +1,86 @@
+
+<dom-module id="vni-color">
+  <template>
+    <style include="shared-styles">
+      :host{
+        display: block;
+        --space: 3px;
+        --selected: {
+          content: '';
+          position: absolute;
+          border: 1px solid black;
+          border-radius: 4px;
+          top: var(--space);
+          bottom: var(--space);
+          left: var(--space);
+          right: var(--space);
+        }
+      }
+
+      .colors{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+      }
+
+      .color.red{
+        background: var(--vni-red-wine);
+        color: white;
+      }
+
+      .color.white{
+        background: var(--vni-white-wine);
+      }
+
+      .color.rose{
+        background: var(--vni-rose-wine);
+      }
+
+      .color{
+        width: 30%;
+        max-width: 13em;
+        border-radius: 4px;
+        text-align: center;
+        text-transform: uppercase;
+        padding: 0.9em 0;
+        position: relative;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      .readonly-false .color{
+        cursor: pointer;
+      }
+
+      .white .color.white:after,
+      .red .color.red:after,
+      .rose .color.rose:after{
+        @apply(--selected);
+      }
+
+      .red .color.red:after{
+        border-color: white;
+      }
+
+      /* in readonly, hide non-selected color blocks */
+      .readonly-true.white .color.red,
+      .readonly-true.white .color.rose,
+      .readonly-true.red .color.white,
+      .readonly-true.red .color.rose,
+      .readonly-true.rose .color.red,
+      .readonly-true.rose .color.white {
+        background: transparent;
+        color: transparent;
+      }
+
+    </style>
+
+    <label>Couleur:</label>
+    <div class$="colors [[color]] readonly-[[readonly]]">
+      <div class="color red" on-tap="select">ROUGE</div>
+      <div class="color white" on-tap="select">BLANC</div>
+      <div class="color rose" on-tap="select">ROSÉ</div>
+    </div>
+  </template>
+  <script src="./vni-color.js"></script>
+</dom-module>

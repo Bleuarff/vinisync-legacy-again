@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="../vni-color/vni-color.html">
 
 <dom-module id="vni-entry">
   <template>
@@ -35,7 +36,6 @@
 
     <!-- TODO:
       - style apogee block
-      - back to cave button
       - moar fields
       - changer titre on load, name or producer
       - vaadin combobox really needed ?
@@ -81,6 +81,10 @@
         readonly="[[!isEdit]]" class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.apogeeEnd, isEdit)]]">
       </paper-input>
     </div>
+
+    <vni-color color="{{entry.wine.color}}" class$="hidden-[[hideProp(entry.wine.color, isEdit)]]"
+      readonly="[[!isEdit]]" >
+    </vni-color>
 
     <paper-button class$="hidden-[[isEdit]]" on-tap="makeEditable">Edit</paper-button>
     <paper-button class$="hidden-[[!isEdit]]" on-tap="save">Enregistrer</paper-button>
