@@ -5,16 +5,7 @@
       :host{
         display: block;
         --space: 3px;
-        --selected: {
-          content: '';
-          position: absolute;
-          border: 1px solid black;
-          border-radius: 4px;
-          top: var(--space);
-          bottom: var(--space);
-          left: var(--space);
-          right: var(--space);
-        }
+        margin-bottom: 1em;
       }
 
       .colors{
@@ -55,7 +46,14 @@
       .white .color.white:after,
       .red .color.red:after,
       .rose .color.rose:after{
-        @apply(--selected);
+        content: '';
+        position: absolute;
+        border: 1px solid black;
+        border-radius: 4px;
+        top: var(--space);
+        bottom: var(--space);
+        left: var(--space);
+        right: var(--space);
       }
 
       .red .color.red:after{

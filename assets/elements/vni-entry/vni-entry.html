@@ -3,6 +3,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/app-route/app-route.html">
 <link rel="import" href="../vni-color/vni-color.html">
+<link rel="import" href="../vni-cepages/vni-cepages.html">
 
 <dom-module id="vni-entry">
   <template>
@@ -30,6 +31,15 @@
         padding-top: 1.1em;
       }
 
+      .row {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+      }
+
+      #count{
+        margin-left: 50%;
+      }
 
 
     </style>
@@ -61,10 +71,15 @@
       readonly="[[!isEdit]]">
     </paper-input>
 
-    <paper-input id="year" label="Millésime" value="{{entry.wine.year}}" type="number" min="1700"
-      max="[[currentYear]]" class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.year, isEdit)]]"
-      readonly="[[!isEdit]]">
-    </paper-input>
+    <div class="row">
+      <paper-input id="year" label="Millésime" value="{{entry.wine.year}}" type="number" min="1700"
+        max="[[currentYear]]" class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.year, isEdit)]]"
+        readonly="[[!isEdit]]">
+      </paper-input>
+      <paper-input id="count" label='Quantité' type='number' value='{{entry.count}}' min='1' max='100' readonly='[[!isEdit]]'
+        class$="edit-[[isEdit]]">
+      </paper-input>
+    </div>
 
     <vaadin-combo-box label="Pays" value="{{entry.wine.country}}" items="[[countries]]" readonly="[[!isEdit]]"
       class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.country, isEdit)]]">
@@ -85,6 +100,12 @@
     <vni-color color="{{entry.wine.color}}" class$="hidden-[[hideProp(entry.wine.color, isEdit)]]"
       readonly="[[!isEdit]]" >
     </vni-color>
+
+    <vni-cepages cepages="{{entry.wine.cepages}}" class$="hidden-[[hideArrayProp(entry.wine.cepages, isEdit)]]"
+      readonly="[[!isEdit]]">
+    </vni-cepages>
+
+
 
     <paper-button class$="hidden-[[isEdit]]" on-tap="makeEditable">Edit</paper-button>
     <paper-button class$="hidden-[[!isEdit]]" on-tap="save">Enregistrer</paper-button>

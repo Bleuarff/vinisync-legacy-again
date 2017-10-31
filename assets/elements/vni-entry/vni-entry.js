@@ -88,9 +88,14 @@ class Entry extends BaseElement{
     return !value && !isEdit
   }
 
+  hideArrayProp(value, isEdit){
+    return (!value || value.length === 0) && !isEdit
+  }
+
   hideApogeeSeparator(apogeeStart, apogeeEnd){
     return !apogeeStart || !apogeeEnd
   }
+
 }
 
 window.customElements.define(Entry.is, Entry)

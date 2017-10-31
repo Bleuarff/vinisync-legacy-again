@@ -1,0 +1,58 @@
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<dom-module id="vni-cepages">
+  <template>
+    <style include="shared-styles">
+      :host {display: block;}
+
+      .cepages{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+      }
+
+      .cepage{
+        margin-right: 1em;
+        padding: 0.3em .9em;
+        color: white;
+        background: #051245;
+        border-radius: 5px;
+        line-height: 1.5em;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      .cepage iron-icon {
+        display: none;
+        --size: 1.4em;
+        width: var(--size);
+        height: var(--size);
+        margin: -.05em -.7em 0 1em;
+      }
+
+      .cepage.selected iron-icon{
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      /* cepage clickable only on edit and when not selected */
+      .edit-true .cepage:not(.selected){
+        cursor: pointer;
+      }
+    </style>
+
+    <label>Cepages:</label>
+    <div class$="cepages edit-[[!readonly]]">
+      <template is="dom-repeat" items="[[cepages]]" as="cepage">
+        <div class="cepage" on-tap="select">
+          [[cepage]]
+          <iron-icon icon="close" on-tap="remove"></iron-icon>
+        </div>
+      </template>
+    </div>
+
+    <!-- TODO: add a cepage, free dropdown  -->
+
+  </template>
+  <script src="./vni-cepages.js"></script>
+</dom-module>
