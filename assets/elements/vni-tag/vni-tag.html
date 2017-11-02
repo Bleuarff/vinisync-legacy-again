@@ -1,0 +1,56 @@
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<dom-module id="vni-tag">
+  <template>
+    <style include="shared-styles">
+      :host{display: inline-block;}
+
+      .lbl{
+        vertical-align: middle;
+        margin-left: 0.1em;
+      }
+
+      iron-icon{
+        color: var(--primary-color);
+      }
+    </style>
+
+    <template is="dom-if" if="[[and(readonly, checked)]]">
+      <iron-icon icon="check-box"></iron-icon>
+      <span class="lbl">[[label]]</span>
+    </template>
+
+    <template is="dom-if" if="[[!readonly]]">
+      <paper-checkbox checked="{{checked}}">[[label]]</paper-checkbox>
+    </template>
+  </template>
+  <script>
+  'use strict'
+
+  class Tag extends Polymer.Element{
+    static get is(){return 'vni-tag'}
+    static get properties(){
+      return {
+        checked: {type: Boolean, notify: true},
+        readonly: Boolean,
+        label: String
+      }
+    }
+    static get observers(){
+      return ['_setRootStyle(checked, readonly)']
+    }
+
+    and(readonly, checked){ return readonly && checked }
+
+    // hide current element if unchecked and readonly
+    _setRootStyle(checked, readonly){
+      if (!checked && readonly)
+        this.style.display = 'none'
+      else
+        this.style.display = 'inline-block'
+    }
+  }
+  window.customElements.define(Tag.is, Tag)
+  </script>
+</dom-module>

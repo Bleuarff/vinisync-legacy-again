@@ -4,6 +4,7 @@
 <link rel="import" href="/bower_components/app-route/app-route.html">
 <link rel="import" href="../vni-color/vni-color.html">
 <link rel="import" href="../vni-cepages/vni-cepages.html">
+<link rel="import" href="../vni-tag/vni-tag.html">
 
 <dom-module id="vni-entry">
   <template>
@@ -41,7 +42,12 @@
         margin-left: 50%;
       }
 
-
+      #details{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        margin-top: 0.25em;
+      }
     </style>
 
     <!-- TODO:
@@ -105,6 +111,13 @@
       readonly="[[!isEdit]]">
     </vni-cepages>
 
+    <label>Détails:</label>
+    <div id="details">
+      <vni-tag checked="{{entry.wine.sparkling}}" readonly="[[!isEdit]]" label="pétillant">
+      </vni-tag>
+      <vni-tag checked="{{entry.wine.sweet}}" readonly="[[!isEdit]]" label="liquoreux">
+      </vni-tag>
+    </div>
 
 
     <paper-button class$="hidden-[[isEdit]]" on-tap="makeEditable">Edit</paper-button>
