@@ -15,7 +15,7 @@ class Entry extends BaseElement{
       },
       containings: {
         type: Array,
-        value: ['37.5cl', '50cl', '75cl', '1.5L', '3l', '4.5l','6l'],
+        value: ['37.5cl', '50cl', '75cl', '1.5L', '3l', '4.5l','6l', 'autre'],
         readonly: true
       },
       currentYear: {
@@ -38,6 +38,7 @@ class Entry extends BaseElement{
       return
     }
 
+    this.isEdit = false
     if (this.route.path)
       this._getEntry(this.routeData.id)
     else{
@@ -57,7 +58,7 @@ class Entry extends BaseElement{
           sweet: false,
           sparkling: false,
         },
-        count: 1
+        count: 6
       }
     }
   }
