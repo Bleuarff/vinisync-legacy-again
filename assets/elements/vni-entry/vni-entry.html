@@ -156,6 +156,10 @@
       </paper-tabs>
     </div>
 
+    <paper-input label='Offert par' value='{{entry.offeredBy}}' readonly='[[!isEdit]]'
+      class$="hidden-[[hideField(entry.offeredBy, isEdit)]] edit-[[isEdit]]">
+    </paper-input>
+
     <paper-button class$="hidden-[[isEdit]]" on-tap="makeEditable">Edit</paper-button>
     <paper-button class$="hidden-[[!isEdit]]" on-tap="save">Enregistrer</paper-button>
 
