@@ -1,6 +1,8 @@
 <link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="/bower_components/app-route/app-route.html">
 <link rel="import" href="../vni-color/vni-color.html">
 <link rel="import" href="../vni-cepages/vni-cepages.html">
@@ -47,6 +49,27 @@
         flex-flow: row wrap;
         justify-content: space-around;
         margin-top: 0.25em;
+      }
+
+      .containings{
+        margin-top: 0.67em;
+      }
+
+      paper-tabs{
+        --paper-tabs-selection-bar-color: var(--primary-color);
+      }
+
+      paper-tab{
+        opacity: 0.5;
+        --paper-tab-ink: var(--primary-color);
+      }
+
+      paper-tab.iron-selected{
+        opacity: 1;
+        color: var(--primary-color);
+        background: rgba(139,0,0,0.3);
+        font-size: 1.1em;
+        border-radius: 5px;
       }
     </style>
 
@@ -119,6 +142,17 @@
       </vni-tag>
     </div>
 
+    <paper-input label='Contenant' value='[[entry.wine.containing]]' readonly='true'
+      class$="edit-[[isEdit]] hidden-[[hideContainingInput(entry.wine.containing, isEdit)]]">
+    </paper-input>
+    <div class$="containings hidden-[[!isEdit]]">
+      <label>Contenant:</label>
+      <paper-tabs attr-for-selected='value' selected='{{entry.wine.containing}}' no-bar>
+        <template is='dom-repeat' items='[[containings]]'>
+          <paper-tab value='[[item]]'>[[item]]</paper-tab>
+        </template>
+      </paper-tabs>
+    </div>
 
     <paper-button class$="hidden-[[isEdit]]" on-tap="makeEditable">Edit</paper-button>
     <paper-button class$="hidden-[[!isEdit]]" on-tap="save">Enregistrer</paper-button>

@@ -15,7 +15,7 @@ class Entry extends BaseElement{
       },
       containings: {
         type: Array,
-        value: ['37.5cl', '50cl', '75cl', '1.5L', '3l', '4.5l','6l', 'autre'],
+        value: ['37.5cl', '50cl', '75cl', '1.5L', '3L', '4.5L','6L', 'autre'],
         readonly: true
       },
       currentYear: {
@@ -93,10 +93,13 @@ class Entry extends BaseElement{
     return (!value || value.length === 0) && !isEdit
   }
 
+  hideContainingInput(value, isEdit){
+    return isEdit || !value
+  }
+
   hideApogeeSeparator(apogeeStart, apogeeEnd){
     return !apogeeStart || !apogeeEnd
   }
-
 }
 
 window.customElements.define(Entry.is, Entry)
