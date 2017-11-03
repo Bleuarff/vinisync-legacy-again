@@ -85,8 +85,10 @@ class Entry extends BaseElement{
     this.isEdit = false
   }
 
-  hideProp(value, isEdit){
-    return !value && !isEdit
+  // returns true (field hidden) if all arguments are falsy
+  // arguments include isEdit (hide only in readonly, not in edition) and values to check (hide only if falsy)
+  hideField(...values){
+    return !values.some(x => x)
   }
 
   hideArrayProp(value, isEdit){
@@ -100,6 +102,7 @@ class Entry extends BaseElement{
   hideApogeeSeparator(apogeeStart, apogeeEnd){
     return !apogeeStart || !apogeeEnd
   }
+
 }
 
 window.customElements.define(Entry.is, Entry)

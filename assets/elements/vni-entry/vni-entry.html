@@ -96,13 +96,13 @@
     </vaadin-combo-box>
 
     <paper-input id="name" label="Cuvée" value="{{entry.wine.name}}"
-      class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.name, isEdit)]]"
+      class$="edit-[[isEdit]] hidden-[[hideField(entry.wine.name, isEdit)]]"
       readonly="[[!isEdit]]">
     </paper-input>
 
     <div class="row">
       <paper-input id="year" label="Millésime" value="{{entry.wine.year}}" type="number" min="1700"
-        max="[[currentYear]]" class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.year, isEdit)]]"
+        max="[[currentYear]]" class$="edit-[[isEdit]] hidden-[[hideField(entry.wine.year, isEdit)]]"
         readonly="[[!isEdit]]">
       </paper-input>
       <paper-input id="count" label='Quantité' type='number' value='{{entry.count}}' min='1' max='100' readonly='[[!isEdit]]'
@@ -111,22 +111,22 @@
     </div>
 
     <vaadin-combo-box label="Pays" value="{{entry.wine.country}}" items="[[countries]]" readonly="[[!isEdit]]"
-      class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.country, isEdit)]]">
+      class$="edit-[[isEdit]] hidden-[[hideField(entry.wine.country, isEdit)]]">
     </vaadin-combo-box>
 
     <div class="apogee">
       <paper-input label="Apogée" value="{{entry.wine.apogeeStart}}" type="number" min="1700" readonly="[[!isEdit]]"
-        class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.apogeeStart, isEdit)]]">
+        class$="edit-[[isEdit]] hidden-[[hideField(entry.wine.apogeeStart, isEdit)]]">
       </paper-input>
 
       <span class$="separator hidden-[[hideApogeeSeparator(entry.wine.apogeeStart, entry.wine.apogeeEnd)]]">–</span>
 
       <paper-input label="Jusqu'à" value="{{entry.wine.apogeeEnd}}" type="number" min="[[entry.wine.apogeeStart]]"
-        readonly="[[!isEdit]]" class$="edit-[[isEdit]] hidden-[[hideProp(entry.wine.apogeeEnd, isEdit)]]">
+        readonly="[[!isEdit]]" class$="edit-[[isEdit]] hidden-[[hideField(entry.wine.apogeeEnd, isEdit)]]">
       </paper-input>
     </div>
 
-    <vni-color color="{{entry.wine.color}}" class$="hidden-[[hideProp(entry.wine.color, isEdit)]]"
+    <vni-color color="{{entry.wine.color}}" class$="hidden-[[hideField(entry.wine.color, isEdit)]]"
       readonly="[[!isEdit]]" >
     </vni-color>
 
@@ -134,12 +134,14 @@
       readonly="[[!isEdit]]">
     </vni-cepages>
 
-    <label>Détails:</label>
-    <div id="details">
-      <vni-tag checked="{{entry.wine.sparkling}}" readonly="[[!isEdit]]" label="pétillant">
-      </vni-tag>
-      <vni-tag checked="{{entry.wine.sweet}}" readonly="[[!isEdit]]" label="liquoreux">
-      </vni-tag>
+    <div class$="hidden-[[hideField(isEdit, entry.wine.sweet, entry.wine.sparkling)]]">
+      <label>Détails:</label>
+      <div id="details">
+        <vni-tag checked="{{entry.wine.sparkling}}" readonly="[[!isEdit]]" label="pétillant">
+        </vni-tag>
+        <vni-tag checked="{{entry.wine.sweet}}" readonly="[[!isEdit]]" label="liquoreux">
+        </vni-tag>
+      </div>
     </div>
 
     <paper-input label='Contenant' value='[[entry.wine.containing]]' readonly='true'
