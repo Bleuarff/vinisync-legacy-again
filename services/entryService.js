@@ -8,9 +8,9 @@ const VError = require('verror'),
 class EntryService{
 
   // first retrieve the entry and check bottle count does not go below 0.
-  static async decrementEntry(id, step){
+  static async decrementEntry(id, step, uid){
     try{
-      var entry = await db.vni.collection('entries').findOne({_id: id})
+      var entry = await db.vni.collection('entries').findOne({_id: id, userId: uid})
       if (!entry)
         throw new VError('entry not found')
 

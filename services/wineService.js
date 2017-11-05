@@ -87,7 +87,7 @@ class WineService {
   // Same for producer, appellation and cepages, to have a list of possible values
   static propagate(wine){
     var proms = []
-    proms.push(wineService.createWine(wine))
+    proms.push(WineService.createWine(wine))
     proms.push(WineService.createEntity(wine.appellation, 'appellations'))
     proms.push(WineService.createEntity(wine.producer, 'producers'))
 
@@ -98,6 +98,11 @@ class WineService {
     }
 
     return Promise.all(proms)
+    .then(() => Promise.resolve())
+    .catch(err => {
+      logger.error(err, 'Propagation error')
+      return Promise.resolve()
+    })
   }
 }
 

@@ -109,54 +109,76 @@ class EntryController {
     try{
       wineSrv.validate(req.params.wine)
       let wine = normalizer.normalize(req.params.wine),
-          userId = new ObjectId(req.params.uid),
-          query = {
-            userId: userId,
-            'wine.appellation': wine.appellation,
-            'wine.producer': wine.producer,
-            'wine.name': wine.name
-          },
-          status = 200, // default status
-          entry = await db.vni.collection(collName).findOne(query)
+          now = moment.utc().toDate()
 
-      if (entry){
-        // update entry if found
-        let confirm = await db.vni.collection(collName).findOneAndUpdate({_id: entry._id}, {
-          $inc: {count: count},
-          $set: {
-            updateDate: moment.utc().toDate()
-          }
-        },{
-          returnOriginal: false
-        })
-
-        entry = confirm.value
-        logger.debug('entry updated')
+      let entry = {
+        _id: ObjectId(),
+        wine: wine,
+        userId: ObjectId(req.params.uid),
+        count: count,
+        offeredBy: req.params.offeredBy,
+        createDate: now,
+        updateDate: now
       }
-      else{
-        // otherwise create new entry
-        let now = moment.utc().toDate()
-        entry = {
-          _id: new ObjectId(),
-          wine: wine,
-          userId: userId,
-          count: req.params.count,
-          offeredBy: req.params.offeredBy,
-          createDate: now,
-          updateDate: now
-        }
-        await db.vni.collection(collName).insertOne(entry)
-        status = 201
-        logger.debug('entry created')
-      }
+      await db.vni.collection(collName).insertOne(entry)
+      logger.debug('entry created')
 
-      res.send(status, entry)
+      res.send(201, entry)
+      wineSrv.propagate(wine)
       return next()
     }
     catch(err){
       if (!err.status)
         logger.error(new VError(err, 'Error creating entry'))
       res.send(err.status || 500, err.status ? err.message : 'Error creating entry')
+      return next(false)
+    }
+  }
+
+  // updates an entry
+  static async update(req, res, next){
+    if (!utils.hasParams(res, req.params, ['wine', 'count']))
+      return next(false)
+
+    if (!ObjectId.isValid(req.params.id)){
+      res.send(400)
+      return next(false)
+    }
+
+    var count = parseInt(req.params.count, 10)
+    if (isNaN(count)){
+      res.send(400)
+      return next(false)
+    }
+
+    try{
+      wineSrv.validate(req.params.wine)
+      let wine = normalizer.normalize(req.params.wine)
+      let updated = await db.vni.collection(collName).findOneAndUpdate({
+        _id: ObjectId(req.params.id), userId: ObjectId(req.params.uid)
+      }, {
+        $set: {
+          wine: wine,
+          count: count,
+          offeredBy: req.params.offeredBy,
+          updateDate: moment.utc().toDate()
+        }
+      }, {returnOriginal: false})
+
+      // fail if document not found
+      if (!updated.value){
+        res.send(404)
+        return next(false)
+      }
+
+      // TODO: propagation
+      res.send(200, updated.value)
+      return next()
+    }
+    catch(err){
+      if (!err.status)
+        logger.error(new VError(err, 'Error updating entry %s', req.params.id))
+      res.send(err.status || 500, err.status ? err.message : 'Error updating entry')
       return next(false)
     }
   }
@@ -180,11 +202,11 @@ class EntryController {
 
     try{
       // negative step: dedicated method to ensure bottle count does not go below 0
-      let entry, id = ObjectId(req.params.id)
+      let entry, id = ObjectId(req.params.id), uid = ObjectId(req.params.uid)
       if (step < 0)
-        entry = await entrySrv.decrementEntry(id, step)
+        entry = await entrySrv.decrementEntry(id, step, uid)
       else {
-        let confirm = await db.vni.collection(collName).findOneAndUpdate({_id: id}, {
+        let confirm = await db.vni.collection(collName).findOneAndUpdate({_id: id, userId: uid}, {
           $inc: {count: step},
           $set: {update: moment.utc().toDate()}
         }, {returnOriginal: false})

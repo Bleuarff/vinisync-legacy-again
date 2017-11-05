@@ -53,19 +53,11 @@ describe('entry controller', () => {
       return expect(entryId).to.match(/[\da-f]+/) // check valid id
     })
 
-    it('add existing entry', async () => {
-      let res = await agent.put('/api/entry?uid=' + uid)
-        .set('Content-Type', 'application/json')
-        .send({
-          count: 2,
-          wine: {
-            appellation: now,
-            producer: now,
-            year: 2012
-          }
-        })
+    it('create another', async () => {
+      let res = await agent.put(`/api/entry?uid=${uid}`).set('Content-Type', 'application/json')
+        .send({count: 3, wine: {appellation: now, producer: now, year: 2012}})
 
-      expect(res).to.have.status(200)
+      expect(res).to.have.status(201)
       expect(res).to.be.json
       expect(res.body.count).to.be.equal(3)
     })
@@ -80,7 +72,7 @@ describe('entry controller', () => {
 
       expect(res).to.have.status(200)
       expect(res).to.be.json
-      expect(res.body.count).to.be.equal(7)
+      expect(res.body.count).to.be.equal(5)
     })
 
     it('decrement', async () => {
@@ -91,7 +83,7 @@ describe('entry controller', () => {
 
       expect(res).to.have.status(200)
       expect(res).to.be.json
-      expect(res.body.count).to.be.equal(6)
+      expect(res.body.count).to.be.equal(4)
     })
 
     it('decrement below 0', async () => {
@@ -162,7 +154,7 @@ describe('entry controller', () => {
       let res = await agent.get(`/api/cave/${uid}/count`).send()
       expect(res).to.have.status(200)
       expect(res).to.be.json
-      expect(res.body.count).to.be.equal(3)
+      expect(res.body.count).to.be.equal(6)
     })
 
     it('empty', async () => {
@@ -171,11 +163,58 @@ describe('entry controller', () => {
         .set('Content-Type', 'application/json')
         .send({email: 'bouaargh@example.com', pwd: 'coincoincoin', name: 'coincoin'})
 
-      let uid = signup.body.user._id
+      uid = signup.body.user._id
       let res = await agent.get(`/api/cave/${uid}/count`).send()
       expect(res).to.have.status(200)
       expect(res).to.be.json
       expect(res.body.count).to.be.equal(0)
     })
   })
+
+  describe('update entry', () => {
+    let eid
+    before('insert bottle', async () => {
+      console.log('uid: ' +  uid)
+      let entry = await agent.put('/api/entry?uid=' + uid)
+      .set('Content-Type', 'application/json')
+      .send({
+        count: 6,
+        wine: {
+          appellation: 'Bando',
+          producer: 'Tanpier',
+          year: 2009
+        }
+      })
+      eid = entry.body._id
+    })
+
+    it('update', async () => {
+      let res = await agent.post(`/api/entry/${eid}?uid=${uid}`).set('Content-Type', 'application/json')
+        .send({ count: 5, wine: {appellation: 'Bandol', producer: 'Tempier', year: 2009}, offeredBy: 'Papa' })
+
+      expect(res).to.be.json
+      expect(res).to.have.status(200)
+      expect(res.body.count).to.be.equal(5)
+      expect(res.body.offeredBy).to.be.equal('Papa')
+      expect(res.body._id).to.be.equal(eid)
+    })
+
+    it('bad update', () => {
+      let p = agent.post(`/api/entry/${eid}?uid=${uid}`).set('Content-Type', 'application/json')
+        .send({ count: 137, wine: {year: 2011}})
+      return p.should.eventually.be.rejected
+    })
+
+    it('unknown id', () => {
+      let p = agent.post(`/api/entry/59ff1f0e5757bd62c9348367?uid=${uid}`).set('Content-Type', 'application/json')
+        .send({count: 1, wine: {appellation: 'coin', producer: 'coincoin'}})
+      return p.should.eventually.be.rejectedWith('Not Found')
+    })
+    it('invalid id', () => {
+      let p = agent.post(`/api/entry/agamemnon?uid=${uid}`).set('Content-Type', 'application/json')
+        .send({count: 1, wine: {appellation: 'coin', producer: 'coincoin'}})
+      return p.should.eventually.be.rejectedWith('Bad Request')
+    })
+  })
+
 })

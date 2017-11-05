@@ -8,7 +8,7 @@ before('DB connection', async () => {
 
 // empty test collections
 after('close DB', async () => {
-  await cleanAll()
+  // await cleanAll()
   return db.close()
 })
 
