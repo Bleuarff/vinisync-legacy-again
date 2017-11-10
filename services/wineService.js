@@ -104,6 +104,64 @@ class WineService {
       return Promise.resolve()
     })
   }
+
+  static isEqual(w1, w2){
+    if (!w1 || !w2)
+      return false
+
+    // appellation, producer must be equal and not null/undefined/empty
+    if (w1.appellation !== w2.appellation || !w1.appellation || w1.producer !== w2.producer || !w1.producer)
+      return false
+
+    var ident = true
+
+    // these properties must be equal OR both null/undefined/empty
+    var props = ['name', 'year', 'country', 'apogeeStart', 'apogeeEnd', 'containing', 'color']
+    for (let i = 0; i < props.length; i++){
+      let p = props[i]
+      if (w1[p] !== w2[p] && (w1[p] != null || w2[p] != null)){
+        ident = false
+        break
+      }
+    }
+
+    if (!ident)
+      return false
+
+    // one cepage is null/undef and not the other -> fail
+    if (w1.cepages == null && w2.cepages != null || w1.cepages != null && w2.cepages == null)
+      return false
+
+    // checks cepage arrays contain the same values, even if not in the same order
+    if (w1.cepages != null && w2.cepages != null){
+      if (w1.cepages.length !== w2.cepages.length)
+        return false
+
+      for (let i = 0; i < w1.cepages.length; i++){
+        let cepage = w1.cepages[i]
+        if (w2.cepages.indexOf(cepage) === -1){
+          ident = false
+          break
+        }
+      }
+      if (!ident)
+        return false
+    }
+
+    // details fields
+    ['sweet', 'sparkling'].forEach(x => {
+      let p1 = w1[x], p2 = w2[x]
+
+      if ((typeof p1 !== 'boolean' && p1 != null) || (typeof p2 !== 'boolean' && p2 != null))
+        ident = false // incorrect type for p1 or p2
+      else if (!p1 !== !p2) // value mismatch
+        ident = false
+    })
+
+    return ident
+
+    // TODO: tests for this method !!!
+  }
 }
 
 module.exports = exports = WineService

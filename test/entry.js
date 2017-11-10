@@ -196,6 +196,8 @@ describe('entry controller', () => {
       expect(res).to.have.status(200)
       expect(res.body.count).to.be.equal(5)
       expect(res.body.offeredBy).to.be.equal('Papa')
+      expect(res.body.wine.appellation).to.be.equal('Bandol')
+      expect(res.body.wine.producer).to.be.equal('Tempier')
       expect(res.body._id).to.be.equal(eid)
     })
 
