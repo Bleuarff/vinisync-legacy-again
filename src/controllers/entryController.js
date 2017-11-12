@@ -153,26 +153,43 @@ class EntryController {
 
     try{
       wineSrv.validate(req.params.wine)
-      let wine = normalizer.normalize(req.params.wine)
-      let updated = await db.vni.collection(collName).findOneAndUpdate({
+      let wine = normalizer.normalize(req.params.wine),
+          updateDate = moment.utc().toDate()
+      let result = await db.vni.collection(collName).findOneAndUpdate({
         _id: ObjectId(req.params.id), userId: ObjectId(req.params.uid)
       }, {
         $set: {
           wine: wine,
           count: count,
           offeredBy: req.params.offeredBy,
-          updateDate: moment.utc().toDate()
+          updateDate: updateDate
         }
-      }, {returnOriginal: false})
+      })
 
       // fail if document not found
-      if (!updated.value){
+      if (!result.value){
         res.send(404)
         return next(false)
       }
 
-      // TODO: propagation
-      res.send(200, updated.value)
+      let entry = result.value
+
+      if (!wineSrv.isEqual(wine, entry.wine)){
+        // entry has modified wine, find and update it
+        try{
+          await wineSrv.propagate(wine, result.value.wine)
+        }
+        catch(err){
+          logger.error(new VError(err, 'error updating wine'))
+        }
+      }
+
+      entry.wine = wine
+      entry.count = count
+      entry.offeredBy = req.params.offeredBy
+      entry.updateDate = updateDate
+
+      res.send(200, entry)
       return next()
     }
     catch(err){

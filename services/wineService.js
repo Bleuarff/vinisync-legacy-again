@@ -5,6 +5,7 @@ const VError = require('verror'),
       utils = require('../utils/utils.js'),
       db = require('node-db-connector'),
       moment = require('moment'),
+      ObjectId = require('bson-objectid'),
       normalizer = require('./normalizer.js')
 
 const mandatoryFields = ['appellation', 'producer'],
@@ -71,6 +72,42 @@ class WineService {
     })
   }
 
+  static async updateWine(oldWine, newWine){
+    if (typeof oldWine != 'object')
+      throw new Error('wine: invalid type')
+    else if (!oldWine)
+      throw new Error('Cannot look for null wine')
+
+    var query = {appellation: oldWine.appellation, producer: oldWine.producer},
+        fields = ['name', 'year', 'country', 'apogeeStart', 'apogeeEnd', 'color', 'cepages', 'containing', 'sweet', 'sparkling'],
+        now = moment.utc().toDate()
+
+    // null/undefined fields are replaced with null. In mongodb query, null means null or undefined
+    fields.forEach(f => {
+      if (oldWine[f] || typeof oldWine[f] === 'boolean')
+        query[f] = oldWine[f]
+      else {
+        query[f] = null
+      }
+    })
+
+    newWine.updateDate = now
+
+    try{
+      // first look for document, then update/upsert new values
+      let w = await db.vni.collection('wines').findOne(query),
+          id = w ? w._id : ObjectId()
+
+      await db.vni.collection('wines').updateOne({_id: id}, {
+        $set: newWine,
+        $setOnInsert: {createDate: now}
+      }, {upsert: true})
+    }
+    catch(err){
+      throw new VError(err, 'Error updating wine')
+    }
+  }
+
   // inserts a new document in given collection, with value name.
   // Also inserts standard form value. Used for all "simple" collections
   static createEntity(value, collName){
@@ -83,11 +120,14 @@ class WineService {
     })
   }
 
-  // data propagation: when a new entry is created, we also create a corresponding wine document
+  // data propagation: when a new entry is created or updated, we also create/update a corresponding wine document
   // Same for producer, appellation and cepages, to have a list of possible values
-  static propagate(wine){
+  static propagate(wine, oldWine = null){
     var proms = []
-    proms.push(WineService.createWine(wine))
+    if (oldWine)
+      proms.push(WineService.updateWine(oldWine, wine))
+    else
+      proms.push(WineService.createWine(wine))
     proms.push(WineService.createEntity(wine.appellation, 'appellations'))
     proms.push(WineService.createEntity(wine.producer, 'producers'))
 
@@ -159,8 +199,6 @@ class WineService {
     })
 
     return ident
-
-    // TODO: tests for this method !!!
   }
 }
 

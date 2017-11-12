@@ -9,7 +9,7 @@ server:
 
 session: # redis session details
   host: localhost:7396
-  duration: 86400 # session duration, in seconds
+  duration: 604800 # session duration, in seconds
   appName: 'vinisync'
 
 log:

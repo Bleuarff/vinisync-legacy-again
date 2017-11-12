@@ -79,10 +79,40 @@ class Entry extends BaseElement{
     this.isEdit = true
   }
 
-  save(){
-    // TODO save
+  async save(){
+    var endpoint = `/api/entry`,
+        method = 'PUT'
+
+    if (this.entry._id){
+      endpoint += '/' + this.entry._id
+      method = 'POST'
+    }
+
+    // cast numeric inputs into number, or delete if empty
+    this.entry.count = this.castOrReset(this.entry.count)
+    this.entry.wine.year = this.castOrReset(this.entry.wine.year)
+    this.entry.wine.apogeeStart = this.castOrReset(this.entry.wine.apogeeStart)
+    this.entry.wine.apogeeEnd = this.castOrReset(this.entry.wine.apogeeEnd)
+
+    try{
+      await this.send(endpoint, this.entry, method)
+    }
+    catch(err){
+      console.error(err)
+      this.dispatchEvent(new CustomEvent('error', {detail: 'Echec sauvegarde', bubbles: true, composed: true}))
+    }
 
     this.isEdit = false
+  }
+
+  castOrReset(input){
+    var value
+
+    if (input){
+      value = parseInt(input, 10)
+      return !isNaN(value) ? value : undefined
+    }
+    return undefined
   }
 
   // returns true (field hidden) if all arguments are falsy
