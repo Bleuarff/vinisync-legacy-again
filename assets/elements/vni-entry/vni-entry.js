@@ -45,13 +45,13 @@ class Entry extends BaseElement{
       // create new entry. Non-mandatory fields or fields without default value are ommitted
       this.entry = {
         wine: {
-          appellation: null,
-          producer: null,
-          // name: null,
-          // year: null,
+          appellation: '',
+          producer: '',
+          name: null,
+          year: null,
           country: 'France',
-          // apogeeStart: null,
-          // apogeeEnd: null,
+          apogeeStart: null,
+          apogeeEnd: null,
           cepages: [],
           containing: '75cl',
           color: null,
@@ -60,6 +60,8 @@ class Entry extends BaseElement{
         },
         count: 6
       }
+      this.isEdit = true
+      this.root.querySelector('[label="Appellation"]').focus()
     }
   }
 

@@ -31,6 +31,8 @@ class Normalizer{
           wine.color = wine.color.toLowerCase()
           return
         }
+        if (key === 'containing')
+          return
 
         let value = Normalizer._toTitleCase(wine[key])
         value = Normalizer._replacePatterns(value)
