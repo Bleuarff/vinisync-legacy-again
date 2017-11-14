@@ -97,14 +97,18 @@ class Entry extends BaseElement{
     this.entry.wine.apogeeEnd = this.castOrReset(this.entry.wine.apogeeEnd)
 
     try{
-      await this.send(endpoint, this.entry, method)
+      this.entry = await this.send(endpoint, this.entry, method)
+      this.isEdit = false
+      window.scrollTo(0, 0)
+
+      // app routing logic makes this a "false" redirect (page stays the same, so ignored). But location is updated,
+      // so a refresh will show the entry instead of the new entry page
+      this.dispatchEvent(new CustomEvent('redirect', {detail: `/entry/${this.entry._id}`, bubbles: true, composed: true}))
     }
     catch(err){
       console.error(err)
       this.dispatchEvent(new CustomEvent('error', {detail: 'Echec sauvegarde', bubbles: true, composed: true}))
     }
-
-    this.isEdit = false
   }
 
   castOrReset(input){
