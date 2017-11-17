@@ -79,7 +79,10 @@ class Entry extends BaseElement{
 
   makeEditable(){
     this.isEdit = true
-    // this.$.menu.classList.add('hidden')
+  }
+
+  cancelEdit(){
+    this.isEdit = false
   }
 
   async save(){
@@ -109,6 +112,27 @@ class Entry extends BaseElement{
     catch(err){
       console.error(err)
       this.dispatchEvent(new CustomEvent('error', {detail: 'Echec sauvegarde', bubbles: true, composed: true}))
+    }
+  }
+
+  // add/remove 1 bottle to the entry count
+  async increment(e){
+    if (!this.entry._id)
+      return
+
+    var step = parseInt(e.currentTarget.dataset.step, 10)
+    if (isNaN(step)){
+      this.dispatchEvent(new CustomEvent('error', {detail: 'Echec: increment invalide'}))
+      return
+    }
+
+    try{
+      let res = await this.send(`/api/entry/${this.entry._id}/increment`, {step: step}, 'POST')
+      this.set('entry.count', res.count)
+    }
+    catch(err){
+      console.error(err)
+      this.dispatchEvent(new CustomEvent('error', {detail: 'Echec modification', bubbles: true, composed: true}))
     }
   }
 

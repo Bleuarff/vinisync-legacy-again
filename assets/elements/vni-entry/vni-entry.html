@@ -97,8 +97,15 @@
         padding: 1.25em;
       }
 
+      .buttons {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        margin-top: 2em;
+      }
+
       .buttons paper-button{
-        width: 48%;
+        width: 45%;
       }
     </style>
 
@@ -193,15 +200,11 @@
       <paper-button on-tap="save">Enregistrer</paper-button>
     </div>
 
-    <!-- TODO:
-              - increment & decrement functions
-              - button back/cancel en edition
-    -->
     <paper-fab icon="more-horiz" id="menuBtn" class$="hidden-[[isEdit]]" on-tap="toggleMenu"></paper-fab>
     <div id="menu" class$="hidden hidden-[[isEdit]]">
       <paper-icon-button icon="arrow-back" on-tap="toggleMenu"></paper-icon-button>
-      <paper-icon-button icon="image:exposure-plus-1" on-tap="increment"></paper-icon-button>
-      <paper-icon-button icon="image:exposure-neg-1" on-tap="decrement"></paper-icon-button>
+      <paper-icon-button icon="image:exposure-plus-1" data-step="1" on-tap="increment"></paper-icon-button>
+      <paper-icon-button icon="image:exposure-neg-1" data-step="-1" on-tap="increment"></paper-icon-button>
       <paper-icon-button icon="create" on-tap="makeEditable"></paper-icon-button>
     </div>
 
