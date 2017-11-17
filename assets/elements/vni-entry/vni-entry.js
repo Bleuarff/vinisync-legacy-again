@@ -79,6 +79,7 @@ class Entry extends BaseElement{
 
   makeEditable(){
     this.isEdit = true
+    // this.$.menu.classList.add('hidden')
   }
 
   async save(){
@@ -119,6 +120,12 @@ class Entry extends BaseElement{
       return !isNaN(value) ? value : undefined
     }
     return undefined
+  }
+
+  toggleMenu(){
+    this.$.menuBtn.classList.toggle('hidden')
+    setTimeout(() => {this.$.menu.classList.toggle('hidden')}, 5)
+
   }
 
   // returns true (field hidden) if all arguments are falsy

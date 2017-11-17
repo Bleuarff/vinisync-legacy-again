@@ -1,9 +1,12 @@
 <link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="/bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../vni-color/vni-color.html">
 <link rel="import" href="../vni-cepages/vni-cepages.html">
 <link rel="import" href="../vni-tag/vni-tag.html">
@@ -75,11 +78,32 @@
         font-size: 1.1em;
         border-radius: 5px;
       }
+
+      #menu{
+        background-color: var(--primary-color);
+        color: white;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+      }
+
+      #menu paper-icon-button{
+        height: 4em;
+        width: 4em;
+        padding: 1.25em;
+      }
+
+      .buttons paper-button{
+        width: 48%;
+      }
     </style>
 
     <!-- TODO:
       - style apogee block
-      - moar fields
       - changer titre on load, name or producer
       - vaadin combobox really needed ?
    -->
@@ -164,8 +188,22 @@
       class$="hidden-[[hideField(entry.offeredBy, isEdit)]] edit-[[isEdit]]">
     </paper-input>
 
-    <paper-button class$="hidden-[[isEdit]]" on-tap="makeEditable">Edit</paper-button>
-    <paper-button class$="hidden-[[!isEdit]]" on-tap="save">Enregistrer</paper-button>
+    <div class$="hidden-[[!isEdit]] buttons">
+      <paper-button on-tap="cancelEdit">Annuler</paper-button>
+      <paper-button on-tap="save">Enregistrer</paper-button>
+    </div>
+
+    <!-- TODO:
+              - increment & decrement functions
+              - button back/cancel en edition
+    -->
+    <paper-fab icon="more-horiz" id="menuBtn" class$="hidden-[[isEdit]]" on-tap="toggleMenu"></paper-fab>
+    <div id="menu" class$="hidden hidden-[[isEdit]]">
+      <paper-icon-button icon="arrow-back" on-tap="toggleMenu"></paper-icon-button>
+      <paper-icon-button icon="image:exposure-plus-1" on-tap="increment"></paper-icon-button>
+      <paper-icon-button icon="image:exposure-neg-1" on-tap="decrement"></paper-icon-button>
+      <paper-icon-button icon="create" on-tap="makeEditable"></paper-icon-button>
+    </div>
 
   </template>
   <script src="./vni-entry.js"></script>
