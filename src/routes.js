@@ -7,7 +7,8 @@ const restify = require('restify'),
       requestIp = require('request-ip')
 
 const auth = require('./controllers/authController.js'),
-      entry = require('./controllers/entryController.js')
+      entry = require('./controllers/entryController.js'),
+      appellation = require('./controllers/appellationController.js')
 
 module.exports.register = exports.register = function registerRoutes(server){
   /* First register handlers */
@@ -62,4 +63,6 @@ module.exports.register = exports.register = function registerRoutes(server){
   server.get('/api/entry/:id', entry.get)
   server.post('/api/entry/:id', entry.update)
   server.post('/api/entry/:id/increment', entry.increment)
+
+  server.get('/api/appellations', appellation.index)
 }
