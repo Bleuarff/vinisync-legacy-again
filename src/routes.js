@@ -8,7 +8,7 @@ const restify = require('restify'),
 
 const auth = require('./controllers/authController.js'),
       entry = require('./controllers/entryController.js'),
-      appellation = require('./controllers/appellationController.js')
+      genericController = require('./controllers/genericDataController.js')
 
 module.exports.register = exports.register = function registerRoutes(server){
   /* First register handlers */
@@ -64,5 +64,6 @@ module.exports.register = exports.register = function registerRoutes(server){
   server.post('/api/entry/:id', entry.update)
   server.post('/api/entry/:id/increment', entry.increment)
 
-  server.get('/api/appellations', appellation.index)
+  // generic endpoint for retrieving dropdown suggestions
+  server.get(/^\/api\/(appellations|producers)$/, genericController.index)
 }

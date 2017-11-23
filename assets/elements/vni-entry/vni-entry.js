@@ -61,7 +61,7 @@ class Entry extends BaseElement{
         count: 6
       }
       this.isEdit = true
-      this.root.querySelector('[label="Appellation"]').focus()
+      this.$.appellation.focus()
     }
   }
 
@@ -79,6 +79,7 @@ class Entry extends BaseElement{
 
   makeEditable(){
     this.isEdit = true
+    this.$.appellation.focus()
   }
 
   cancelEdit(){
@@ -168,6 +169,52 @@ class Entry extends BaseElement{
 
   hideApogeeSeparator(apogeeStart, apogeeEnd){
     return !apogeeStart || !apogeeEnd
+  }
+
+  appellationChanged(e){
+    this.getSuggestions(e.currentTarget, 'appellations')
+  }
+
+  producerChanged(e){
+    this.getSuggestions(e.currentTarget, 'producers')
+  }
+
+  // manages dropdown suggestions for appellation & producer fields
+  async getSuggestions(field, endpoint){
+
+    var search = field.filter
+
+    // not enough chars: hide suggestions
+    if (search.length < 3){
+      field.items = null
+      return
+    }
+
+    // if already got suggestions, filter manually on standard form
+    // so as to ignore accented chars
+    if (field.items != null){
+      let stdForm = normalizer.getStandardForm(search)
+      field.filteredItems = field.items.filter(x => x.stdForm.toLowerCase().indexOf(stdForm) > -1)
+      return
+    }
+
+    if (this.reqwip)
+      return
+
+    this.reqwip = true
+    var data = []
+
+    try{
+      // retrieve suggestions for given endpoint
+      data = await this.send(`/api/${endpoint}`, {search: search})
+      field.items = data
+    }
+    catch(err){
+      console.error(err)
+    }
+    finally{
+      this.reqwip = false
+    }
   }
 
 }

@@ -10,6 +10,7 @@
 <link rel="import" href="../vni-color/vni-color.html">
 <link rel="import" href="../vni-cepages/vni-cepages.html">
 <link rel="import" href="../vni-tag/vni-tag.html">
+<script src="../../dist/normalizer.js"></script>
 
 <dom-module id="vni-entry">
   <template>
@@ -122,12 +123,14 @@
       <iron-icon icon="arrow-back"></iron-icon>Cave
     </a>
 
-    <vaadin-combo-box label="Appellation" value="{{entry.wine.appellation}}" allow-custom-value
-      on-input="appellationChanged" readonly="[[!isEdit]]" class$="edit-[[isEdit]]">
+    <vaadin-combo-box id="appellation" label="Appellation" value="{{entry.wine.appellation}}" allow-custom-value
+      on-input="appellationChanged" readonly="[[!isEdit]]" class$="edit-[[isEdit]]"
+      item-value-path="name" item-label-path="name">
     </vaadin-combo-box>
 
     <vaadin-combo-box label="Producteur" value="{{entry.wine.producer}}" allow-custom-value
-      on-input="producerChanged" readonly="[[!isEdit]]" class$="edit-[[isEdit]]">
+      on-input="producerChanged" readonly="[[!isEdit]]" class$="edit-[[isEdit]]"
+      item-value-path="name" item-label-path="name">
     </vaadin-combo-box>
 
     <paper-input id="name" label="Cuvée" value="{{entry.wine.name}}"

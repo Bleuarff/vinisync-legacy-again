@@ -28,14 +28,27 @@ module.exports = function(grunt){
     chequire: {
       all: ['src/**/*.js', 'utils/**/*.js']
     },
+    browserify: {
+      normalizer: {
+        options: {
+          browserifyOptions: {
+            standalone: 'normalizer'
+          },
+        },
+        files: {
+          'assets/dist/normalizer.js': 'services/normalizer.js'
+        }
+      }
+    },
   })
 
+  grunt.loadNpmTasks('grunt-browserify')
   grunt.loadNpmTasks('grunt-concurrent')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-exec')
   grunt.loadNpmTasks('grunt-nodemon')
 
-  grunt.registerTask('basis', [])
+  grunt.registerTask('basis', ['browserify'])
 
   grunt.registerTask('default', ['basis', 'concurrent'])
   grunt.registerTask('debug', ['exec:debug'])

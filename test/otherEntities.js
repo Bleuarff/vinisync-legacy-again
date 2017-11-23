@@ -29,7 +29,8 @@ describe('entities controllers', () => {
       {name: 'Saint-Emilion', stdForm:'saint-emilion'},
       {name: 'Bourgueil', stdForm:'bourgueil'},
       {name: 'Coteaux Varois en Provence', stdForm:'coteaux varois en provence'},
-      {name: 'Saint-Joseph', stdForm:'saint-joseph'}
+      {name: 'Saint-Joseph', stdForm:'saint-joseph'},
+      {name: 'xsfrf', stdForm:'xsfrf'}
     ])
   })
 
@@ -48,13 +49,15 @@ describe('entities controllers', () => {
     })
 
     it('term', async () => {
-      let res = await agent.get(`/api/appellations?uid=${uid}&term=saint`)
+      let res = await agent.get(`/api/appellations?uid=${uid}&search=xsfrf`)
       .set('Content-Type', 'application/json')
       .send()
       expect(res).to.have.status(200)
       expect(res).to.be.json
-      expect(res.body).to.be.an('array')
-      expect(res.body).to.have.lengthOf(2)
+      let data = res.body
+      expect(data).to.be.an('array')
+      expect(data).to.have.lengthOf(1)
+
     })
   })
 })
