@@ -217,6 +217,33 @@ class Entry extends BaseElement{
     }
   }
 
+  selectPhoto(e){
+    this.$.uploader.click()
+  }
+
+  async upload(e){
+    if (!e.currentTarget.files.length)
+      return
+
+    var file = e.currentTarget.files[0]
+    if (!file.type.startsWith('image/')){
+      this.dispatchEvent(new CustomEvent('error', {detail: 'Le fichier n\'est pas une image ', bubbles: true, composed: true}))
+      return
+    }
+
+    var imageUrl = URL.createObjectURL(file)
+
+    try{
+      let res = await this.send(`/api/image/${file.name}`, file, 'PUT')
+      console.log('image uploaded: ' + res.filepath)
+      this.entry.wine.pictures = [res.filepath]
+    }
+    catch(err){
+      console.log(err)
+      this.dispatchEvent(new CustomEvent('error', {detail: 'Echec upload', bubbles: true, composed: true}))
+    }
+  }
+
 }
 
 window.customElements.define(Entry.is, Entry)

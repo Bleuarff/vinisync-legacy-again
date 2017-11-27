@@ -108,6 +108,21 @@
       .buttons paper-button{
         width: 45%;
       }
+
+      #uploader {
+        display: none;
+      }
+
+      #upload-btn {
+        color: grey;
+        margin: auto;
+        display: block;
+        padding: 0;
+      }
+
+      .back {
+        margin-bottom: 0;
+      }
     </style>
 
     <!-- TODO:
@@ -122,6 +137,12 @@
     <a href="/cave" class="back">
       <iron-icon icon="arrow-back"></iron-icon>Cave
     </a>
+
+    <div class="photo">
+      <input type="file" id="uploader" accept='image/*' capture on-change='upload' />
+      <paper-icon-button id="upload-btn" icon="image:camera-alt" on-tap="selectPhoto">
+      </paper-icon-button>
+    </div>
 
     <vaadin-combo-box id="appellation" label="Appellation" value="{{entry.wine.appellation}}" allow-custom-value
       on-input="appellationChanged" readonly="[[!isEdit]]" class$="edit-[[isEdit]]"
