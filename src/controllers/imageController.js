@@ -1,11 +1,17 @@
 'use strict'
 
-const fs = require('fs'),
+const logger = require('swn-logger').create('imageController'),
+      fs = require('fs'),
       path = require('path'),
+      crypto = require('crypto'),
       VError = require('verror'),
       util = require('util'),
+      mkdirp = require('mkdirp'),
+      config = require('../../utils/config.js'),
       lstat = util.promisify(fs.lstat),
-      config = require('../../utils/config.js')
+      writeFile = util.promisify(fs.writeFile),
+      randomBytes = util.promisify(crypto.randomBytes),
+      pmkdirp = util.promisify(mkdirp)
 
 const MAX_SIZE = 5 * 1e6 // 5MB max
 
@@ -27,28 +33,52 @@ class ImageController {
   }
 
   static async upload(req, res, next){
-    res.send(200, {filepath: 'coin pouet'})
-    return next()
 
-    // check file type & size
+    // check file type
     if (!req.contentType().startsWith('image/')){
-      res.send(400, 'Invalid file type')
+      res.send(415, 'Invalid mime type')
       return next(false)
     }
 
+    // check file size
     if (req.body.length > MAX_SIZE){
       res.send(413, `File too large. Max size: ${MAX_SIZE / 1e6}MB`)
       return next(false)
     }
 
-    var contentType = req.getContentType()
-    if (!contentType.startsWith('image/')){
-      res.send(415, 'Invalid mime type')
+    var fullpath
+    try{
+      // generate random directory
+      let dirBuf = await randomBytes(1),
+          dir = dirBuf.toString('hex'),
+          fullDir = path.resolve(config.imageDirectory, dir)
+
+      await pmkdirp(fullDir) // create path
+
+      // generate random filename
+      let nameBuf = await randomBytes(4),
+          name = nameBuf.toString('hex'),
+          extension = path.extname(req.params.name)
+
+      fullpath = path.resolve(fullDir,  `${name}${extension}`)
+      // logger.debug(`fullpath: ${fullpath}`)
+    }
+    catch(err){
+      logger.error(new VError(err, 'Error setting image path'))
+      res.send(500, 'error setting image path')
       return next(false)
     }
 
-    res.send(200, {filepath: 'eat my shorts'})
-    return next()
+    try{
+      await writeFile(fullpath, req.body)
+      res.send(200, {filepath: fullpath})
+      return next()
+    }
+    catch(err){
+      logger.error(new VError(err, 'Error saving image'))
+      res.send(500, 'error saving image')
+      return next(false)
+    }
   }
 }
 

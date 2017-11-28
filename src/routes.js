@@ -50,6 +50,8 @@ module.exports.register = exports.register = function registerRoutes(server){
   auth.publicUrls = [/user\/*/]
   server.use(auth.isLogged)
 
+  // TODO: check CSRF token
+
   /* routes defined below*/
 
   server.put('/api/user/signup', auth.signup)
