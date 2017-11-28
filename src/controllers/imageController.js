@@ -46,7 +46,8 @@ class ImageController {
       return next(false)
     }
 
-    var fullpath
+    var fullpath, // absolute path where to save image
+        webpath // partial path, the one the client needs to know to retrieve image
     try{
       // generate random directory
       let dirBuf = await randomBytes(1),
@@ -60,6 +61,7 @@ class ImageController {
           name = nameBuf.toString('hex'),
           extension = path.extname(req.params.name)
 
+      webpath = `${dir}/${name}${extension}`
       fullpath = path.resolve(fullDir,  `${name}${extension}`)
       // logger.debug(`fullpath: ${fullpath}`)
     }
@@ -71,7 +73,7 @@ class ImageController {
 
     try{
       await writeFile(fullpath, req.body)
-      res.send(200, {filepath: fullpath})
+      res.send(200, {filepath: webpath})
       return next()
     }
     catch(err){

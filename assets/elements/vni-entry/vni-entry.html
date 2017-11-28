@@ -123,12 +123,17 @@
       .back {
         margin-bottom: 0;
       }
+
+      .picture {
+        max-width: 100%;
+        margin: auto;
+        display: block;
+      }
     </style>
 
     <!-- TODO:
       - style apogee block
       - changer titre on load, name or producer
-      - vaadin combobox really needed ?
    -->
 
     <app-route route="[[route]]" pattern="/:id" data="{{routeData}}"></app-route>
@@ -138,10 +143,13 @@
       <iron-icon icon="arrow-back"></iron-icon>Cave
     </a>
 
+    <!-- TODO: handle aspect ratio -->
     <div class="photo">
-      <input type="file" id="uploader" accept='image/*' capture on-change='upload' />
-      <paper-icon-button id="upload-btn" icon="image:camera-alt" on-tap="selectPhoto">
-      </paper-icon-button>
+        <input type="file" id="uploader" accept='image/*' capture on-change='upload' />
+        <paper-icon-button id="upload-btn" class$="hidden-[[hasPhoto(imageUrl)]]" icon="image:camera-alt"
+          on-tap="selectPhoto">
+        </paper-icon-button>
+        <img class$="picture hidden-[[!hasPhoto(imageUrl)]]" src="[[imageUrl]]">
     </div>
 
     <vaadin-combo-box id="appellation" label="Appellation" value="{{entry.wine.appellation}}" allow-custom-value

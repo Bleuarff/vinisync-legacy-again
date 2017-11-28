@@ -22,6 +22,12 @@ class Entry extends BaseElement{
         type: Number,
         value: (new Date()).getUTCFullYear(),
         readonly: true
+      },
+      imageUrl: {type: String, value: ''},
+      uploadPath: {
+        type: String,
+        value: '/uploads/',
+        readOnly: true
       }
     }
   }
@@ -39,6 +45,8 @@ class Entry extends BaseElement{
     }
 
     this.isEdit = false
+    this.imageUrl = ''
+
     if (this.route.path)
       this._getEntry(this.routeData.id)
     else{
@@ -66,10 +74,12 @@ class Entry extends BaseElement{
   }
 
   async _getEntry(id){
-    // console.log(`TODO: get entry ${id}`)
     try{
       let entry = await this.send(`/api/entry/${id}`)
       this.entry = entry
+
+      if (this.entry.wine.pictures && this.entry.wine.pictures.length > 0)
+        this.imageUrl = this.uploadPath + this.entry.wine.pictures[0]
     }
     catch(err){
       console.error(err)
@@ -179,6 +189,10 @@ class Entry extends BaseElement{
     this.getSuggestions(e.currentTarget, 'producers')
   }
 
+  hasPhoto(imageUrl){
+    return !!imageUrl
+  }
+
   // manages dropdown suggestions for appellation & producer fields
   async getSuggestions(field, endpoint){
 
@@ -231,7 +245,7 @@ class Entry extends BaseElement{
       return
     }
 
-    var imageUrl = URL.createObjectURL(file)
+    this.imageUrl = URL.createObjectURL(file)
 
     try{
       let res = await this.send(`/api/image/${file.name}`, file, 'PUT')
