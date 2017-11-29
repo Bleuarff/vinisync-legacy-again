@@ -126,6 +126,7 @@
 
       .picture {
         max-width: 100%;
+        max-height: 13em;
         margin: auto;
         display: block;
       }
@@ -138,12 +139,10 @@
 
     <app-route route="[[route]]" pattern="/:id" data="{{routeData}}"></app-route>
 
-    <!-- <h1>Entrée</h1> -->
     <a href="/cave" class="back">
       <iron-icon icon="arrow-back"></iron-icon>Cave
     </a>
 
-    <!-- TODO: handle aspect ratio -->
     <div class="photo">
         <input type="file" id="uploader" accept='image/*' capture on-change='upload' />
         <paper-icon-button id="upload-btn" class$="hidden-[[hasPhoto(imageUrl)]]" icon="image:camera-alt"
