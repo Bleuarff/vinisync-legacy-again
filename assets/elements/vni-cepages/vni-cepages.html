@@ -69,7 +69,8 @@
     </div>
 
     <div class$="add hidden-[[readonly]]">
-      <vaadin-combo-box id="newCepage" label="Ajouter un cépage" allow-custom-value>
+      <vaadin-combo-box id="newCepage" label="Ajouter un cépage" allow-custom-value
+        on-input="inputChanged" item-value-path="name" item-label-path="name">
       </vaadin-combo-box>
       <paper-icon-button icon="add" on-tap="addCepage"></paper-icon-button>
     </div>

@@ -181,6 +181,10 @@ class Entry extends BaseElement{
     return !apogeeStart || !apogeeEnd
   }
 
+  hasPhoto(imageUrl){
+    return !!imageUrl
+  }
+
   appellationChanged(e){
     this.getSuggestions(e.currentTarget, 'appellations')
   }
@@ -189,9 +193,11 @@ class Entry extends BaseElement{
     this.getSuggestions(e.currentTarget, 'producers')
   }
 
-  hasPhoto(imageUrl){
-    return !!imageUrl
+  cepageChanged(e){
+    var input = e.detail.field
+    this.getSuggestions(input, 'cepages')
   }
+
 
   // manages dropdown suggestions for appellation & producer fields
   async getSuggestions(field, endpoint){

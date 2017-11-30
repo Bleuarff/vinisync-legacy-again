@@ -42,6 +42,12 @@ class Cepages extends BaseElement{
     }
     this.$.newCepage.focus()
   }
+
+  inputChanged(e){
+    this.dispatchEvent(new CustomEvent('cepage-input', {detail: {
+      field: this.$.newCepage
+    }, bubbles: true, composed: true}))
+  }
 }
 
 window.customElements.define(Cepages.is, Cepages)

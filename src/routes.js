@@ -70,5 +70,5 @@ module.exports.register = exports.register = function registerRoutes(server){
   server.put('/api/image/:name', image.upload)
 
   // generic endpoint for retrieving dropdown suggestions
-  server.get(/^\/api\/(appellations|producers)$/, genericController.index)
+  server.get(/^\/api\/(appellations|producers|cepages)$/, genericController.index)
 }

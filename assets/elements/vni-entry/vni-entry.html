@@ -197,7 +197,7 @@
     </vni-color>
 
     <vni-cepages cepages="{{entry.wine.cepages}}" class$="hidden-[[hideArrayProp(entry.wine.cepages, isEdit)]]"
-      readonly="[[!isEdit]]">
+      readonly="[[!isEdit]]" on-cepage-input="cepageChanged">
     </vni-cepages>
 
     <div class$="hidden-[[hideField(isEdit, entry.wine.sweet, entry.wine.sparkling)]]">
